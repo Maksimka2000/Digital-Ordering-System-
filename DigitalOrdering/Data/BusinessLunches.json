@@ -1,0 +1,122 @@
+[
+  {
+    "Foods": [
+      {
+        "DietaryPreference": 4,
+        "FoodT": 0,
+        "Id": 0,
+        "Name": "Spaghetti Carbonara",
+        "Price": 12.99,
+        "Description": "Classic pasta dish with bacon and eggs",
+        "hasChangableIngredients": true,
+        "Ingredients": [
+          {
+            "Id": 10,
+            "Name": "Pasta"
+          },
+          {
+            "Id": 16,
+            "Name": "Bacon"
+          },
+          {
+            "Id": 17,
+            "Name": "Egg"
+          }
+        ],
+        "Promotion": {
+          "Id": 1,
+          "DiscountPercent": 50,
+          "Name": "welcome back",
+          "Description": "discount for clients "
+        }
+      },
+      {
+        "DietaryPreference": 4,
+        "FoodT": 0,
+        "Id": 1,
+        "Name": "Penne Alfredo",
+        "Price": 14.99,
+        "Description": "Creamy Alfredo pasta with Parmesan cheese",
+        "hasChangableIngredients": true,
+        "Ingredients": [
+          {
+            "Id": 10,
+            "Name": "Pasta"
+          },
+          {
+            "Id": 11,
+            "Name": "Cream"
+          },
+          {
+            "Id": 9,
+            "Name": "Parmesan"
+          }
+        ],
+        "Promotion": {
+          "Id": 0,
+          "DiscountPercent": 30,
+          "Name": "new year",
+          "Description": "discount for the new year"
+        }
+      },
+      {
+        "DietaryPreference": 1,
+        "FoodT": 0,
+        "Id": 2,
+        "Name": "Fettuccine Primavera",
+        "Price": 13.99,
+        "Description": "Pasta with fresh vegetables and olive oil",
+        "hasChangableIngredients": true,
+        "Ingredients": [
+          {
+            "Id": 10,
+            "Name": "Pasta"
+          },
+          {
+            "Id": 13,
+            "Name": "Broccoli"
+          },
+          {
+            "Id": 14,
+            "Name": "Zucchini"
+          },
+          {
+            "Id": 15,
+            "Name": "Shrimp"
+          }
+        ],
+        "Promotion": {
+          "Id": 2,
+          "DiscountPercent": 10,
+          "Name": "Wednesday discount",
+          "Description": "wednesday discount for clients"
+        }
+      }
+    ],
+    "Beverages": [
+      {
+        "IsAlcohol": true,
+        "BeverageT": 0,
+        "Id": 7,
+        "Name": "Mojito",
+        "Price": 7.99,
+        "Description": "Refreshing cocktail with mint and lime",
+        "hasChangableIngredients": false,
+        "Ingredients": null,
+        "Promotion": {
+          "Id": 0,
+          "DiscountPercent": 30,
+          "Name": "new year",
+          "Description": "discount for the new year"
+        }
+      }
+    ],
+    "Id": 11,
+    "Name": "Business Special",
+    "Price": 19.99,
+    "Description": "A combination of three foods and a drink",
+    "hasChangableIngredients": true,
+    "Ingredients": null,
+    "Promotion": null
+  }
+]

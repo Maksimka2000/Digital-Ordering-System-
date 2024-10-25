@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalOrdering", "DigitalOrdering\DigitalOrdering.csproj", "{180F6841-1F70-469E-877C-180331B45B9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalOrderingUnitTests", "DigitalOrderingUnitTests\DigitalOrderingUnitTests.csproj", "{A70B0FA0-3474-42B4-BA43-C7A3511F64DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{180F6841-1F70-469E-877C-180331B45B9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{180F6841-1F70-469E-877C-180331B45B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{180F6841-1F70-469E-877C-180331B45B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{180F6841-1F70-469E-877C-180331B45B9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A70B0FA0-3474-42B4-BA43-C7A3511F64DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A70B0FA0-3474-42B4-BA43-C7A3511F64DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A70B0FA0-3474-42B4-BA43-C7A3511F64DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A70B0FA0-3474-42B4-BA43-C7A3511F64DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

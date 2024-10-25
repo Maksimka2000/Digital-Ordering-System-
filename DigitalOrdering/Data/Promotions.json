@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 0,
+    "DiscountPercent": 30,
+    "Name": "new year",
+    "Description": "discount for the new year"
+  },
+  {
+    "Id": 1,
+    "DiscountPercent": 50,
+    "Name": "welcome back",
+    "Description": "discount for clients "
+  },
+  {
+    "Id": 2,
+    "DiscountPercent": 10,
+    "Name": "Wednesday discount",
+    "Description": "wednesday discount for clients"
+  }
+]

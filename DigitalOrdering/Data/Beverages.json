@@ -1,0 +1,85 @@
+[
+  {
+    "IsAlcohol": false,
+    "BeverageT": 0,
+    "Id": 6,
+    "Name": "Cappuccino",
+    "Price": 3.99,
+    "Description": "Classic Italian coffee",
+    "hasChangableIngredients": false,
+    "Ingredients": null,
+    "Promotion": null
+  },
+  {
+    "IsAlcohol": true,
+    "BeverageT": 0,
+    "Id": 7,
+    "Name": "Mojito",
+    "Price": 7.99,
+    "Description": "Refreshing cocktail with mint and lime",
+    "hasChangableIngredients": false,
+    "Ingredients": null,
+    "Promotion": {
+      "Id": 0,
+      "DiscountPercent": 30,
+      "Name": "new year",
+      "Description": "discount for the new year"
+    }
+  },
+  {
+    "IsAlcohol": false,
+    "BeverageT": 0,
+    "Id": 8,
+    "Name": "Iced Tea",
+    "Price": 2.99,
+    "Description": "Cold brewed tea with lemon",
+    "hasChangableIngredients": false,
+    "Ingredients": null,
+    "Promotion": {
+      "Id": 1,
+      "DiscountPercent": 50,
+      "Name": "welcome back",
+      "Description": "discount for clients "
+    }
+  },
+  {
+    "IsAlcohol": true,
+    "BeverageT": 1,
+    "Id": 9,
+    "Name": "Negroni",
+    "Price": 8.99,
+    "Description": "n",
+    "hasChangableIngredients": false,
+    "Ingredients": [
+      {
+        "Id": 20,
+        "Name": "Gin London Dry Bombay Sapphire "
+      },
+      {
+        "Id": 21,
+        "Name": "Vermouth: Cinzano Bianco 15%"
+      },
+      {
+        "Id": 22,
+        "Name": "Liqueur: Campari"
+      }
+    ],
+    "Promotion": {
+      "Id": 2,
+      "DiscountPercent": 10,
+      "Name": "Wednesday discount",
+      "Description": "wednesday discount for clients"
+    }
+  },
+  {
+    "IsAlcohol": false,
+    "BeverageT": 2,
+    "Id": 10,
+    "Name": "Lemonade",
+    "Price": 2.99,
+    "Description": "Refreshing lemon juice and sugar",
+    "hasChangableIngredients": false,
+    "Ingredients": null,
+    "Promotion": null
+  }
+]
