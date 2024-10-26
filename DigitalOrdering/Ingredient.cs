@@ -7,25 +7,29 @@ public class Ingredient
     
     private static List<Ingredient> _ingredients = new List<Ingredient>();
     
-    public int Id { get;  set; }
+    private static int IdCounter = 0;
+    public int Id { get; private set; }
     public string Name { get; set; }
 
 
     [JsonConstructor]
-    public Ingredient() {}
     public Ingredient(string name)
     {
-        Id = _ingredients.Count;
+        Id = ++IdCounter;
         Name = name;
-        if (GetIngredientByName(name) == null)
-        {
-            _ingredients.Add(this);
-        }
-        else
-        {
-            throw new Exception($"Ingredient already exists: {name}");
-        }
     }
+
+    public static void AddIngredient(Ingredient ingredient)
+    {
+        if(ingredient == null) throw new ArgumentException("Game cannot be null");
+        else _ingredients.Add(ingredient);
+    }
+
+    private void ValidateDuplication(string name)
+    {
+        if (GetIngredientByName(name) != null) throw new Exception($"Ingredient already exists: {name}");
+    }
+
 
     public static Ingredient? GetIngredientByName(string name)
     {
@@ -59,11 +63,11 @@ public class Ingredient
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            var ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
-            foreach (var ingredient in ingredients)
-            {
-                new Ingredient(ingredient.Name);
-            }
+            _ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
+            // foreach (var ingredient in ingredients)
+            // {
+            //     new Ingredient(ingredient.Name);
+            // }
         }
         else
         {

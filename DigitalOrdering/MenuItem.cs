@@ -5,7 +5,8 @@ namespace DigitalOrdering;
 
 public abstract class MenuItem
 {
-    public int Id { get;  set; }
+    private static int IdCounter = 0;
+    public int Id { get;  private set; }
     public string Name { get;  set; }
     public double Price { get;  set; }
     public string Description { get; set; }
@@ -14,14 +15,14 @@ public abstract class MenuItem
     public List<Ingredient>? Ingredients { get;  set; }
     public Promotion? Promotion { get; set; }
 
-    public abstract bool Delete();
+    
     
     [JsonConstructor]
     protected MenuItem(){}
     protected MenuItem(string name, double price, string description, bool hasChangableIngredients,
         List<Ingredient>? ingredients, Promotion? promotion)
     {
-        Id = Beverage.GetBeverages().Count + Food.GetFoods().Count + BusinessLunch.GetBusinessLunches().Count;
+        Id = ++IdCounter;
         Name = name;
         Price = price;
         Description = description;

@@ -18,14 +18,18 @@ public class Beverage : MenuItem
     public BeverageType BeverageT { get;  set; }
 
     [JsonConstructor]
-    public Beverage():base(){}
     public Beverage(string name, double price, string description, bool hasChangableIngredients,
         List<Ingredient>? ingredients, Promotion? promotion, bool isAlcohol, BeverageType beverageT) : base(name, price, description,
         hasChangableIngredients, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
-        _beverages.Add(this);
+    }
+
+    public static void AddBeverage(Beverage beverage)
+    {
+        if(beverage == null) throw new ArgumentException("Game cannot be null");
+        else _beverages.Add(beverage);
     }
 
 
@@ -34,10 +38,7 @@ public class Beverage : MenuItem
         return new List<Beverage>(_beverages);
     }
     
-    public override bool Delete()
-    {
-        return _beverages.Remove(this);
-    }
+    
     
     // ================================================================ serialized and deserialized
     public static void LoadBeverageJSON(string path) 
@@ -45,30 +46,30 @@ public class Beverage : MenuItem
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            var beverages = JsonConvert.DeserializeObject<List<Beverage>>(json);
-            foreach (var beverage in beverages)
-            {
-                
-                
-                Promotion? promotion = beverage.Promotion == null ? null : Promotion.GetPromotions().Find(pro => pro.Id == beverage.Promotion.Id);
-                Beverage.BeverageType beverageType = (Beverage.BeverageType)beverage.BeverageT;
-                
-                
-                List<Ingredient?>? ingredients = new List<Ingredient>();
-                if (beverage.Ingredients != null)
-                {
-                    foreach (var ingredient in beverage.Ingredients)
-                    {
-                        ingredients.Add(DigitalOrdering.Ingredient.GetIngredients().FirstOrDefault(p => p.Id == ingredient.Id));
-                    }
-                    
-                    new Beverage(beverage.Name, beverage.Price, beverage.Description, beverage.hasChangableIngredients, ingredients, promotion, beverage.IsAlcohol, beverage.BeverageT);
-                }
-                else
-                {
-                    new Beverage(beverage.Name, beverage.Price, beverage.Description, beverage.hasChangableIngredients, null, promotion, beverage.IsAlcohol, beverage.BeverageT);
-                }
-            }
+            _beverages = JsonConvert.DeserializeObject<List<Beverage>>(json);
+            // foreach (var beverage in beverages)
+            // {
+            //     
+            //     
+            //     Promotion? promotion = beverage.Promotion == null ? null : Promotion.GetPromotions().Find(pro => pro.Id == beverage.Promotion.Id);
+            //     Beverage.BeverageType beverageType = (Beverage.BeverageType)beverage.BeverageT;
+            //     
+            //     
+            //     List<Ingredient?>? ingredients = new List<Ingredient>();
+            //     if (beverage.Ingredients != null)
+            //     {
+            //         foreach (var ingredient in beverage.Ingredients)
+            //         {
+            //             ingredients.Add(DigitalOrdering.Ingredient.GetIngredients().FirstOrDefault(p => p.Id == ingredient.Id));
+            //         }
+            //         
+            //         new Beverage(beverage.Name, beverage.Price, beverage.Description, beverage.hasChangableIngredients, ingredients, promotion, beverage.IsAlcohol, beverage.BeverageT);
+            //     }
+            //     else
+            //     {
+            //         new Beverage(beverage.Name, beverage.Price, beverage.Description, beverage.hasChangableIngredients, null, promotion, beverage.IsAlcohol, beverage.BeverageT);
+            //     }
+            // }
         }
         else
         {

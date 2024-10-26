@@ -6,33 +6,34 @@ public class Promotion
 {
     private static List<Promotion> _promotions = new List<Promotion>();
 
-    public int Id { get; set; }
+    private static int IdCounter = 0;
+    public int Id { get; private set; }
     public int DiscountPercent { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public const int MaxDiscountPercent = 50;
     public const int MinDiscountPercent = 5;
-    
-    
+
     
     [JsonConstructor]
-    public Promotion(){}
     public Promotion(int discountPercent, string name, string description)
     {
-        
-            Id = _promotions.Count;
-            DiscountPercent = validateDiscountPercentage(discountPercent);
-            Name = name;
-            Description = description;
+        Id = ++IdCounter;
+        DiscountPercent = validateDiscountPercentage(discountPercent);
+        Name = name;
+        Description = description;
+    }
 
-            if (GetPromotionByName(name) == null)
-            {
-                _promotions.Add(this);
-            }
-            else
-            {
-                throw new Exception($"The promotion with name {name} has already been added.");
-            }        
+
+    public static void AddPromotion(Promotion promotion)
+    {
+        if (promotion == null) throw new ArgumentException("Game cannot be null");
+        _promotions.Add(promotion);
+    }
+
+    private void ValidateDuplication(string name)
+    {
+        if (GetPromotionByName(name) != null) throw new Exception($"The promotion with name {name} has already been added.");
     }
 
     private static Promotion? GetPromotionByName(string name)
@@ -72,12 +73,11 @@ public class Promotion
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            var promotions = JsonConvert.DeserializeObject<List<Promotion>>(json);
-            foreach (var promotion in promotions)
-            {
-                new Promotion(promotion.DiscountPercent, promotion.Name, promotion.Description);
-            }
-           
+            _promotions = JsonConvert.DeserializeObject<List<Promotion>>(json);
+            // foreach (var promotion in promotions)
+            // {
+            //     new Promotion(promotion.DiscountPercent, promotion.Name, promotion.Description);
+            // }
         }
         else
         {

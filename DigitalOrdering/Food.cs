@@ -22,24 +22,26 @@ public class Food : MenuItem
 
 
     private static List<Food> _foods = new List<Food>();
+    
     public DietaryPreferencesType DietaryPreference { get; set; }
     public FoodType FoodT { get; set; }
 
     [JsonConstructor]
-    public Food():base(){}
     public Food(string name, double price, string description, bool hasChangableIngredients,
         List<Ingredient>? ingredients, Promotion? promotion, DietaryPreferencesType dietaryPreference, FoodType foodT)
         : base(name, price, description, hasChangableIngredients, ingredients, promotion)
     {
         DietaryPreference = dietaryPreference;
         FoodT = foodT;
-        _foods.Add(this);
+    }
+
+    public static void AddFood(Food food)
+    {
+        if(food == null)throw new ArgumentException("Game cannot be null");
+        else _foods.Add(food);
     }
     
-    public override bool Delete()
-    {
-        return _foods.Remove(this);
-    }
+   
     
 
     public static List<Food> GetFoods()
@@ -69,27 +71,29 @@ public class Food : MenuItem
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            var foods = JsonConvert.DeserializeObject<List<Food>>(json);
-            foreach (var food in foods)
-            {
-                Promotion? promotion = food.Promotion == null ? null : Promotion.GetPromotions().Find(pro => pro.Id == food.Promotion.Id);
-                Food.DietaryPreferencesType dietaryPreference = (Food.DietaryPreferencesType)food.DietaryPreference;
-                Food.FoodType foodType = (Food.FoodType)food.FoodT;
-                List<Ingredient?>? ingredients = new List<Ingredient>();
-                if (food.Ingredients != null)
-                {
-                    foreach (var ingredient in food.Ingredients)
-                    {
-                        ingredients.Add(DigitalOrdering.Ingredient.GetIngredients().FirstOrDefault(p => p.Id == ingredient.Id));
-                    }
-                    
-                    new Food(food.Name, food.Price, food.Description, food.hasChangableIngredients, ingredients, promotion, dietaryPreference, foodType);
-                }
-                else
-                {
-                    new Food(food.Name, food.Price, food.Description, food.hasChangableIngredients, null, promotion, dietaryPreference, foodType);
-                }
-            }
+            _foods = JsonConvert.DeserializeObject<List<Food>>(json);
+            // foreach (var food in foods)
+            // {
+            //     Promotion? promotion = food.Promotion == null ? null : Promotion.GetPromotions().Find(pro => pro.Id == food.Promotion.Id);
+            //     Food.DietaryPreferencesType dietaryPreference = (Food.DietaryPreferencesType)food.DietaryPreference;
+            //     Food.FoodType foodType = (Food.FoodType)food.FoodT;
+            //     List<Ingredient?>? ingredients = new List<Ingredient>();
+            //     if (food.Ingredients != null)
+            //     {
+            //         foreach (var ingredient in food.Ingredients)
+            //         {
+            //             ingredients.Add(DigitalOrdering.Ingredient.GetIngredients().FirstOrDefault(p => p.Id == ingredient.Id));
+            //         }
+            //         
+            //         var foodAdd = new Food(food.Name, food.Price, food.Description, food.hasChangableIngredients, ingredients, promotion, dietaryPreference, foodType);
+            //         AddFood(foodAdd);
+            //     }
+            //     else
+            //     {
+            //         var foodAdd = new Food(food.Name, food.Price, food.Description, food.hasChangableIngredients, null, promotion, dietaryPreference, foodType);
+            //         AddFood(foodAdd);
+            //     }
+            // }
         }
         else
         {

@@ -12,7 +12,7 @@
   },
   {
     "IsAlcohol": true,
-    "BeverageT": 0,
+    "BeverageT": 1,
     "Id": 7,
     "Name": "Mojito",
     "Price": 7.99,
@@ -20,7 +20,7 @@
     "hasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": {
-      "Id": 0,
+      "Id": 8,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
@@ -36,10 +36,10 @@
     "hasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": {
-      "Id": 1,
+      "Id": 9,
       "DiscountPercent": 50,
       "Name": "welcome back",
-      "Description": "discount for clients "
+      "Description": "discount for returning clients"
     }
   },
   {
@@ -48,27 +48,27 @@
     "Id": 9,
     "Name": "Negroni",
     "Price": 8.99,
-    "Description": "n",
+    "Description": "Classic Italian cocktail",
     "hasChangableIngredients": false,
     "Ingredients": [
       {
-        "Id": 20,
-        "Name": "Gin London Dry Bombay Sapphire "
+        "Id": 41,
+        "Name": "Gin"
       },
       {
-        "Id": 21,
-        "Name": "Vermouth: Cinzano Bianco 15%"
+        "Id": 42,
+        "Name": "Vermouth"
       },
       {
-        "Id": 22,
-        "Name": "Liqueur: Campari"
+        "Id": 43,
+        "Name": "Campari"
       }
     ],
     "Promotion": {
-      "Id": 2,
+      "Id": 10,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
-      "Description": "wednesday discount for clients"
+      "Description": "discount for clients on Wednesdays"
     }
   },
   {

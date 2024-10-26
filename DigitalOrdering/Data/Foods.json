@@ -2,56 +2,56 @@
   {
     "DietaryPreference": 4,
     "FoodT": 0,
-    "Id": 0,
+    "Id": 1,
     "Name": "Spaghetti Carbonara",
     "Price": 12.99,
-    "Description": "Classic pasta dish with bacon and eggs",
+    "Description": "Classic pasta with bacon and eggs",
     "hasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 10,
+        "Id": 24,
         "Name": "Pasta"
       },
       {
-        "Id": 16,
+        "Id": 25,
         "Name": "Bacon"
       },
       {
-        "Id": 17,
+        "Id": 26,
         "Name": "Egg"
       }
     ],
     "Promotion": {
-      "Id": 1,
+      "Id": 4,
       "DiscountPercent": 50,
       "Name": "welcome back",
-      "Description": "discount for clients "
+      "Description": "discount for returning clients"
     }
   },
   {
     "DietaryPreference": 4,
     "FoodT": 0,
-    "Id": 1,
+    "Id": 2,
     "Name": "Penne Alfredo",
     "Price": 14.99,
-    "Description": "Creamy Alfredo pasta with Parmesan cheese",
+    "Description": "Creamy Alfredo pasta with Parmesan",
     "hasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 10,
+        "Id": 27,
         "Name": "Pasta"
       },
       {
-        "Id": 11,
+        "Id": 28,
         "Name": "Cream"
       },
       {
-        "Id": 9,
+        "Id": 29,
         "Name": "Parmesan"
       }
     ],
     "Promotion": {
-      "Id": 0,
+      "Id": 5,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
@@ -60,59 +60,55 @@
   {
     "DietaryPreference": 1,
     "FoodT": 0,
-    "Id": 2,
+    "Id": 3,
     "Name": "Fettuccine Primavera",
     "Price": 13.99,
     "Description": "Pasta with fresh vegetables and olive oil",
     "hasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 10,
+        "Id": 30,
         "Name": "Pasta"
       },
       {
-        "Id": 13,
+        "Id": 31,
         "Name": "Broccoli"
       },
       {
-        "Id": 14,
+        "Id": 32,
         "Name": "Zucchini"
       },
       {
-        "Id": 15,
-        "Name": "Shrimp"
+        "Id": 33,
+        "Name": "Spinach"
       }
     ],
     "Promotion": {
-      "Id": 2,
+      "Id": 6,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
-      "Description": "wednesday discount for clients"
+      "Description": "discount for clients on Wednesdays"
     }
   },
   {
     "DietaryPreference": 2,
     "FoodT": 0,
-    "Id": 3,
+    "Id": 4,
     "Name": "Spaghetti Aglio e Olio",
     "Price": 10.99,
-    "Description": "Pasta with garlic, olive oil, and red pepper flakes",
+    "Description": "Pasta with garlic, olive oil, red pepper flakes",
     "hasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 10,
+        "Id": 34,
         "Name": "Pasta"
       },
       {
-        "Id": 4,
+        "Id": 35,
         "Name": "Garlic"
       },
       {
-        "Id": 12,
-        "Name": "Spinach"
-      },
-      {
-        "Id": 18,
+        "Id": 36,
         "Name": "Red Pepper Flakes"
       }
     ],
@@ -121,45 +117,34 @@
   {
     "DietaryPreference": 4,
     "FoodT": 0,
-    "Id": 4,
+    "Id": 5,
     "Name": "Linguine Shrimp Scampi",
     "Price": 16.99,
-    "Description": "Linguine pasta with shrimp in a garlic butter sauce",
+    "Description": "Linguine with shrimp in garlic butter",
     "hasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 10,
+        "Id": 37,
         "Name": "Pasta"
       },
       {
-        "Id": 15,
+        "Id": 38,
         "Name": "Shrimp"
       },
       {
-        "Id": 4,
+        "Id": 39,
         "Name": "Garlic"
       },
       {
-        "Id": 3,
+        "Id": 40,
         "Name": "Olive Oil"
       }
     ],
     "Promotion": {
-      "Id": 0,
+      "Id": 7,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
     }
-  },
-  {
-    "DietaryPreference": 4,
-    "FoodT": 2,
-    "Id": 5,
-    "Name": "Olives",
-    "Price": 2.99,
-    "Description": "Best Italy olives ever",
-    "hasChangableIngredients": false,
-    "Ingredients": null,
-    "Promotion": null
   }
 ]
