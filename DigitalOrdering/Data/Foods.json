@@ -1,147 +1,147 @@
 [
   {
-    "DietaryPreference": 4,
-    "FoodT": 0,
+    "DietaryPreference": "NoPreference",
+    "FoodT": "Pasta",
     "Id": 1,
     "Name": "Spaghetti Carbonara",
     "Price": 12.99,
     "Description": "Classic pasta with bacon and eggs",
-    "hasChangableIngredients": true,
+    "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 24,
+        "Id": 11,
         "Name": "Pasta"
       },
       {
-        "Id": 25,
+        "Id": 17,
         "Name": "Bacon"
       },
       {
-        "Id": 26,
+        "Id": 18,
         "Name": "Egg"
       }
     ],
     "Promotion": {
-      "Id": 4,
+      "Id": 2,
       "DiscountPercent": 50,
       "Name": "welcome back",
       "Description": "discount for returning clients"
     }
   },
   {
-    "DietaryPreference": 4,
-    "FoodT": 0,
+    "DietaryPreference": "NoPreference",
+    "FoodT": "Pasta",
     "Id": 2,
     "Name": "Penne Alfredo",
     "Price": 14.99,
     "Description": "Creamy Alfredo pasta with Parmesan",
-    "hasChangableIngredients": true,
+    "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 27,
+        "Id": 11,
         "Name": "Pasta"
       },
       {
-        "Id": 28,
+        "Id": 12,
         "Name": "Cream"
       },
       {
-        "Id": 29,
+        "Id": 10,
         "Name": "Parmesan"
       }
     ],
     "Promotion": {
-      "Id": 5,
+      "Id": 1,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
     }
   },
   {
-    "DietaryPreference": 1,
-    "FoodT": 0,
+    "DietaryPreference": "Vegan",
+    "FoodT": "Pasta",
     "Id": 3,
     "Name": "Fettuccine Primavera",
     "Price": 13.99,
     "Description": "Pasta with fresh vegetables and olive oil",
-    "hasChangableIngredients": true,
+    "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 30,
+        "Id": 11,
         "Name": "Pasta"
       },
       {
-        "Id": 31,
+        "Id": 14,
         "Name": "Broccoli"
       },
       {
-        "Id": 32,
+        "Id": 15,
         "Name": "Zucchini"
       },
       {
-        "Id": 33,
+        "Id": 13,
         "Name": "Spinach"
       }
     ],
     "Promotion": {
-      "Id": 6,
+      "Id": 3,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
       "Description": "discount for clients on Wednesdays"
     }
   },
   {
-    "DietaryPreference": 2,
-    "FoodT": 0,
+    "DietaryPreference": "Vegetarian",
+    "FoodT": "Pasta",
     "Id": 4,
     "Name": "Spaghetti Aglio e Olio",
     "Price": 10.99,
     "Description": "Pasta with garlic, olive oil, red pepper flakes",
-    "hasChangableIngredients": true,
+    "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 34,
+        "Id": 11,
         "Name": "Pasta"
       },
       {
-        "Id": 35,
+        "Id": 5,
         "Name": "Garlic"
       },
       {
-        "Id": 36,
+        "Id": 19,
         "Name": "Red Pepper Flakes"
       }
     ],
     "Promotion": null
   },
   {
-    "DietaryPreference": 4,
-    "FoodT": 0,
+    "DietaryPreference": "NoPreference",
+    "FoodT": "Pasta",
     "Id": 5,
     "Name": "Linguine Shrimp Scampi",
     "Price": 16.99,
     "Description": "Linguine with shrimp in garlic butter",
-    "hasChangableIngredients": true,
+    "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 37,
+        "Id": 11,
         "Name": "Pasta"
       },
       {
-        "Id": 38,
+        "Id": 16,
         "Name": "Shrimp"
       },
       {
-        "Id": 39,
+        "Id": 5,
         "Name": "Garlic"
       },
       {
-        "Id": 40,
+        "Id": 4,
         "Name": "Olive Oil"
       }
     ],
     "Promotion": {
-      "Id": 7,
+      "Id": 1,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"

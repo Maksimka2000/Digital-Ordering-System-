@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DigitalOrdering;
 
+[Serializable]
 public class Beverage : MenuItem
 {
     private static List<Beverage> _beverages = new List<Beverage>();
@@ -15,6 +17,7 @@ public class Beverage : MenuItem
         Drinks = 2
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public BeverageType BeverageT { get;  set; }
 
     [JsonConstructor]
@@ -26,16 +29,21 @@ public class Beverage : MenuItem
         BeverageT = beverageT;
     }
 
+    
+    
+    // Get, Add, Delete, Update
     public static void AddBeverage(Beverage beverage)
     {
         if(beverage == null) throw new ArgumentException("Game cannot be null");
         else _beverages.Add(beverage);
     }
-
-
     public static List<Beverage> GetBeverages()
     {
         return new List<Beverage>(_beverages);
+    }
+    public static void DeleteBeverage(Beverage beverage)
+    {
+        _beverages.Remove(beverage);
     }
     
     

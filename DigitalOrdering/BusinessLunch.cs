@@ -2,45 +2,48 @@
 
 namespace DigitalOrdering;
 
+[Serializable]
 public class BusinessLunch : MenuItem
 {
     private static List<BusinessLunch> _businessLunches = new List<BusinessLunch>();
-
-    public Food[] Foods = new Food[3];
-    public Beverage[] Beverages = new Beverage[1];
+    
+    public List<Food> Foods { get; } = new List<Food>();
+    public List<Beverage> Beverages { get; } = new List<Beverage>();
 
     [JsonConstructor]
-    public BusinessLunch(string name, double price, string description, bool hasChangableIngredients, Food[] foods, Beverage[] beverages) : base(name, price, description,
-        hasChangableIngredients, null, null)
+    public BusinessLunch(string name, double price, string description, bool hasChangableIngredients, List<Food> foods, List<Beverage> beverages) : base(name, price, description,
+        hasChangableIngredients)
     {
-        Foods = validateFoodsInput(foods);
-        Beverages = validateBeveragesInput(beverages);
-        
+        ValidateFoodsInput(foods);
+        Foods = foods;
+        ValidateBeveragesInput(beverages);
+        Beverages = beverages;
     }
 
+    // validation 
+    private static void  ValidateFoodsInput(List<Food> foods)
+    {
+        if (!(foods.Count >= 2 && foods.Count <=4)) throw new NotImplementedException();
+    }
+    private static void ValidateBeveragesInput(List<Beverage> beverages)
+    {
+        if (beverages.Count != 1) throw new NotImplementedException();
+        
+    }
+    
+    // Get, Delete, Add, Update
     public static void AddBusinessLunch(BusinessLunch businessLunch)
     {
         if(businessLunch == null)throw new ArgumentException("Game cannot be null");
-        else _businessLunches.Add(businessLunch);
+        _businessLunches.Add(businessLunch);
     }
-    
-
-    private Food[] validateFoodsInput(Food[] foods)
-    {
-        if (foods.Length != 3) throw new NotImplementedException();
-        return foods;
-    }
-
-    private Beverage[] validateBeveragesInput(Beverage[] beverages)
-    {
-        if (beverages.Length != 1) throw new NotImplementedException();
-        return beverages;
-    }
-
-    
     public static List<BusinessLunch> GetBusinessLunches()
     {
         return new List<BusinessLunch>(_businessLunches);
+    }
+    public static void DeleteBusinessLunch(BusinessLunch businessLunch)
+    {
+        _businessLunches.Remove(businessLunch);
     }
     
     

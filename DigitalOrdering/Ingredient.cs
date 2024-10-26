@@ -2,6 +2,7 @@
 
 namespace DigitalOrdering;
 
+[Serializable]
 public class Ingredient
 {
     
@@ -9,36 +10,45 @@ public class Ingredient
     
     private static int IdCounter = 0;
     public int Id { get; private set; }
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
 
     [JsonConstructor]
     public Ingredient(string name)
     {
         Id = ++IdCounter;
+        ValidateStringMandatory(name, "Name in Ingredient");
         Name = name;
     }
-
-    public static void AddIngredient(Ingredient ingredient)
+    
+    // validation
+    private static void ValidateStringMandatory(string name, string text)
     {
-        if(ingredient == null) throw new ArgumentException("Game cannot be null");
-        else _ingredients.Add(ingredient);
+        if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
     }
-
-    private void ValidateDuplication(string name)
+    private static void ValidateNameDuplication(Ingredient ingredient)
     {
-        if (GetIngredientByName(name) != null) throw new Exception($"Ingredient already exists: {name}");
-    }
-
-
-    public static Ingredient? GetIngredientByName(string name)
-    {
-        return _ingredients.FirstOrDefault(n => n.Name == name);
+        if (_ingredients.FirstOrDefault(i => i.Name == ingredient.Name) == null); 
+        else throw new ArgumentException($"ingredient {ingredient.Name} already exists");
     }
     
+    
+    
+    // get, delete, add, update
+    public static void AddIngredient(Ingredient ingredient)
+    {        
+        if(ingredient == null) throw new ArgumentException("Ingredient cannot be null");
+        ValidateNameDuplication(ingredient);
+        _ingredients.Add(ingredient);
+    }
+
     public static List<Ingredient> GetIngredients()
     {
         return new List<Ingredient>(_ingredients);
+    }
+    public static void DeleteIngredient(Ingredient ingredient)
+    {
+        _ingredients.Remove(ingredient);
     }
     
     

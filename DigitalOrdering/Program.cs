@@ -1,13 +1,14 @@
 ﻿using DigitalOrdering;
 using Newtonsoft.Json;
 
-
+// CreateObjects();
 LoadClassExtent();
 OutputAllObjectsCreated();
-SaveClassExtent();
-// CreageObjects();
+// SaveClassExtent();
 
 
+Restaurant restaurant = Restaurant.GetRestaurants().FirstOrDefault(n => n.Name == "Miscusi");
+Console.WriteLine(restaurant.IsRestaurantOpen(DayOfWeek.Friday, new TimeSpan(9, 0, 0)));
 
 
 
@@ -20,6 +21,8 @@ void LoadClassExtent()
     Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
     BusinessLunch.LoadBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
+    Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "Restaurant.json"));
 }
 
 void SaveClassExtent()
@@ -31,6 +34,8 @@ void SaveClassExtent()
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
     BusinessLunch.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
+    Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "Restaurant.json"));
 }
 
 void OutputAllObjectsCreated()
@@ -55,7 +60,7 @@ void OutputAllObjectsCreated()
     foreach (Food food in Food.GetFoods())
     {
         Console.WriteLine(
-            $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, HasChangableIngredients: {food.hasChangableIngredients}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
+            $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, HasChangableIngredients: {food.HasChangableIngredients}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
         Console.WriteLine(food.Promotion == null
             ? "                    No promotion"
             : $"                   Promotion [Name: {food.Promotion.Name}, Description: {food.Promotion.Description}]");
@@ -80,7 +85,7 @@ void OutputAllObjectsCreated()
     foreach (Beverage beverage in Beverage.GetBeverages())
     {
         Console.WriteLine(
-            $"beverage id: {beverage.Id}, Name: {beverage.Name}, Price: {beverage.Price}, Description: {beverage.Description}, HasChangableIngredients: {beverage.hasChangableIngredients}, BeverageType: {beverage.BeverageT}");
+            $"beverage id: {beverage.Id}, Name: {beverage.Name}, Price: {beverage.Price}, Description: {beverage.Description}, HasChangableIngredients: {beverage.HasChangableIngredients}, BeverageType: {beverage.BeverageT}");
         Console.WriteLine(beverage.Promotion == null
             ? "                    No promotion"
             : $"                    Promotion [ name: {beverage.Promotion.Name}, Description: {beverage.Promotion.Description}]");
@@ -105,7 +110,7 @@ void OutputAllObjectsCreated()
     foreach (BusinessLunch businessLunch in BusinessLunch.GetBusinessLunches())
     {
         Console.WriteLine(
-            $"Business Lunch id: {businessLunch.Id}, Name: {businessLunch.Name}, Price: {businessLunch.Price}, Description: {businessLunch.Description}, HasChangableIngredients: {businessLunch.hasChangableIngredients},");
+            $"Business Lunch id: {businessLunch.Id}, Name: {businessLunch.Name}, Price: {businessLunch.Price}, Description: {businessLunch.Description}, HasChangableIngredients: {businessLunch.HasChangableIngredients},");
         Console.WriteLine(businessLunch.Promotion == null
             ? "                    No promotion"
             : $"                    Promotion name: {businessLunch.Promotion.Name}, Description: {businessLunch.Promotion.Description}");
@@ -113,7 +118,7 @@ void OutputAllObjectsCreated()
             ? "                    No ingredients"
             : "                    There are ingredients:");
 
-        Console.WriteLine($"                    There are {businessLunch.Foods.Length} foods: ");
+        Console.WriteLine($"                    There are {businessLunch.Foods.Count} foods: ");
         foreach (var food in businessLunch.Foods)
         {
             Console.Write("                           [");
@@ -136,7 +141,7 @@ void OutputAllObjectsCreated()
         }
 
 
-        Console.WriteLine($"                    There are {businessLunch.Beverages.Length} beverages: ");
+        Console.WriteLine($"                    There are {businessLunch.Beverages.Count} beverages: ");
         foreach (var beverage in businessLunch.Beverages)
         {
             Console.Write("                           [");
@@ -158,9 +163,22 @@ void OutputAllObjectsCreated()
             Console.WriteLine("]");
         }
     }
+
+    // ========================================== Load Restaurant
+    Console.WriteLine("=========================================== Restaurant ===========================");
+    foreach (var restaurant in Restaurant.GetRestaurants())
+    {
+        Console.Write(
+            $"Restaurant name is: {restaurant.Name}, location is: {restaurant.Location.Street} {restaurant.Location.City},  ");
+        Console.WriteLine("Open hours are: ");
+        foreach (var openHour in restaurant.WorkHours)
+        {
+            Console.WriteLine($" {openHour.Day}: {openHour.OpenTime} to {openHour.CloseTime}");
+        }
+    }
 }
 
-void CreageObjects()
+void CreateObjects()
 {
     /// ================================DO not delete just in case)
 //
@@ -302,9 +320,27 @@ void CreageObjects()
 // ======================================================== Create Business Lunch
     var businessLunch = new BusinessLunch("Business Special", 19.99,
         "A combination of three foods and a drink",
-        true, new Food[] { food1, food2, food3 }, new Beverage[] { beverage2 });
+        true, new List<Food> { food1, food2, food3 }, new List<Beverage> { beverage2 });
     BusinessLunch.AddBusinessLunch(businessLunch);
 
     BusinessLunch.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
+
+
+    // ========================================================= Create Restaurant
+
+    Address address = new Address("Zlota 43", "Warszawa");
+    List<OpenHours> workHours = new List<OpenHours>
+    {
+        new OpenHours(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHours(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHours(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHours(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHours(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHours(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(15, 0, 0)),
+        new OpenHours(DayOfWeek.Sunday, new TimeSpan(10, 0, 0), new TimeSpan(15, 0, 0))
+    };
+    Restaurant restaurant = new Restaurant("Miscusi", address, workHours);
+    Restaurant.AddRestaurant(restaurant);
+    Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Restaurant.json"));
 }

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DigitalOrdering;
 
+[Serializable]
 public class Food : MenuItem
 {
     public enum DietaryPreferencesType
@@ -23,7 +25,9 @@ public class Food : MenuItem
 
     private static List<Food> _foods = new List<Food>();
     
-    public DietaryPreferencesType DietaryPreference { get; set; }
+    [JsonConverter(typeof(StringEnumConverter))]
+    public DietaryPreferencesType? DietaryPreference { get; set; }
+    [JsonConverter(typeof(StringEnumConverter))]
     public FoodType FoodT { get; set; }
 
     [JsonConstructor]
@@ -35,18 +39,21 @@ public class Food : MenuItem
         FoodT = foodT;
     }
 
+    
+    // Get, Add, Delete, Update
     public static void AddFood(Food food)
     {
         if(food == null)throw new ArgumentException("Game cannot be null");
         else _foods.Add(food);
     }
-    
-   
-    
-
     public static List<Food> GetFoods()
     {
         return new List<Food>(_foods);
+    }
+
+    public static void DeleteFood(Food food)
+    {
+        _foods.Remove(food);
     }
 
     

@@ -2,91 +2,91 @@
   {
     "Foods": [
       {
-        "DietaryPreference": 4,
-        "FoodT": 0,
-        "Id": 11,
+        "DietaryPreference": "NoPreference",
+        "FoodT": "Pasta",
+        "Id": 1,
         "Name": "Spaghetti Carbonara",
         "Price": 12.99,
         "Description": "Classic pasta with bacon and eggs",
-        "hasChangableIngredients": true,
+        "HasChangableIngredients": true,
         "Ingredients": [
           {
-            "Id": 44,
+            "Id": 11,
             "Name": "Pasta"
           },
           {
-            "Id": 45,
+            "Id": 17,
             "Name": "Bacon"
           },
           {
-            "Id": 46,
+            "Id": 18,
             "Name": "Egg"
           }
         ],
         "Promotion": {
-          "Id": 11,
+          "Id": 2,
           "DiscountPercent": 50,
           "Name": "welcome back",
           "Description": "discount for returning clients"
         }
       },
       {
-        "DietaryPreference": 4,
-        "FoodT": 0,
-        "Id": 12,
+        "DietaryPreference": "NoPreference",
+        "FoodT": "Pasta",
+        "Id": 2,
         "Name": "Penne Alfredo",
         "Price": 14.99,
         "Description": "Creamy Alfredo pasta with Parmesan",
-        "hasChangableIngredients": true,
+        "HasChangableIngredients": true,
         "Ingredients": [
           {
-            "Id": 47,
+            "Id": 11,
             "Name": "Pasta"
           },
           {
-            "Id": 48,
+            "Id": 12,
             "Name": "Cream"
           },
           {
-            "Id": 49,
+            "Id": 10,
             "Name": "Parmesan"
           }
         ],
         "Promotion": {
-          "Id": 12,
+          "Id": 1,
           "DiscountPercent": 30,
           "Name": "new year",
           "Description": "discount for the new year"
         }
       },
       {
-        "DietaryPreference": 1,
-        "FoodT": 0,
-        "Id": 13,
+        "DietaryPreference": "Vegan",
+        "FoodT": "Pasta",
+        "Id": 3,
         "Name": "Fettuccine Primavera",
         "Price": 13.99,
         "Description": "Pasta with fresh vegetables and olive oil",
-        "hasChangableIngredients": true,
+        "HasChangableIngredients": true,
         "Ingredients": [
           {
-            "Id": 50,
+            "Id": 11,
             "Name": "Pasta"
           },
           {
-            "Id": 51,
+            "Id": 14,
             "Name": "Broccoli"
           },
           {
-            "Id": 52,
+            "Id": 15,
             "Name": "Zucchini"
           },
           {
-            "Id": 53,
+            "Id": 13,
             "Name": "Spinach"
           }
         ],
         "Promotion": {
-          "Id": 13,
+          "Id": 3,
           "DiscountPercent": 10,
           "Name": "Wednesday discount",
           "Description": "discount for clients on Wednesdays"
@@ -96,26 +96,26 @@
     "Beverages": [
       {
         "IsAlcohol": true,
-        "BeverageT": 1,
-        "Id": 14,
+        "BeverageT": "Cocktails",
+        "Id": 7,
         "Name": "Mojito",
         "Price": 7.99,
         "Description": "Refreshing cocktail with mint and lime",
-        "hasChangableIngredients": false,
+        "HasChangableIngredients": false,
         "Ingredients": null,
         "Promotion": {
-          "Id": 14,
+          "Id": 1,
           "DiscountPercent": 30,
           "Name": "new year",
           "Description": "discount for the new year"
         }
       }
     ],
-    "Id": 15,
+    "Id": 11,
     "Name": "Business Special",
     "Price": 19.99,
     "Description": "A combination of three foods and a drink",
-    "hasChangableIngredients": true,
+    "HasChangableIngredients": true,
     "Ingredients": null,
     "Promotion": null
   }

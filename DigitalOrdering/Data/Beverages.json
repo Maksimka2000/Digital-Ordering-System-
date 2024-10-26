@@ -1,26 +1,26 @@
 [
   {
     "IsAlcohol": false,
-    "BeverageT": 0,
+    "BeverageT": "Cafeteria",
     "Id": 6,
     "Name": "Cappuccino",
     "Price": 3.99,
     "Description": "Classic Italian coffee",
-    "hasChangableIngredients": false,
+    "HasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": null
   },
   {
     "IsAlcohol": true,
-    "BeverageT": 1,
+    "BeverageT": "Cocktails",
     "Id": 7,
     "Name": "Mojito",
     "Price": 7.99,
     "Description": "Refreshing cocktail with mint and lime",
-    "hasChangableIngredients": false,
+    "HasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": {
-      "Id": 8,
+      "Id": 1,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
@@ -28,15 +28,15 @@
   },
   {
     "IsAlcohol": false,
-    "BeverageT": 0,
+    "BeverageT": "Cafeteria",
     "Id": 8,
     "Name": "Iced Tea",
     "Price": 2.99,
     "Description": "Cold brewed tea with lemon",
-    "hasChangableIngredients": false,
+    "HasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": {
-      "Id": 9,
+      "Id": 2,
       "DiscountPercent": 50,
       "Name": "welcome back",
       "Description": "discount for returning clients"
@@ -44,28 +44,28 @@
   },
   {
     "IsAlcohol": true,
-    "BeverageT": 1,
+    "BeverageT": "Cocktails",
     "Id": 9,
     "Name": "Negroni",
     "Price": 8.99,
     "Description": "Classic Italian cocktail",
-    "hasChangableIngredients": false,
+    "HasChangableIngredients": false,
     "Ingredients": [
       {
-        "Id": 41,
+        "Id": 21,
         "Name": "Gin"
       },
       {
-        "Id": 42,
+        "Id": 22,
         "Name": "Vermouth"
       },
       {
-        "Id": 43,
+        "Id": 23,
         "Name": "Campari"
       }
     ],
     "Promotion": {
-      "Id": 10,
+      "Id": 3,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
       "Description": "discount for clients on Wednesdays"
@@ -73,12 +73,12 @@
   },
   {
     "IsAlcohol": false,
-    "BeverageT": 2,
+    "BeverageT": "Drinks",
     "Id": 10,
     "Name": "Lemonade",
     "Price": 2.99,
     "Description": "Refreshing lemon juice and sugar",
-    "hasChangableIngredients": false,
+    "HasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": null
   }
