@@ -1,6 +1,6 @@
 [
   {
-    "DietaryPreference": "NoPreference",
+    "DietaryPreference": "Vegan",
     "FoodT": "Pasta",
     "Id": 1,
     "Name": "Spaghetti Carbonara",
@@ -9,27 +9,27 @@
     "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 11,
+        "Id": 24,
         "Name": "Pasta"
       },
       {
-        "Id": 17,
+        "Id": 25,
         "Name": "Bacon"
       },
       {
-        "Id": 18,
+        "Id": 26,
         "Name": "Egg"
       }
     ],
     "Promotion": {
-      "Id": 2,
+      "Id": 4,
       "DiscountPercent": 50,
       "Name": "welcome back",
       "Description": "discount for returning clients"
     }
   },
   {
-    "DietaryPreference": "NoPreference",
+    "DietaryPreference": "Vegan",
     "FoodT": "Pasta",
     "Id": 2,
     "Name": "Penne Alfredo",
@@ -38,27 +38,27 @@
     "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 11,
+        "Id": 27,
         "Name": "Pasta"
       },
       {
-        "Id": 12,
+        "Id": 28,
         "Name": "Cream"
       },
       {
-        "Id": 10,
+        "Id": 29,
         "Name": "Parmesan"
       }
     ],
     "Promotion": {
-      "Id": 1,
+      "Id": 5,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
     }
   },
   {
-    "DietaryPreference": "Vegan",
+    "DietaryPreference": "GlutenFree",
     "FoodT": "Pasta",
     "Id": 3,
     "Name": "Fettuccine Primavera",
@@ -67,31 +67,31 @@
     "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 11,
+        "Id": 30,
         "Name": "Pasta"
       },
       {
-        "Id": 14,
+        "Id": 31,
         "Name": "Broccoli"
       },
       {
-        "Id": 15,
+        "Id": 32,
         "Name": "Zucchini"
       },
       {
-        "Id": 13,
+        "Id": 33,
         "Name": "Spinach"
       }
     ],
     "Promotion": {
-      "Id": 3,
+      "Id": 6,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
       "Description": "discount for clients on Wednesdays"
     }
   },
   {
-    "DietaryPreference": "Vegetarian",
+    "DietaryPreference": "LactoseFree",
     "FoodT": "Pasta",
     "Id": 4,
     "Name": "Spaghetti Aglio e Olio",
@@ -100,22 +100,22 @@
     "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 11,
+        "Id": 34,
         "Name": "Pasta"
       },
       {
-        "Id": 5,
+        "Id": 35,
         "Name": "Garlic"
       },
       {
-        "Id": 19,
+        "Id": 36,
         "Name": "Red Pepper Flakes"
       }
     ],
     "Promotion": null
   },
   {
-    "DietaryPreference": "NoPreference",
+    "DietaryPreference": null,
     "FoodT": "Pasta",
     "Id": 5,
     "Name": "Linguine Shrimp Scampi",
@@ -124,24 +124,24 @@
     "HasChangableIngredients": true,
     "Ingredients": [
       {
-        "Id": 11,
+        "Id": 37,
         "Name": "Pasta"
       },
       {
-        "Id": 16,
+        "Id": 38,
         "Name": "Shrimp"
       },
       {
-        "Id": 5,
+        "Id": 39,
         "Name": "Garlic"
       },
       {
-        "Id": 4,
+        "Id": 40,
         "Name": "Olive Oil"
       }
     ],
     "Promotion": {
-      "Id": 1,
+      "Id": 7,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"

@@ -8,7 +8,9 @@ public class Restaurant
 {
     
     private static List<Restaurant> _restaurants = new List<Restaurant>();
-    
+    private static int IdCounter = 0;
+
+    public int Id { get; }
     public string Name { get; set; }
     public Address Location { get; set; }
     public List<OpenHours> WorkHours { get; set; }
@@ -18,6 +20,7 @@ public class Restaurant
     public Restaurant(string name, Address location, List<OpenHours> openHours)
     {
         ValidateStringMandatory(name, "Restaurant name");
+        Id = ++IdCounter;
         Name = name;
         Location = location;
         WorkHours = openHours;

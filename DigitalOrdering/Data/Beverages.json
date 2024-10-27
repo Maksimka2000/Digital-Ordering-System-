@@ -20,7 +20,7 @@
     "HasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": {
-      "Id": 1,
+      "Id": 8,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
@@ -36,7 +36,7 @@
     "HasChangableIngredients": false,
     "Ingredients": null,
     "Promotion": {
-      "Id": 2,
+      "Id": 9,
       "DiscountPercent": 50,
       "Name": "welcome back",
       "Description": "discount for returning clients"
@@ -52,20 +52,20 @@
     "HasChangableIngredients": false,
     "Ingredients": [
       {
-        "Id": 21,
+        "Id": 41,
         "Name": "Gin"
       },
       {
-        "Id": 22,
+        "Id": 42,
         "Name": "Vermouth"
       },
       {
-        "Id": 23,
+        "Id": 43,
         "Name": "Campari"
       }
     ],
     "Promotion": {
-      "Id": 3,
+      "Id": 10,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
       "Description": "discount for clients on Wednesdays"
