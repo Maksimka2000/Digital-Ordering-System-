@@ -23,11 +23,11 @@ public class BusinessLunch : MenuItem
     // validation 
     private static void  ValidateFoodsInput(List<Food> foods)
     {
-        if (!(foods.Count >= 2 && foods.Count <=4)) throw new NotImplementedException();
+        if (!(foods.Count >= 2 && foods.Count <=4)) throw new ArgumentException("The number of foods must be between 2 and 4");
     }
     private static void ValidateBeveragesInput(List<Beverage> beverages)
     {
-        if (beverages.Count != 1) throw new NotImplementedException();
+        if (beverages.Count != 1) throw new ArgumentException("Bevarage should be min and max: 1");
         
     }
     

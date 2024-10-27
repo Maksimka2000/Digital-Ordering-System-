@@ -12,7 +12,6 @@ public class Food : MenuItem
         Vegan = 1,
         Vegetarian = 2,
         LactoseFree = 3,
-        NoPreference = 4
     }
 
     public enum FoodType
@@ -32,7 +31,8 @@ public class Food : MenuItem
 
     [JsonConstructor]
     public Food(string name, double price, string description, bool hasChangableIngredients,
-        List<Ingredient>? ingredients, Promotion? promotion, DietaryPreferencesType dietaryPreference, FoodType foodT)
+        List<Ingredient>? ingredients, Promotion? promotion, FoodType foodT,
+        DietaryPreferencesType? dietaryPreference = null)
         : base(name, price, description, hasChangableIngredients, ingredients, promotion)
     {
         DietaryPreference = dietaryPreference;

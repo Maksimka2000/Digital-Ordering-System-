@@ -4,11 +4,7 @@ using Newtonsoft.Json;
 // CreateObjects();
 LoadClassExtent();
 OutputAllObjectsCreated();
-// SaveClassExtent();
-
-
-Restaurant restaurant = Restaurant.GetRestaurants().FirstOrDefault(n => n.Name == "Miscusi");
-Console.WriteLine(restaurant.IsRestaurantOpen(DayOfWeek.Friday, new TimeSpan(9, 0, 0)));
+SaveClassExtent();
 
 
 
@@ -267,28 +263,23 @@ void CreateObjects()
 
     // ======================================================== Create FOod
     var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", true,
-        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, promo2,
-        Food.DietaryPreferencesType.NoPreference, Food.FoodType.Pasta);
+        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, promo2, Food.FoodType.Pasta, Food.DietaryPreferencesType.Vegan);
     Food.AddFood(food1);
 
     var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", true,
-        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, promo1,
-        Food.DietaryPreferencesType.NoPreference, Food.FoodType.Pasta);
+        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, promo1, Food.FoodType.Pasta, Food.DietaryPreferencesType.Vegan);
     Food.AddFood(food2);
 
     var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil", true,
-        new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, promo3,
-        Food.DietaryPreferencesType.Vegan, Food.FoodType.Pasta);
+        new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, promo3, Food.FoodType.Pasta, Food.DietaryPreferencesType.GlutenFree);
     Food.AddFood(food3);
 
     var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes", true,
-        new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, null,
-        Food.DietaryPreferencesType.Vegetarian, Food.FoodType.Pasta);
+        new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, null, Food.FoodType.Pasta, Food.DietaryPreferencesType.LactoseFree);
     Food.AddFood(food4);
 
     var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter", true,
-        new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient }, promo1,
-        Food.DietaryPreferencesType.NoPreference, Food.FoodType.Pasta);
+        new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient }, promo1, Food.FoodType.Pasta);
     Food.AddFood(food5);
 
     Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));

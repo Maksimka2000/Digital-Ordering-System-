@@ -6,14 +6,14 @@ namespace DigitalOrdering;
 public class Promotion
 {
     private static List<Promotion> _promotions = new List<Promotion>();
-
     private static int IdCounter = 0;
-    public int Id { get; private set; }
+    
+    public int Id { get; }
     public int DiscountPercent { get; private set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public const int MaxDiscountPercent = 95;
-    public const int MinDiscountPercent = 5;
+    private const int MaxDiscountPercent = 95;
+    private const int MinDiscountPercent = 5;
 
     
     [JsonConstructor]
