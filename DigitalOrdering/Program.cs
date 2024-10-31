@@ -4,8 +4,7 @@ using Newtonsoft.Json;
 // CreateObjects();
 LoadClassExtent();
 OutputAllObjectsCreated();
-SaveClassExtent();
-
+// SaveClassExtent();
 
 
 void LoadClassExtent()
@@ -56,7 +55,7 @@ void OutputAllObjectsCreated()
     foreach (Food food in Food.GetFoods())
     {
         Console.WriteLine(
-            $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, HasChangableIngredients: {food.HasChangableIngredients}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
+            $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
         Console.WriteLine(food.Promotion == null
             ? "                    No promotion"
             : $"                   Promotion [Name: {food.Promotion.Name}, Description: {food.Promotion.Description}]");
@@ -81,7 +80,7 @@ void OutputAllObjectsCreated()
     foreach (Beverage beverage in Beverage.GetBeverages())
     {
         Console.WriteLine(
-            $"beverage id: {beverage.Id}, Name: {beverage.Name}, Price: {beverage.Price}, Description: {beverage.Description}, HasChangableIngredients: {beverage.HasChangableIngredients}, BeverageType: {beverage.BeverageT}");
+            $"beverage id: {beverage.Id}, Name: {beverage.Name}, Price: {beverage.Price}, Description: {beverage.Description}, BeverageType: {beverage.BeverageT}");
         Console.WriteLine(beverage.Promotion == null
             ? "                    No promotion"
             : $"                    Promotion [ name: {beverage.Promotion.Name}, Description: {beverage.Promotion.Description}]");
@@ -106,7 +105,7 @@ void OutputAllObjectsCreated()
     foreach (BusinessLunch businessLunch in BusinessLunch.GetBusinessLunches())
     {
         Console.WriteLine(
-            $"Business Lunch id: {businessLunch.Id}, Name: {businessLunch.Name}, Price: {businessLunch.Price}, Description: {businessLunch.Description}, HasChangableIngredients: {businessLunch.HasChangableIngredients},");
+            $"Business Lunch id: {businessLunch.Id}, Name: {businessLunch.Name}, Price: {businessLunch.Price}, Description: {businessLunch.Description}");
         Console.WriteLine(businessLunch.Promotion == null
             ? "                    No promotion"
             : $"                    Promotion name: {businessLunch.Promotion.Name}, Description: {businessLunch.Promotion.Description}");
@@ -167,10 +166,19 @@ void OutputAllObjectsCreated()
         Console.Write(
             $"Restaurant name is: {restaurant.Name}, location is: {restaurant.Location.Street} {restaurant.Location.City},  ");
         Console.WriteLine("Open hours are: ");
-        foreach (var openHour in restaurant.WorkHours)
+        foreach (var openHour in restaurant.OpenHours)
         {
-            Console.WriteLine($" {openHour.Day}: {openHour.OpenTime} to {openHour.CloseTime}");
+            Console.WriteLine($" {openHour.Day}: {(openHour.IsOpen ? ($"{openHour.OpenTime} to {openHour.CloseTime}") : "closed")}");
         }
+
+        Console.WriteLine(
+            $"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
+        restaurant.UpdateOpenHours(DayOfWeek.Monday, new TimeSpan(7, 0, 0), new TimeSpan(18, 0, 0));
+        Console.WriteLine(
+            $"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
+        restaurant.UpdateOpenHours(DayOfWeek.Monday, null, null);
+        Console.WriteLine(
+            $"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
     }
 }
 
@@ -262,47 +270,52 @@ void CreateObjects()
         "Ingredients.json"));
 
     // ======================================================== Create FOod
-    var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", true,
-        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, promo2, Food.FoodType.Pasta, Food.DietaryPreferencesType.Vegan);
+    var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs",
+        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, promo2, Food.FoodType.Pasta,
+        Food.DietaryPreferencesType.Vegan);
     Food.AddFood(food1);
 
-    var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", true,
-        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, promo1, Food.FoodType.Pasta, Food.DietaryPreferencesType.Vegan);
+    var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan",
+        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, promo1, Food.FoodType.Pasta,
+        Food.DietaryPreferencesType.Vegan);
     Food.AddFood(food2);
 
-    var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil", true,
-        new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, promo3, Food.FoodType.Pasta, Food.DietaryPreferencesType.GlutenFree);
+    var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil",
+        new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, promo3,
+        Food.FoodType.Pasta, Food.DietaryPreferencesType.GlutenFree);
     Food.AddFood(food3);
 
-    var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes", true,
-        new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, null, Food.FoodType.Pasta, Food.DietaryPreferencesType.LactoseFree);
+    var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes",
+        new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, null,
+        Food.FoodType.Pasta, Food.DietaryPreferencesType.LactoseFree);
     Food.AddFood(food4);
 
-    var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter", true,
-        new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient }, promo1, Food.FoodType.Pasta);
+    var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter",
+        new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient }, promo1,
+        Food.FoodType.Pasta);
     Food.AddFood(food5);
 
     Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
 
 // ======================================================== Create Beverages
-    var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee", false, null, null, false,
+    var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee", null, null, false,
         Beverage.BeverageType.Cafeteria);
     Beverage.AddBeverage(beverage1);
 
-    var beverage2 = new Beverage("Mojito", 7.99, "Refreshing cocktail with mint and lime", false, null, promo1, true,
+    var beverage2 = new Beverage("Mojito", 7.99, "Refreshing cocktail with mint and lime", null, promo1, true,
         Beverage.BeverageType.Cocktails);
     Beverage.AddBeverage(beverage2);
 
-    var beverage3 = new Beverage("Iced Tea", 2.99, "Cold brewed tea with lemon", false, null, promo2, false,
+    var beverage3 = new Beverage("Iced Tea", 2.99, "Cold brewed tea with lemon", null, promo2, false,
         Beverage.BeverageType.Cafeteria);
     Beverage.AddBeverage(beverage3);
 
-    var beverage4 = new Beverage("Negroni", 8.99, "Classic Italian cocktail", false,
+    var beverage4 = new Beverage("Negroni", 8.99, "Classic Italian cocktail",
         new List<Ingredient> { ginIngredient, vermouthIngredient, campariIngredient }, promo3, true,
         Beverage.BeverageType.Cocktails);
     Beverage.AddBeverage(beverage4);
 
-    var beverage5 = new Beverage("Lemonade", 2.99, "Refreshing lemon juice and sugar", false, null, null, false,
+    var beverage5 = new Beverage("Lemonade", 2.99, "Refreshing lemon juice and sugar", null, null, false,
         Beverage.BeverageType.Drinks);
     Beverage.AddBeverage(beverage5);
 
@@ -310,8 +323,8 @@ void CreateObjects()
 
 // ======================================================== Create Business Lunch
     var businessLunch = new BusinessLunch("Business Special", 19.99,
-        "A combination of three foods and a drink",
-        true, new List<Food> { food1, food2, food3 }, new List<Beverage> { beverage2 });
+        "A combination of three foods and a drink", new List<Food> { food1, food2, food3 },
+        new List<Beverage> { beverage2 });
     BusinessLunch.AddBusinessLunch(businessLunch);
 
     BusinessLunch.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
@@ -321,15 +334,15 @@ void CreateObjects()
     // ========================================================= Create Restaurant
 
     Address address = new Address("Zlota 43", "Warszawa");
-    List<OpenHours> workHours = new List<OpenHours>
+    List<OpenHour> workHours = new List<OpenHour>
     {
-        new OpenHours(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
-        new OpenHours(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
-        new OpenHours(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
-        new OpenHours(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
-        new OpenHours(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
-        new OpenHours(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(15, 0, 0)),
-        new OpenHours(DayOfWeek.Sunday, new TimeSpan(10, 0, 0), new TimeSpan(15, 0, 0))
+        new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHour(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHour(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHour(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHour(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+        new OpenHour(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(15, 0, 0)),
+        new OpenHour(DayOfWeek.Sunday)
     };
     Restaurant restaurant = new Restaurant("Miscusi", address, workHours);
     Restaurant.AddRestaurant(restaurant);

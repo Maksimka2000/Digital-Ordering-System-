@@ -7,69 +7,102 @@ namespace DigitalOrdering;
 public class Restaurant
 {
     
+    // class extent
     private static List<Restaurant> _restaurants = new List<Restaurant>();
+    
+    // static fields
     private static int IdCounter = 0;
 
+    // fields
     public int Id { get; }
-    public string Name { get; set; }
-    public Address Location { get; set; }
-    public List<OpenHours> WorkHours { get; set; }
+    private string _name;
+    public Address Location { get; } // as assigned not changed never immutable 
+    private List<OpenHour> _openHours;
 
-    
-    [JsonConstructor]
-    public Restaurant(string name, Address location, List<OpenHours> openHours)
+    // setters validation
+    public string Name
     {
-        ValidateStringMandatory(name, "Restaurant name");
+        get => _name;
+        private set
+        {
+            ValidateStringMandatory(value, "Restaurant Name");
+            _name = value;
+        }
+    }
+    public List<OpenHour> OpenHours
+    {
+        get => _openHours;
+        private set
+        {
+            ValidateWorkHours(value);
+            _openHours = value;
+        }
+    }
+    
+    
+    //constructor
+    [JsonConstructor]
+    public Restaurant(string name, Address location, List<OpenHour> openHours)
+    {
         Id = ++IdCounter;
         Name = name;
         Location = location;
-        WorkHours = openHours;
-    }
-
-    public bool IsRestaurantOpen(DayOfWeek dayOfWeek, TimeSpan currentTime)
-    {
-        OpenHours openHours = WorkHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
-        return openHours != null && openHours.OpenTime <= currentTime && openHours.CloseTime >= currentTime;
+        OpenHours = openHours;
     }
     
-
     // validation
     private static void ValidateStringMandatory(string value, string text)
     {
         if (string.IsNullOrEmpty(value)) throw new ArgumentException($"{text} cannot be null or empty");
     }
-    
-   
-
-    
-
+    private static void ValidateWorkHours(List<OpenHour> workHours)
+    {
+        if(workHours == null) throw new ArgumentException("work hours is null");
+        if (workHours == null || workHours.Count != 7) throw new ArgumentException("Work hours cannot be null or less than 7.");
+        if (workHours.Select(wh => wh.Day).Distinct().Count() != 7) throw new ArgumentException("not all days specified.");
+    }
     
     // get, delete, add, update.
     public static List<Restaurant> GetRestaurants()
     {
         return new List<Restaurant>(_restaurants);
     }
-
     public static void AddRestaurant(Restaurant restaurant)
     {
         _restaurants.Add(restaurant);
     }
+    public void UpdateName(string newName)
+    {
+        Name = newName;  // Calls setter validation
+    }
+    
+    // methods
+    public bool IsRestaurantOpen(DayOfWeek dayOfWeek, TimeSpan currentTime)
+    {
+        OpenHour openHoursDay = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
+        return openHoursDay.IsOpen && openHoursDay.OpenTime <= currentTime && openHoursDay.CloseTime >= currentTime;
+    }
+
+    public void UpdateOpenHours(DayOfWeek dayOfWeek, TimeSpan? openTime, TimeSpan? closeTime)
+    {
+        var day = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
+        day.UpdateTime(openTime, closeTime);
+        Console.WriteLine($"time successfull updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}" )}");
+    }
     
     
-    
-    // ================================================================ serialized and deserialized 
+    //  serialized and deserialized 
     public static void SaveRestaurantJSON(string path)
     {
         try
         {
             string json = JsonConvert.SerializeObject(_restaurants, Formatting.Indented);
-
             File.WriteAllText(path, json);
-            Console.WriteLine($"File saved successfully at {path}");
+            Console.WriteLine($"File Restaurant saved successfully at {path}");
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error saving file: {e.Message}");
+            throw new ArgumentException($"Error saving Restaurant file: {e.Message}");
         }
     }
 
@@ -81,19 +114,14 @@ public class Restaurant
             {
                 string json = File.ReadAllText(path);
                 _restaurants = JsonConvert.DeserializeObject<List<Restaurant>>(json);
-                // foreach (var restaurant in restaurants)
-                // {
-                //     new Restaurant(restaurant.Name, restaurant.Location, restaurant.OpeningHours);
-                // }
+                // foreach (var restaurant in restaurants) {new Restaurant(restaurant.Name, restaurant.Location, restaurant.OpeningHours);}
+                Console.WriteLine($"File Restaurant loaded successfully at {path}");
             }
-            else
-            {
-                throw new Exception($"Load Promotion JSON problem");
-            }
+            else throw new ArgumentException($"Error loading Restaurant file: path: {path} doesn't exist ");
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error loading file: {e.Message}");
+            throw new ArgumentException($"Error loading Restaurant file: {e.Message}");
         }
         
     }
@@ -105,25 +133,33 @@ public class Restaurant
 
 // are custom objects, Complex attributes
 [Serializable]
-public class OpenHours
+public class OpenHour
 {
     
     [JsonConverter(typeof(StringEnumConverter))]
     public DayOfWeek Day { get; private set; }
-    public TimeSpan OpenTime { get;}
-    public TimeSpan CloseTime { get;}
-
+    public TimeSpan? OpenTime { get; private set; }
+    public TimeSpan? CloseTime { get; private set; }
+    public bool IsOpen {get; private set;}
+    
     [JsonConstructor]
-    public OpenHours(DayOfWeek day, TimeSpan openTime, TimeSpan closeTime)
+    public OpenHour(DayOfWeek day, TimeSpan? openTime = null, TimeSpan? closeTime = null)
     {
-        ValidateTime(openTime, closeTime);
         Day = day;
-        OpenTime = openTime;
-        CloseTime = closeTime;
+        UpdateTime(openTime, closeTime);
     }
     
-
-    private static void ValidateTime(TimeSpan openTime, TimeSpan closeTime)
+    public void UpdateTime(TimeSpan? newOpenTime, TimeSpan? newCloseTime)
+    {
+        if (newOpenTime.HasValue && newCloseTime.HasValue)
+            ValidateTime(newOpenTime, newCloseTime);
+        
+        OpenTime = newOpenTime;
+        CloseTime = newCloseTime;
+        IsOpen = !(OpenTime == null && CloseTime == null);
+    }
+    
+    private static void ValidateTime(TimeSpan? openTime, TimeSpan? closeTime)
     {
         if(openTime >= closeTime) throw new ArgumentException("Closing time must be later than opening time");
     }
@@ -132,8 +168,8 @@ public class OpenHours
 [Serializable]
 public class Address
 {
-    public string Street { get; }
-    public string City { get; }
+    public string Street { get; } // unmodified after creation (no setter)
+    public string City { get; } // unmodified after creation
 
     [JsonConstructor]
     public Address(string street, string city)

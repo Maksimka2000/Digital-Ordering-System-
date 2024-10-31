@@ -1,45 +1,53 @@
 [
   {
-    "Name": "Miscusi",
+    "Id": 1,
     "Location": {
       "Street": "Zlota 43",
       "City": "Warszawa"
     },
-    "WorkHours": [
+    "Name": "Miscusi",
+    "OpenHours": [
       {
         "Day": "Monday",
         "OpenTime": "09:00:00",
-        "CloseTime": "17:00:00"
+        "CloseTime": "17:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Tuesday",
         "OpenTime": "09:00:00",
-        "CloseTime": "17:00:00"
+        "CloseTime": "17:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Wednesday",
         "OpenTime": "09:00:00",
-        "CloseTime": "17:00:00"
+        "CloseTime": "17:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Thursday",
         "OpenTime": "09:00:00",
-        "CloseTime": "17:00:00"
+        "CloseTime": "17:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Friday",
         "OpenTime": "09:00:00",
-        "CloseTime": "17:00:00"
+        "CloseTime": "17:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Saturday",
         "OpenTime": "10:00:00",
-        "CloseTime": "15:00:00"
+        "CloseTime": "15:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Sunday",
-        "OpenTime": "10:00:00",
-        "CloseTime": "15:00:00"
+        "OpenTime": null,
+        "CloseTime": null,
+        "IsOpen": false
       }
     ]
   }

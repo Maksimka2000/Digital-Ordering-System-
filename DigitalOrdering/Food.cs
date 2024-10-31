@@ -6,6 +6,9 @@ namespace DigitalOrdering;
 [Serializable]
 public class Food : MenuItem
 {
+    
+    // enums
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DietaryPreferencesType
     {
         GlutenFree = 0,
@@ -13,7 +16,7 @@ public class Food : MenuItem
         Vegetarian = 2,
         LactoseFree = 3,
     }
-
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum FoodType
     {
         Pasta = 0,
@@ -21,93 +24,71 @@ public class Food : MenuItem
         Snack = 2
     }
 
-
+    // class extent
     private static List<Food> _foods = new List<Food>();
     
+    // fields
     [JsonConverter(typeof(StringEnumConverter))]
-    public DietaryPreferencesType? DietaryPreference { get; set; }
+    public DietaryPreferencesType? DietaryPreference { get; private set; }
     [JsonConverter(typeof(StringEnumConverter))]
-    public FoodType FoodT { get; set; }
+    public FoodType FoodT { get; private set; }
 
+    // constructor
     [JsonConstructor]
-    public Food(string name, double price, string description, bool hasChangableIngredients,
+    public Food(string name, double price, string description,
         List<Ingredient>? ingredients, Promotion? promotion, FoodType foodT,
         DietaryPreferencesType? dietaryPreference = null)
-        : base(name, price, description, hasChangableIngredients, ingredients, promotion)
+        : base(name, price, description, ingredients, promotion)
     {
         DietaryPreference = dietaryPreference;
         FoodT = foodT;
     }
-
     
-    // Get, Add, Delete, Update
+    // Get, Add, Delete, Update CRUD
     public static void AddFood(Food food)
     {
-        if(food == null)throw new ArgumentException("Game cannot be null");
+        if(food == null) throw new ArgumentException("food cannot be null");
         else _foods.Add(food);
     }
     public static List<Food> GetFoods()
     {
         return new List<Food>(_foods);
     }
-
     public static void DeleteFood(Food food)
     {
         _foods.Remove(food);
     }
 
     
-    // ================================================================ serialized and deserialized
+    // serialized and deserialized
     public static void SaveFoodJSON(string path)
     {
         try
         {
             string json = JsonConvert.SerializeObject(_foods, Formatting.Indented);
-        
             File.WriteAllText(path, json);
-            Console.WriteLine($"File saved successfully at {path}");
+            Console.WriteLine($"File Food saved successfully at {path}");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Error saving file: {ex.Message}");
+            throw new ArgumentException($"Error saving Food file: {e.Message}");
         }
     }
-
     public static void LoadFoodJSON(string path)
     {
-        if (File.Exists(path))
+        try
         {
-            string json = File.ReadAllText(path);
-            _foods = JsonConvert.DeserializeObject<List<Food>>(json);
-            // foreach (var food in foods)
-            // {
-            //     Promotion? promotion = food.Promotion == null ? null : Promotion.GetPromotions().Find(pro => pro.Id == food.Promotion.Id);
-            //     Food.DietaryPreferencesType dietaryPreference = (Food.DietaryPreferencesType)food.DietaryPreference;
-            //     Food.FoodType foodType = (Food.FoodType)food.FoodT;
-            //     List<Ingredient?>? ingredients = new List<Ingredient>();
-            //     if (food.Ingredients != null)
-            //     {
-            //         foreach (var ingredient in food.Ingredients)
-            //         {
-            //             ingredients.Add(DigitalOrdering.Ingredient.GetIngredients().FirstOrDefault(p => p.Id == ingredient.Id));
-            //         }
-            //         
-            //         var foodAdd = new Food(food.Name, food.Price, food.Description, food.hasChangableIngredients, ingredients, promotion, dietaryPreference, foodType);
-            //         AddFood(foodAdd);
-            //     }
-            //     else
-            //     {
-            //         var foodAdd = new Food(food.Name, food.Price, food.Description, food.hasChangableIngredients, null, promotion, dietaryPreference, foodType);
-            //         AddFood(foodAdd);
-            //     }
-            // }
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                _foods = JsonConvert.DeserializeObject<List<Food>>(json);
+                Console.WriteLine($"File Food loaded successfully at {path}");
+            }
+            else throw new ArgumentException($"Error loading Food file: path: {path} doesn't exist ");
         }
-        else
+        catch (Exception e)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Error loading Food file: {e.Message}");
         }
     }
-
-
-    
 }

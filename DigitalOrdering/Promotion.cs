@@ -5,31 +5,61 @@ namespace DigitalOrdering;
 [Serializable]
 public class Promotion
 {
+    
+    // class extent
     private static List<Promotion> _promotions = new List<Promotion>();
-    private static int IdCounter = 0;
     
-    public int Id { get; }
-    public int DiscountPercent { get; private set; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    private const int MaxDiscountPercent = 95;
-    private const int MinDiscountPercent = 5;
-
+    // Class/static fileds/attributes
+    private static int IdCounter = 0;  // add id counter
+    private const int MaxDiscountPercent = 99;
+    private const int MinDiscountPercent = 1;
     
+    // Fields/attributesx
+    public int Id { get; } // no set! As asigned can't be changed 
+    private int _discountPercent; // no set and get
+    private string _name;
+    private string _description;
+    
+    // setters validation 
+    public int DiscountPercent
+    {
+        get => _discountPercent;
+        private set
+        {
+            ValidateDiscountPercentage(value);
+            _discountPercent = value;
+        }
+    }
+    public string Name
+    {
+        get => _name;
+        private set
+        {
+            ValidateStringMandatory(value, "Name in Promotion");
+            _name = value;
+        }
+    }
+    public string Description
+    {
+        get => _description;
+        private set
+        {
+            ValidateStringMandatory(value, "Description in Promotion");
+            _description = value;
+        }
+    }
+    
+    // constructor
     [JsonConstructor]
     public Promotion(int discountPercent, string name, string description)
     {
         Id = ++IdCounter;
-        ValidateDiscountPercentage(discountPercent);
         DiscountPercent = discountPercent;
-        ValidateStringMandatory(name, "Name in Promotion");
         Name = name;
-        ValidateStringMandatory(description, "Description in Promotion");
         Description = description;
     }
     
-
-    // validation 
+    // validation meethods
     private static void ValidateDiscountPercentage(int discountPercent)
     {
         if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 5 to 95 max");
@@ -44,7 +74,7 @@ public class Promotion
         else throw new ArgumentException($"promotion {promotion.Name} already exists");
     }
     
-    // get, add, delete
+    // get, add, delete, set  on class
     public static void AddPromotion(Promotion promotion)
     {
         if (promotion == null) throw new ArgumentException("Promotion cannot be null");
@@ -57,42 +87,53 @@ public class Promotion
     }
     public static void DeletePromotion(Promotion promotion)
     {
-        if(promotion == null) throw new ArgumentException("Game cannot be null");
+        if(promotion == null) throw new ArgumentException("Promotion cannot be null");
         _promotions.Remove(promotion);
     }
+    public void UpdateDiscountPercent(int newDiscountPercent)
+    {
+        DiscountPercent = newDiscountPercent;
+    }
+    public void UpdateName(string newName)
+    {
+        Name = newName;
+    }
+    public void UpdateDescription(string newDescription)
+    {
+        Description = newDescription;
+    }
     
-    
-    
-    // ================================================================ serialized and deserialized 
+    // Serialized and deserialized 
     public static void SavePromotionJSON(string path)
     {
         try
         {
             string json = JsonConvert.SerializeObject(_promotions, Formatting.Indented);
-
             File.WriteAllText(path, json);
-            Console.WriteLine($"File saved successfully at {path}");
+            Console.WriteLine($"File Promotion saved successfully at {path}");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Error saving file: {ex.Message}");
+            throw new ArgumentException($"Error saving Promotion file: {e.Message}");
         }
     }
 
     public static void LoadPromotionJSON(string path)
     {
-        if (File.Exists(path))
+        try
         {
-            string json = File.ReadAllText(path);
-            _promotions = JsonConvert.DeserializeObject<List<Promotion>>(json);
-            // foreach (var promotion in promotions)
-            // {
-            //     new Promotion(promotion.DiscountPercent, promotion.Name, promotion.Description);
-            // }
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                _promotions = JsonConvert.DeserializeObject<List<Promotion>>(json);
+                // foreach (var promotion in promotions) { new Promotion(promotion.DiscountPercent, promotion.Name, promotion.Description); }
+                Console.WriteLine($"File Promotion loaded successfully at {path}");
+            }
+            else throw new ArgumentException($"Error loading Promotion file: path: {path} doesn't exist ");
         }
-        else
+        catch (Exception e)
         {
-            throw new Exception($"Load Promotion JSON problem");
+            throw new ArgumentException($"Error loading Promotion file: {e.Message}");
         }
     }
 }

@@ -5,14 +5,23 @@ namespace DigitalOrdering;
 [Serializable]
 public class BusinessLunch : MenuItem
 {
+    
+    // class extent
     private static List<BusinessLunch> _businessLunches = new List<BusinessLunch>();
     
-    public List<Food> Foods { get; } = new List<Food>();
-    public List<Beverage> Beverages { get; } = new List<Beverage>();
+    // static fields
+    private const int MaxNumberOfFood = 4;
+    private const int MinNumberOfFood = 2;
+    private const int MaxNumberOfBeverage = 1;
+    private const int MinNumberOfBeverage = 1;
+    
+    // dependencies
+    public List<Food> Foods { get; private set; } = new List<Food>();
+    public List<Beverage> Beverages { get; private set; } = new List<Beverage>();
 
+    // constructor
     [JsonConstructor]
-    public BusinessLunch(string name, double price, string description, bool hasChangableIngredients, List<Food> foods, List<Beverage> beverages) : base(name, price, description,
-        hasChangableIngredients)
+    public BusinessLunch(string name, double price, string description, List<Food> foods, List<Beverage> beverages) : base(name, price, description)
     {
         ValidateFoodsInput(foods);
         Foods = foods;
@@ -23,18 +32,18 @@ public class BusinessLunch : MenuItem
     // validation 
     private static void  ValidateFoodsInput(List<Food> foods)
     {
-        if (!(foods.Count >= 2 && foods.Count <=4)) throw new ArgumentException("The number of foods must be between 2 and 4");
+        if (!(foods.Count >= MinNumberOfFood && foods.Count <= MaxNumberOfFood)) throw new ArgumentException($"The number of foods must be between {MinNumberOfFood} and {MaxNumberOfFood}");
     }
     private static void ValidateBeveragesInput(List<Beverage> beverages)
     {
-        if (beverages.Count != 1) throw new ArgumentException("Bevarage should be min and max: 1");
-        
+        if (!(beverages.Count >= MinNumberOfBeverage && beverages.Count <= MaxNumberOfBeverage))
+            throw new ArgumentException($"Bevarage should be min {MinNumberOfBeverage} and max {MaxNumberOfBeverage}");
     }
     
     // Get, Delete, Add, Update
     public static void AddBusinessLunch(BusinessLunch businessLunch)
     {
-        if(businessLunch == null)throw new ArgumentException("Game cannot be null");
+        if(businessLunch == null)throw new ArgumentException("businessLunch cannot be null");
         _businessLunches.Add(businessLunch);
     }
     public static List<BusinessLunch> GetBusinessLunches()
@@ -45,7 +54,21 @@ public class BusinessLunch : MenuItem
     {
         _businessLunches.Remove(businessLunch);
     }
+    public void UpdateFood(int index, Food newFood)
+    {
+        if (newFood == null) throw new ArgumentNullException($"newFood is null");
+        if (index < 0 || index >= Foods.Count) throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+        Foods[index] = newFood;
+        ValidateFoodsInput(Foods);
+    }
     
+    public void UpdateBeverage(int index, Beverage newBeverage)
+    {
+        if (newBeverage == null) throw new ArgumentNullException($"newBeverage is null");
+        if (index < 0 || index >= Beverages.Count) throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+        Beverages[index] = newBeverage;
+        ValidateBeveragesInput(Beverages);
+    }
     
 
     
@@ -55,44 +78,33 @@ public class BusinessLunch : MenuItem
         try
         {
             string json = JsonConvert.SerializeObject(_businessLunches, Formatting.Indented);
-        
             File.WriteAllText(path, json);
-            Console.WriteLine($"File saved successfully at {path}");
+            Console.WriteLine($"File BusinessLunch saved successfully at {path}");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Error saving file: {ex.Message}");
+            throw new ArgumentException($"Error saving BusinessLunch file: {e.Message}");
         }
     }
 
     public static void LoadBusinessLunchJSON(string path)
     {
-        if (File.Exists(path))
+        try
         {
-            string json = File.ReadAllText(path);
-            _businessLunches = JsonConvert.DeserializeObject<List<BusinessLunch>>(json);
-            // foreach (var businessLunch in businessLunches)
-            // {
-            //
-            //     Food[] foods = new Food[3];
-            //     for (int i = 0; i < businessLunch.Foods.Length; i++)
-            //     {
-            //         foods[i] = Food.GetFoods().FirstOrDefault(b => b.Id == businessLunch.Foods[i].Id);;
-            //     }
-            //     Beverage[] baverages = new Beverage[1];
-            //     for (int i = 0; i < businessLunch.Beverages.Length; i++)
-            //     {
-            //         baverages[i] = Beverage.GetBeverages().FirstOrDefault(b => b.Id == businessLunch.Beverages[i].Id);
-            //     }
-            //     
-            //     new BusinessLunch(businessLunch.Name, businessLunch.Price, businessLunch.Description, businessLunch.hasChangableIngredients, foods, baverages);
-            //     
-            // }
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                _businessLunches = JsonConvert.DeserializeObject<List<BusinessLunch>>(json);
+                Console.WriteLine($"File BusinessLunch loaded successfully at {path}");
+            }
+            else throw new ArgumentException($"Error loading BusinessLunch file: path: {path} doesn't exist ");
         }
-        else
+        catch (Exception e)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Error loading BusinessLunch file: {e.Message}");
         }
+        
+        
     }
 
     

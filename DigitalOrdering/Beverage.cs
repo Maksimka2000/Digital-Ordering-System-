@@ -6,30 +6,31 @@ namespace DigitalOrdering;
 [Serializable]
 public class Beverage : MenuItem
 {
-    private static List<Beverage> _beverages = new List<Beverage>();
-
-    public bool IsAlcohol { get;  set; }
-
+    //enums
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum BeverageType 
     {
         Cafeteria = 0,
         Cocktails = 1,
         Drinks = 2
     }
+    
+    // class extent
+    private static List<Beverage> _beverages = new List<Beverage>();
 
+    // fields
+    public bool IsAlcohol { get; private set; }
     [JsonConverter(typeof(StringEnumConverter))]
-    public BeverageType BeverageT { get;  set; }
+    public BeverageType BeverageT { get; private set; }
 
+    // constructor
     [JsonConstructor]
-    public Beverage(string name, double price, string description, bool hasChangableIngredients,
-        List<Ingredient>? ingredients, Promotion? promotion, bool isAlcohol, BeverageType beverageT) : base(name, price, description,
-        hasChangableIngredients, ingredients, promotion)
+    public Beverage(string name, double price, string description,
+        List<Ingredient>? ingredients, Promotion? promotion, bool isAlcohol, BeverageType beverageT) : base(name, price, description, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
     }
-
-    
     
     // Get, Add, Delete, Update
     public static void AddBeverage(Beverage beverage)
@@ -46,57 +47,37 @@ public class Beverage : MenuItem
         _beverages.Remove(beverage);
     }
     
-    
-    
-    // ================================================================ serialized and deserialized
-    public static void LoadBeverageJSON(string path) 
-    {
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            _beverages = JsonConvert.DeserializeObject<List<Beverage>>(json);
-            // foreach (var beverage in beverages)
-            // {
-            //     
-            //     
-            //     Promotion? promotion = beverage.Promotion == null ? null : Promotion.GetPromotions().Find(pro => pro.Id == beverage.Promotion.Id);
-            //     Beverage.BeverageType beverageType = (Beverage.BeverageType)beverage.BeverageT;
-            //     
-            //     
-            //     List<Ingredient?>? ingredients = new List<Ingredient>();
-            //     if (beverage.Ingredients != null)
-            //     {
-            //         foreach (var ingredient in beverage.Ingredients)
-            //         {
-            //             ingredients.Add(DigitalOrdering.Ingredient.GetIngredients().FirstOrDefault(p => p.Id == ingredient.Id));
-            //         }
-            //         
-            //         new Beverage(beverage.Name, beverage.Price, beverage.Description, beverage.hasChangableIngredients, ingredients, promotion, beverage.IsAlcohol, beverage.BeverageT);
-            //     }
-            //     else
-            //     {
-            //         new Beverage(beverage.Name, beverage.Price, beverage.Description, beverage.hasChangableIngredients, null, promotion, beverage.IsAlcohol, beverage.BeverageT);
-            //     }
-            // }
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
-
+    //  serialized and deserialized
     public static void SaveBeverageJSON(string path)
     {
         try
         {
             string json = JsonConvert.SerializeObject(_beverages, Formatting.Indented);
-        
             File.WriteAllText(path, json);
-            Console.WriteLine($"File saved successfully at {path}");
+            Console.WriteLine($"File Beverage saved successfully at {path}");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Error saving file: {ex.Message}");
+            throw new ArgumentException($"Error saving Beverage file: {e.Message}");
         }
+    }
+    public static void LoadBeverageJSON(string path) 
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                _beverages = JsonConvert.DeserializeObject<List<Beverage>>(json);
+                Console.WriteLine($"File Beverage loaded successfully at {path}");
+            }
+            else throw new ArgumentException($"Error loading Beverage file: path: {path} doesn't exist ");
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentException($"Error loading Beverage file: {e.Message}");
+        }
+        
+        
     }
 }

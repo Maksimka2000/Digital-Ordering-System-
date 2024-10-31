@@ -6,18 +6,32 @@ namespace DigitalOrdering;
 public class Ingredient
 {
     
+    // clas extent
     private static List<Ingredient> _ingredients = new List<Ingredient>();
     
+    // static/class fields/attributes
     private static int IdCounter = 0;
+    
+    // fields
     public int Id { get; }
-    public string Name { get; private set; }
+    private string _name;
 
+    // setter validation 
+    public string Name
+    {
+        get => _name;
+        private set
+        {
+            ValidateStringMandatory(value, "Name in Ingredient");
+            _name = value;
+        }
+    }
 
+    // constructor
     [JsonConstructor]
     public Ingredient(string name)
     {
         Id = ++IdCounter;
-        ValidateStringMandatory(name, "Name in Ingredient");
         Name = name;
     }
     
@@ -32,23 +46,25 @@ public class Ingredient
         else throw new ArgumentException($"ingredient {ingredient.Name} already exists");
     }
     
-    
-    
-    // get, delete, add, update
+    // get, delete, add, update CRUD 
     public static void AddIngredient(Ingredient ingredient)
     {        
         if(ingredient == null) throw new ArgumentException("Ingredient cannot be null");
         ValidateNameDuplication(ingredient);
         _ingredients.Add(ingredient);
     }
-
     public static List<Ingredient> GetIngredients()
     {
         return new List<Ingredient>(_ingredients);
     }
     public static void DeleteIngredient(Ingredient ingredient)
     {
+        if(ingredient == null) throw new ArgumentException("ingredient cannot be null");
         _ingredients.Remove(ingredient);
+    }
+    public void UpdateName(string newName)
+    {
+        Name = newName;
     }
     
     
@@ -58,30 +74,31 @@ public class Ingredient
         try
         {
             string json = JsonConvert.SerializeObject(_ingredients, Formatting.Indented);
-        
             File.WriteAllText(path, json);
-            Console.WriteLine($"File saved successfully at {path}");
+            Console.WriteLine($"File Ingredient saved successfully at {path}");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Error saving file: {ex.Message}");
+            throw new ArgumentException($"Error saving Ingredient file: {e.Message}");
         }
     }
 
     public static void LoadIngredientJSON(string path)
     {
-        if (File.Exists(path))
+        try
         {
-            string json = File.ReadAllText(path);
-            _ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
-            // foreach (var ingredient in ingredients)
-            // {
-            //     new Ingredient(ingredient.Name);
-            // }
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                _ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
+                // foreach (var ingredient in ingredients) { new Ingredient(ingredient.Name); }
+                Console.WriteLine($"File Ingredient loaded successfully at {path}");
+            }
+            else throw new ArgumentException($"Error loading Ingredient file: path: {path} doesn't exist ");
         }
-        else
+        catch (Exception e)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Error loading Ingredient file: {e.Message}");
         }
     }
     
