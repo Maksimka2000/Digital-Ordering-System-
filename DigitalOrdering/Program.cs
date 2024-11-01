@@ -1,9 +1,9 @@
 ﻿using DigitalOrdering;
 using Newtonsoft.Json;
 
-// CreateObjects();
-LoadClassExtent();
-OutputAllObjectsCreated();
+CreateObjects();
+// LoadClassExtent();
+// OutputAllObjectsCreated();
 // SaveClassExtent();
 
 
@@ -18,6 +18,10 @@ void LoadClassExtent()
         "BusinessLunches.json"));
     Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
+    Table.LoadTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "Table.json"));
+    RegisteredClient.LoadRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "RegisteredClient.json"));
 }
 
 void SaveClassExtent()
@@ -31,6 +35,10 @@ void SaveClassExtent()
         "BusinessLunches.json"));
     Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
+    Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "Table.json"));
+    RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "RegisteredClient.json"));
 }
 
 void OutputAllObjectsCreated()
@@ -347,4 +355,24 @@ void CreateObjects()
     Restaurant restaurant = new Restaurant("Miscusi", address, workHours);
     Restaurant.AddRestaurant(restaurant);
     Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Restaurant.json"));
+    
+    // -================================================= Create Table
+    Table table1 = new Table(2);
+    Table.AddTable(table1);
+    Table table2 = new Table(6, "window");
+    Table.AddTable(table2);
+    Table table3 = new Table(4, "near wc");
+    Table.AddTable(table3);
+    Table table4 = new Table(8, "alies");
+    Table.AddTable(table4);
+    Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Table.json"));
+
+    // ==================================================== Registered client
+    RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", null, "s23454@pjatk.com", "546 545 544");
+    RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", "Arstv", null, "344 434 344");
+    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "Skr", "s488@gjsp.com", null);
+    RegisteredClient.AddRegisteredClient(client1);
+    RegisteredClient.AddRegisteredClient(client2);
+    RegisteredClient.AddRegisteredClient(client3);
+    RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "RegisteredClient.json"));
 }

@@ -11,8 +11,8 @@ public class Promotion
     
     // Class/static fileds/attributes
     private static int IdCounter = 0;  // add id counter
-    private const int MaxDiscountPercent = 99;
-    private const int MinDiscountPercent = 1;
+    private static int MaxDiscountPercent = 99;
+    private static int MinDiscountPercent = 1;
     
     // Fields/attributesx
     public int Id { get; } // no set! As asigned can't be changed 

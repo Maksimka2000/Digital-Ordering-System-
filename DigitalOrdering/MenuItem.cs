@@ -61,7 +61,6 @@ public abstract class MenuItem
             _ingredients = value;
         }
     }
-    
     public Promotion? Promotion
     {
         get => _promotion;

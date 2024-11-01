@@ -10,10 +10,10 @@ public class BusinessLunch : MenuItem
     private static List<BusinessLunch> _businessLunches = new List<BusinessLunch>();
     
     // static fields
-    private const int MaxNumberOfFood = 4;
-    private const int MinNumberOfFood = 2;
-    private const int MaxNumberOfBeverage = 1;
-    private const int MinNumberOfBeverage = 1;
+    private static int MaxNumberOfFood = 4;
+    private static int MinNumberOfFood = 2;
+    private static int MaxNumberOfBeverage = 1;
+    private static int MinNumberOfBeverage = 1;
     
     // dependencies
     public List<Food> Foods { get; private set; } = new List<Food>();
