@@ -3,27 +3,27 @@
     "Id": 1,
     "Bonus": 0,
     "Password": "32jpjoi3j04#A",
-    "Name": "Max",
     "Surname": null,
     "Email": "s23454@pjatk.com",
-    "PhoneNumber": "546 545 544"
+    "PhoneNumber": "546 545 544",
+    "Name": "Max"
   },
   {
     "Id": 2,
     "Bonus": 0,
     "Password": "32jpjD$i3j04#A",
-    "Name": "Alexa",
     "Surname": "Arstv",
     "Email": null,
-    "PhoneNumber": "344 434 344"
+    "PhoneNumber": "344 434 344",
+    "Name": "Alexa"
   },
   {
     "Id": 3,
     "Bonus": 0,
     "Password": "32Apjoi3jf4#A",
-    "Name": "Max",
     "Surname": "Skr",
     "Email": "s488@gjsp.com",
-    "PhoneNumber": null
+    "PhoneNumber": null,
+    "Name": "Max"
   }
 ]

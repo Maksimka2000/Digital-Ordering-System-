@@ -31,15 +31,6 @@ public class RegisteredClient : NonRegisteredClient
             _password = value;
         }
     }
-    public new string Name
-    {
-        get => base.Name;
-        set
-        {
-            ValidateName(value);
-            base.Name = value;
-        }
-    }
     public string? Surname
     {
         get => _surname;
@@ -61,9 +52,10 @@ public class RegisteredClient : NonRegisteredClient
     public new string? PhoneNumber
     {
         get => base.PhoneNumber;
-        set
+        private set
         {
             ValidatePhoneNumber(value);
+            ValidatePhoneNumberRegex(value);
             base.PhoneNumber = value;
         }
     }
@@ -77,6 +69,7 @@ public class RegisteredClient : NonRegisteredClient
         Password = password;
         Surname = surname;
         Email = email;
+        PhoneNumber = phoneNumber;
         ValidateEmailAndPhoneNumberInput(email, phoneNumber);
         Bonus = 0;
     }
@@ -98,12 +91,15 @@ public class RegisteredClient : NonRegisteredClient
         if(!PasswordRegex.IsMatch(value)) throw new ArgumentException($"Password is not valid");
         if(value.Length < 8) throw new ArgumentException($"Password must be at least 8 characters");
     }
-
     private static void ValidateEmail(string? value)
     {
         Regex EmailRegex = new Regex(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
         if(value == string.Empty) throw new ArgumentException($"Email cannot be empty");
         if(value != null && !EmailRegex.IsMatch(value)) throw new ArgumentException($"Email is not valid");
+    }
+    protected override void ValidatePhoneNumber(string? phoneNumber)
+    {
+        if (phoneNumber == string.Empty)  throw new ArgumentException($"PhoneNumber cannot be empty");
     }
     
     // crud
@@ -131,13 +127,23 @@ public class RegisteredClient : NonRegisteredClient
 
     public void UpdateEmail(string? newEmail)
     {
+        var oldEmail = Email;
         Email = newEmail;
-        if(newEmail is null && PhoneNumber is null) throw new NullReferenceException("Email cannot be null");   
+        if (newEmail is null && PhoneNumber is null)
+        {
+            Email = oldEmail;
+            throw new NullReferenceException("Email cannot be null");
+        }   
     }
     public void UpdatePhoneNumber(string? newPhoneNumber)
     {
+        var oldPhoneNumber = PhoneNumber;
         PhoneNumber = newPhoneNumber;
-        if(newPhoneNumber is null && Email is null) throw new NullReferenceException("Email cannot be null");
+        if (newPhoneNumber is null && Email is null)
+        {
+            PhoneNumber = oldPhoneNumber;
+            throw new NullReferenceException("Email cannot be null");
+        }
     }
     
     //  serialized and deserialized 

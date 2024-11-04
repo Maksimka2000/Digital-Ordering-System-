@@ -3,11 +3,11 @@
 namespace DigitalOrdering;
 
 [Serializable]
-public class BusinessLunch : MenuItem
+public class SetOfMenuItem : MenuItem
 {
     
     // class extent
-    private static List<BusinessLunch> _businessLunches = new List<BusinessLunch>();
+    private static List<SetOfMenuItem> _businessLunches = new List<SetOfMenuItem>();
     
     // static fields
     private static int MaxNumberOfFood = 4;
@@ -21,7 +21,7 @@ public class BusinessLunch : MenuItem
 
     // constructor
     [JsonConstructor]
-    public BusinessLunch(string name, double price, string description, List<Food> foods, List<Beverage> beverages) : base(name, price, description)
+    public SetOfMenuItem(string name, double price, string description, List<Food> foods, List<Beverage> beverages) : base(name, price, description)
     {
         ValidateFoodsInput(foods);
         Foods = foods;
@@ -41,18 +41,18 @@ public class BusinessLunch : MenuItem
     }
     
     // Get, Delete, Add, Update
-    public static void AddBusinessLunch(BusinessLunch businessLunch)
+    public static void AddBusinessLunch(SetOfMenuItem setOfMenuItem)
     {
-        if(businessLunch == null)throw new ArgumentException("businessLunch cannot be null");
-        _businessLunches.Add(businessLunch);
+        if(setOfMenuItem == null)throw new ArgumentException("businessLunch cannot be null");
+        _businessLunches.Add(setOfMenuItem);
     }
-    public static List<BusinessLunch> GetBusinessLunches()
+    public static List<SetOfMenuItem> GetBusinessLunches()
     {
-        return new List<BusinessLunch>(_businessLunches);
+        return new List<SetOfMenuItem>(_businessLunches);
     }
-    public static void DeleteBusinessLunch(BusinessLunch businessLunch)
+    public static void DeleteBusinessLunch(SetOfMenuItem setOfMenuItem)
     {
-        _businessLunches.Remove(businessLunch);
+        _businessLunches.Remove(setOfMenuItem);
     }
     public void UpdateFood(int index, Food newFood)
     {
@@ -94,7 +94,7 @@ public class BusinessLunch : MenuItem
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                _businessLunches = JsonConvert.DeserializeObject<List<BusinessLunch>>(json);
+                _businessLunches = JsonConvert.DeserializeObject<List<SetOfMenuItem>>(json);
                 Console.WriteLine($"File BusinessLunch loaded successfully at {path}");
             }
             else throw new ArgumentException($"Error loading BusinessLunch file: path: {path} doesn't exist ");

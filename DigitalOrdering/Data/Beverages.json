@@ -20,7 +20,7 @@
     "_description": "Refreshing cocktail with mint and lime",
     "_ingredients": null,
     "_promotion": {
-      "Id": 1,
+      "Id": 12,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
@@ -33,7 +33,7 @@
     "Description": "Refreshing cocktail with mint and lime",
     "Ingredients": null,
     "Promotion": {
-      "Id": 1,
+      "Id": 12,
       "DiscountPercent": 30,
       "Name": "new year",
       "Description": "discount for the new year"
@@ -45,7 +45,7 @@
     "_description": "Cold brewed tea with lemon",
     "_ingredients": null,
     "_promotion": {
-      "Id": 2,
+      "Id": 14,
       "DiscountPercent": 50,
       "Name": "welcome back",
       "Description": "discount for returning clients"
@@ -58,7 +58,7 @@
     "Description": "Cold brewed tea with lemon",
     "Ingredients": null,
     "Promotion": {
-      "Id": 2,
+      "Id": 14,
       "DiscountPercent": 50,
       "Name": "welcome back",
       "Description": "discount for returning clients"
@@ -70,20 +70,20 @@
     "_description": "Classic Italian cocktail",
     "_ingredients": [
       {
-        "Id": 21,
+        "Id": 58,
         "Name": "Gin"
       },
       {
-        "Id": 22,
+        "Id": 59,
         "Name": "Vermouth"
       },
       {
-        "Id": 23,
+        "Id": 60,
         "Name": "Campari"
       }
     ],
     "_promotion": {
-      "Id": 3,
+      "Id": 16,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
       "Description": "discount for clients on Wednesdays"
@@ -96,20 +96,20 @@
     "Description": "Classic Italian cocktail",
     "Ingredients": [
       {
-        "Id": 21,
+        "Id": 58,
         "Name": "Gin"
       },
       {
-        "Id": 22,
+        "Id": 59,
         "Name": "Vermouth"
       },
       {
-        "Id": 23,
+        "Id": 60,
         "Name": "Campari"
       }
     ],
     "Promotion": {
-      "Id": 3,
+      "Id": 16,
       "DiscountPercent": 10,
       "Name": "Wednesday discount",
       "Description": "discount for clients on Wednesdays"

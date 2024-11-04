@@ -1,0 +1,18 @@
+[
+  {
+    "QRCodeScanTime": "739193.04:36:04.5847773",
+    "StartTime": "739193.04:35:44.1199064",
+    "Id": 1,
+    "OrderPrice": 0.0,
+    "TotalPrice": 0.0,
+    "NumberOfPeople": 2
+  },
+  {
+    "QRCodeScanTime": "739193.04:36:04.5892273",
+    "StartTime": "739193.04:35:44.1205938",
+    "Id": 2,
+    "OrderPrice": 0.0,
+    "TotalPrice": 0.0,
+    "NumberOfPeople": 6
+  }
+]

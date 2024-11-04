@@ -12,46 +12,46 @@
         "_description": "Classic pasta with bacon and eggs",
         "_ingredients": [
           {
-            "Id": 11,
+            "Id": 64,
             "Name": "Pasta"
           },
           {
-            "Id": 17,
+            "Id": 65,
             "Name": "Bacon"
           },
           {
-            "Id": 18,
+            "Id": 66,
             "Name": "Egg"
           }
         ],
         "_promotion": {
-          "Id": 2,
+          "Id": 18,
           "DiscountPercent": 50,
           "Name": "welcome back",
           "Description": "discount for returning clients"
         },
         "DietaryPreference": "Vegan",
         "FoodT": "Pasta",
-        "Id": 1,
+        "Id": 11,
         "Name": "Spaghetti Carbonara",
         "Price": 12.99,
         "Description": "Classic pasta with bacon and eggs",
         "Ingredients": [
           {
-            "Id": 11,
+            "Id": 64,
             "Name": "Pasta"
           },
           {
-            "Id": 17,
+            "Id": 65,
             "Name": "Bacon"
           },
           {
-            "Id": 18,
+            "Id": 66,
             "Name": "Egg"
           }
         ],
         "Promotion": {
-          "Id": 2,
+          "Id": 18,
           "DiscountPercent": 50,
           "Name": "welcome back",
           "Description": "discount for returning clients"
@@ -63,46 +63,46 @@
         "_description": "Creamy Alfredo pasta with Parmesan",
         "_ingredients": [
           {
-            "Id": 11,
+            "Id": 70,
             "Name": "Pasta"
           },
           {
-            "Id": 12,
+            "Id": 71,
             "Name": "Cream"
           },
           {
-            "Id": 10,
+            "Id": 72,
             "Name": "Parmesan"
           }
         ],
         "_promotion": {
-          "Id": 1,
+          "Id": 20,
           "DiscountPercent": 30,
           "Name": "new year",
           "Description": "discount for the new year"
         },
         "DietaryPreference": "Vegan",
         "FoodT": "Pasta",
-        "Id": 2,
+        "Id": 12,
         "Name": "Penne Alfredo",
         "Price": 14.99,
         "Description": "Creamy Alfredo pasta with Parmesan",
         "Ingredients": [
           {
-            "Id": 11,
+            "Id": 70,
             "Name": "Pasta"
           },
           {
-            "Id": 12,
+            "Id": 71,
             "Name": "Cream"
           },
           {
-            "Id": 10,
+            "Id": 72,
             "Name": "Parmesan"
           }
         ],
         "Promotion": {
-          "Id": 1,
+          "Id": 20,
           "DiscountPercent": 30,
           "Name": "new year",
           "Description": "discount for the new year"
@@ -114,54 +114,54 @@
         "_description": "Pasta with fresh vegetables and olive oil",
         "_ingredients": [
           {
-            "Id": 11,
+            "Id": 76,
             "Name": "Pasta"
           },
           {
-            "Id": 14,
+            "Id": 77,
             "Name": "Broccoli"
           },
           {
-            "Id": 15,
+            "Id": 78,
             "Name": "Zucchini"
           },
           {
-            "Id": 13,
+            "Id": 79,
             "Name": "Spinach"
           }
         ],
         "_promotion": {
-          "Id": 3,
+          "Id": 22,
           "DiscountPercent": 10,
           "Name": "Wednesday discount",
           "Description": "discount for clients on Wednesdays"
         },
         "DietaryPreference": "GlutenFree",
         "FoodT": "Pasta",
-        "Id": 3,
+        "Id": 13,
         "Name": "Fettuccine Primavera",
         "Price": 13.99,
         "Description": "Pasta with fresh vegetables and olive oil",
         "Ingredients": [
           {
-            "Id": 11,
+            "Id": 76,
             "Name": "Pasta"
           },
           {
-            "Id": 14,
+            "Id": 77,
             "Name": "Broccoli"
           },
           {
-            "Id": 15,
+            "Id": 78,
             "Name": "Zucchini"
           },
           {
-            "Id": 13,
+            "Id": 79,
             "Name": "Spinach"
           }
         ],
         "Promotion": {
-          "Id": 3,
+          "Id": 22,
           "DiscountPercent": 10,
           "Name": "Wednesday discount",
           "Description": "discount for clients on Wednesdays"
@@ -175,27 +175,27 @@
         "_description": "Refreshing cocktail with mint and lime",
         "_ingredients": null,
         "_promotion": {
-          "Id": 1,
+          "Id": 24,
           "DiscountPercent": 30,
           "Name": "new year",
           "Description": "discount for the new year"
         },
         "IsAlcohol": true,
         "BeverageT": "Cocktails",
-        "Id": 7,
+        "Id": 14,
         "Name": "Mojito",
         "Price": 7.99,
         "Description": "Refreshing cocktail with mint and lime",
         "Ingredients": null,
         "Promotion": {
-          "Id": 1,
+          "Id": 24,
           "DiscountPercent": 30,
           "Name": "new year",
           "Description": "discount for the new year"
         }
       }
     ],
-    "Id": 11,
+    "Id": 15,
     "Name": "Business Special",
     "Price": 19.99,
     "Description": "A combination of three foods and a drink",

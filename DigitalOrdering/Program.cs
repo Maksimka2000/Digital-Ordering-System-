@@ -1,10 +1,10 @@
 ﻿using DigitalOrdering;
 using Newtonsoft.Json;
 
-CreateObjects();
-// LoadClassExtent();
-// OutputAllObjectsCreated();
-// SaveClassExtent();
+// CreateObjects();
+LoadClassExtent();
+OutputAllObjectsCreated();
+SaveClassExtent();
 
 
 void LoadClassExtent()
@@ -14,7 +14,7 @@ void LoadClassExtent()
         "Ingredients.json"));
     Food.LoadFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
     Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    BusinessLunch.LoadBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.LoadBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
     Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
@@ -22,6 +22,8 @@ void LoadClassExtent()
         "Table.json"));
     RegisteredClient.LoadRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "RegisteredClient.json"));
+    TableOrder.LoadTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
+    OnlineOrder.LoadOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "OnlineOrder.json"));
 }
 
 void SaveClassExtent()
@@ -31,7 +33,7 @@ void SaveClassExtent()
         "Ingredients.json"));
     Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    BusinessLunch.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
     Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
@@ -39,6 +41,8 @@ void SaveClassExtent()
         "Table.json"));
     RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "RegisteredClient.json"));
+    TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
+    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "OnlineOrder.json"));
 }
 
 void OutputAllObjectsCreated()
@@ -110,7 +114,7 @@ void OutputAllObjectsCreated()
 
 // // ------------------------------------------------------ Load BusinessLunches
     Console.WriteLine("================================  BusinessLunches ==================");
-    foreach (BusinessLunch businessLunch in BusinessLunch.GetBusinessLunches())
+    foreach (SetOfMenuItem businessLunch in SetOfMenuItem.GetBusinessLunches())
     {
         Console.WriteLine(
             $"Business Lunch id: {businessLunch.Id}, Name: {businessLunch.Name}, Price: {businessLunch.Price}, Description: {businessLunch.Description}");
@@ -187,6 +191,34 @@ void OutputAllObjectsCreated()
         restaurant.UpdateOpenHours(DayOfWeek.Monday, null, null);
         Console.WriteLine(
             $"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
+    }
+    
+    // ========================================== Load Tables
+    Console.WriteLine("================================ Tables ===========================");
+    foreach (var table in Table.GetTables())
+    {
+        Console.WriteLine($"Table ID: {table.Id}, Alias: {table.Alias}, Capacity: {table.Capacity}, IsLocked: {table.IsLocked}");
+    }
+
+    // ========================================== Load Registered Clients
+    Console.WriteLine("================================ Registered Clients ===========================");
+    foreach (var client in RegisteredClient.GetRegisteredClients())
+    {
+        Console.WriteLine($"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}");
+    }
+
+    // ========================================== Load Table Orders
+    Console.WriteLine("================================ Table Orders ===========================");
+    foreach (var order in TableOrder.GetTableOrders())
+    {
+        Console.WriteLine($"Table Order: Number of People: {order.NumberOfPeople}, Start Time: {order.StartTime}, QR Code Scan Time: {order.QRCodeScanTime}");
+    }
+
+    // ========================================== Load Online Orders
+    Console.WriteLine("================================ Online Orders ===========================");
+    foreach (var order in OnlineOrder.GetOnlineOrders())
+    {
+        Console.WriteLine($"Online Order: Number of People: {order.NumberOfPeople}, Date and Time: {order.DateAndTime}, Description: {order.Description}, Guests Arrived: {order.IsGuestesArrived}");
     }
 }
 
@@ -330,12 +362,12 @@ void CreateObjects()
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
 
 // ======================================================== Create Business Lunch
-    var businessLunch = new BusinessLunch("Business Special", 19.99,
+    var businessLunch = new SetOfMenuItem("Business Special", 19.99,
         "A combination of three foods and a drink", new List<Food> { food1, food2, food3 },
         new List<Beverage> { beverage2 });
-    BusinessLunch.AddBusinessLunch(businessLunch);
+    SetOfMenuItem.AddBusinessLunch(businessLunch);
 
-    BusinessLunch.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
 
 
@@ -375,4 +407,20 @@ void CreateObjects()
     RegisteredClient.AddRegisteredClient(client2);
     RegisteredClient.AddRegisteredClient(client3);
     RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "RegisteredClient.json"));
+    
+    // ================================================ TableOrder
+    TableOrder tableOrder1 = new TableOrder(2);
+    TableOrder tableOrder2 = new TableOrder(6);
+    TableOrder.AddTableOrder(tableOrder1);
+    TableOrder.AddTableOrder(tableOrder2);
+    TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
+
+    // =============================================== ONline order
+    OnlineOrder onlineOrder1 = new OnlineOrder(4, DateTime.Now, "heljfoadsf");
+    OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now);
+    OnlineOrder.AddOnlineOrder(onlineOrder1);
+    OnlineOrder.AddOnlineOrder(onlineOrder2);
+    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "OnlineOrder.json"));
+    
+
 }
