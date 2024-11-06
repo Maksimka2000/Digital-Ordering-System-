@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 LoadClassExtent();
 OutputAllObjectsCreated();
 SaveClassExtent();
+return;
 
 
 void LoadClassExtent()
@@ -23,7 +24,8 @@ void LoadClassExtent()
     RegisteredClient.LoadRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "RegisteredClient.json"));
     TableOrder.LoadTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-    OnlineOrder.LoadOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "OnlineOrder.json"));
+    OnlineOrder.LoadOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "OnlineOrder.json"));
 }
 
 void SaveClassExtent()
@@ -42,7 +44,8 @@ void SaveClassExtent()
     RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "RegisteredClient.json"));
     TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "OnlineOrder.json"));
+    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "OnlineOrder.json"));
 }
 
 void OutputAllObjectsCreated()
@@ -180,7 +183,8 @@ void OutputAllObjectsCreated()
         Console.WriteLine("Open hours are: ");
         foreach (var openHour in restaurant.OpenHours)
         {
-            Console.WriteLine($" {openHour.Day}: {(openHour.IsOpen ? ($"{openHour.OpenTime} to {openHour.CloseTime}") : "closed")}");
+            Console.WriteLine(
+                $" {openHour.Day}: {(openHour.IsOpen ? ($"{openHour.OpenTime} to {openHour.CloseTime}") : "closed")}");
         }
 
         Console.WriteLine(
@@ -192,33 +196,37 @@ void OutputAllObjectsCreated()
         Console.WriteLine(
             $"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
     }
-    
+
     // ========================================== Load Tables
     Console.WriteLine("================================ Tables ===========================");
     foreach (var table in Table.GetTables())
     {
-        Console.WriteLine($"Table ID: {table.Id}, Alias: {table.Alias}, Capacity: {table.Capacity}, IsLocked: {table.IsLocked}");
+        Console.WriteLine(
+            $"Table ID: {table.Id}, Alias: {table.Alias}, Capacity: {table.Capacity}, IsLocked: {table.IsLocked}");
     }
 
     // ========================================== Load Registered Clients
     Console.WriteLine("================================ Registered Clients ===========================");
     foreach (var client in RegisteredClient.GetRegisteredClients())
     {
-        Console.WriteLine($"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}");
+        Console.WriteLine(
+            $"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}");
     }
 
     // ========================================== Load Table Orders
     Console.WriteLine("================================ Table Orders ===========================");
     foreach (var order in TableOrder.GetTableOrders())
     {
-        Console.WriteLine($"Table Order: Number of People: {order.NumberOfPeople}, Start Time: {order.StartTime}, QR Code Scan Time: {order.QRCodeScanTime}");
+        Console.WriteLine(
+            $"Table Order: Number of People: {order.NumberOfPeople}, Start Time: {order.StartTime}, QR Code Scan Time: {order.QRCodeScanTime}");
     }
 
     // ========================================== Load Online Orders
     Console.WriteLine("================================ Online Orders ===========================");
     foreach (var order in OnlineOrder.GetOnlineOrders())
     {
-        Console.WriteLine($"Online Order: Number of People: {order.NumberOfPeople}, Date and Time: {order.DateAndTime}, Description: {order.Description}, Guests Arrived: {order.IsGuestesArrived}");
+        Console.WriteLine(
+            $"Online Order: Number of People: {order.NumberOfPeople}, Date and Time: {order.DateAndTime}, Description: {order.Description}, Guests Arrived: {order.HaveGuestsArrived}");
     }
 }
 
@@ -387,7 +395,7 @@ void CreateObjects()
     Restaurant restaurant = new Restaurant("Miscusi", address, workHours);
     Restaurant.AddRestaurant(restaurant);
     Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Restaurant.json"));
-    
+
     // -================================================= Create Table
     Table table1 = new Table(2);
     Table.AddTable(table1);
@@ -406,8 +414,9 @@ void CreateObjects()
     RegisteredClient.AddRegisteredClient(client1);
     RegisteredClient.AddRegisteredClient(client2);
     RegisteredClient.AddRegisteredClient(client3);
-    RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "RegisteredClient.json"));
-    
+    RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "RegisteredClient.json"));
+
     // ================================================ TableOrder
     TableOrder tableOrder1 = new TableOrder(2);
     TableOrder tableOrder2 = new TableOrder(6);
@@ -420,7 +429,6 @@ void CreateObjects()
     OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now);
     OnlineOrder.AddOnlineOrder(onlineOrder1);
     OnlineOrder.AddOnlineOrder(onlineOrder2);
-    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "OnlineOrder.json"));
-    
-
+    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        "OnlineOrder.json"));
 }

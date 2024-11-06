@@ -5,34 +5,35 @@ namespace DigitalOrdering;
 [Serializable]
 public class Table
 {
-    // class extente
-    private static List<Table> _tables = new List<Table>();
-    
+    // class extent
+    private static List<Table> _tables = [];
+
     // static fields
     private static int IdCounter = 0;
-    
+
     // fields
     public int Id { get; }
     private string? _alias;
     private int _capacity;
     public bool IsLocked { get; private set; }
-    
-    // fieslds setter validation
+
+    // fields setter validation
     public int Capacity
     {
         get => _capacity;
         private set
         {
-            if(value <= 0) throw new ArgumentException("Capacity must be greater than zero.");
+            if (value <= 0) throw new ArgumentException("Capacity must be greater than zero.");
             _capacity = value;
         }
     }
+
     public string Alias
     {
         get => _alias;
         private set
         {
-            if(value != null && string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Alias cant be empty");
+            if (value != null && string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Alias cant be empty");
             _alias = value;
         }
     }
@@ -46,43 +47,48 @@ public class Table
         Capacity = capacity;
         IsLocked = false;
     }
-    
+
     // validation
-    
+
     // get, delete, add, update CRUD 
     public static void AddTable(Table table)
-    {        
-        if(table == null) throw new ArgumentException("Tabale cannot be null");
+    {
+        if (table == null) throw new ArgumentException("Tabale cannot be null");
         _tables.Add(table);
     }
+
     public static List<Table> GetTables()
     {
-        return new List<Table>(_tables);
+        return [.._tables];
     }
+
     public static void DeleteTable(Table table)
     {
-        if(table == null) throw new ArgumentException("table cannot be null");
+        if (table == null) throw new ArgumentException("table cannot be null");
         _tables.Remove(table);
     }
+
     public void UpdateAlias(string alias)
     {
         Alias = alias;
     }
+
     public void UpdateCapacity(int capacity)
     {
         Capacity = capacity;
     }
-    
+
     // methods
     public void LockTable()
     {
         IsLocked = true;
     }
+
     public void UnLockTable()
     {
         IsLocked = false;
     }
-    
+
     // ================================================================ serialized and deserialized 
     public static void SaveTableJSON(string path)
     {
@@ -115,6 +121,4 @@ public class Table
             throw new ArgumentException($"Error loading Table file: {e.Message}");
         }
     }
-
-
 }

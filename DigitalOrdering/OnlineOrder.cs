@@ -6,7 +6,7 @@ namespace DigitalOrdering;
 public class OnlineOrder : Order
 {
     //class extent
-    private static List<OnlineOrder> _onlineOrders = new List<OnlineOrder>();
+    private static List<OnlineOrder> _onlineOrders = [];
     
     // static fields
     private static TimeSpan Duration = new TimeSpan(2, 0, 0);
@@ -14,7 +14,7 @@ public class OnlineOrder : Order
     //fields
     private DateTime _dateAndTime;
     private string? _description;
-    public bool IsGuestesArrived { get; private set; }
+    public bool HaveGuestsArrived { get; private set; }
     
     // fields setter validation
     public string? Description
@@ -50,7 +50,7 @@ public class OnlineOrder : Order
     {
         DateAndTime = dateAndTime;
         Description = description;
-        IsGuestesArrived = false;
+        HaveGuestsArrived = false;
         StartTime = null;
     }
     
@@ -70,13 +70,13 @@ public class OnlineOrder : Order
     }
     public static List<OnlineOrder> GetOnlineOrders()
     {
-        return new List<OnlineOrder>(_onlineOrders);
+        return [.._onlineOrders];
     }
     
     //methods
-    public void MarkAsGuestesArrived()
+    public void MarkAsGuestsArrived()
     {
-        IsGuestesArrived = true;
+        HaveGuestsArrived = true;
         StartTime = new TimeSpan(DateTime.Now.Ticks);
     }
     

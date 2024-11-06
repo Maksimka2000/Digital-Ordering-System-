@@ -25,7 +25,7 @@ public class Food : MenuItem
     }
 
     // class extent
-    private static List<Food> _foods = new List<Food>();
+    private static List<Food> _foods = [];
     
     // fields
     [JsonConverter(typeof(StringEnumConverter))]

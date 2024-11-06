@@ -8,7 +8,7 @@ public class Restaurant
 {
     
     // class extent
-    private static List<Restaurant> _restaurants = new List<Restaurant>();
+    private static List<Restaurant> _restaurants = [];
     
     // static fields
     private static int IdCounter = 0;
@@ -65,7 +65,7 @@ public class Restaurant
     // get, delete, add, update.
     public static List<Restaurant> GetRestaurants()
     {
-        return new List<Restaurant>(_restaurants);
+        return [.._restaurants];
     }
     public static void AddRestaurant(Restaurant restaurant)
     {
@@ -79,7 +79,7 @@ public class Restaurant
     // methods
     public bool IsRestaurantOpen(DayOfWeek dayOfWeek, TimeSpan currentTime)
     {
-        OpenHour openHoursDay = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
+        var openHoursDay = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
         return openHoursDay.IsOpen && openHoursDay.OpenTime <= currentTime && openHoursDay.CloseTime >= currentTime;
     }
 

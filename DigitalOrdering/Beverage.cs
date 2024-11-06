@@ -8,45 +8,49 @@ public class Beverage : MenuItem
 {
     //enums
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum BeverageType 
+    public enum BeverageType
     {
         Cafeteria = 0,
         Cocktails = 1,
         Drinks = 2
     }
-    
+
     // class extent
-    private static List<Beverage> _beverages = new List<Beverage>();
+    private static List<Beverage> _beverages = [];
 
     // fields
     public bool IsAlcohol { get; private set; }
+
     [JsonConverter(typeof(StringEnumConverter))]
     public BeverageType BeverageT { get; private set; }
 
     // constructor
     [JsonConstructor]
     public Beverage(string name, double price, string description,
-        List<Ingredient>? ingredients, Promotion? promotion, bool isAlcohol, BeverageType beverageT) : base(name, price, description, ingredients, promotion)
+        List<Ingredient>? ingredients, Promotion? promotion, bool isAlcohol, BeverageType beverageT) : base(name, price,
+        description, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
     }
-    
+
     // Get, Add, Delete, Update
     public static void AddBeverage(Beverage beverage)
     {
-        if(beverage == null) throw new ArgumentException("Game cannot be null");
+        if (beverage == null) throw new ArgumentException("Game cannot be null");
         else _beverages.Add(beverage);
     }
+
     public static List<Beverage> GetBeverages()
     {
-        return new List<Beverage>(_beverages);
+        return [.._beverages];
     }
+
     public static void DeleteBeverage(Beverage beverage)
     {
         _beverages.Remove(beverage);
     }
-    
+
     //  serialized and deserialized
     public static void SaveBeverageJSON(string path)
     {
@@ -61,7 +65,8 @@ public class Beverage : MenuItem
             throw new ArgumentException($"Error saving Beverage file: {e.Message}");
         }
     }
-    public static void LoadBeverageJSON(string path) 
+
+    public static void LoadBeverageJSON(string path)
     {
         try
         {
@@ -77,7 +82,5 @@ public class Beverage : MenuItem
         {
             throw new ArgumentException($"Error loading Beverage file: {e.Message}");
         }
-        
-        
     }
 }

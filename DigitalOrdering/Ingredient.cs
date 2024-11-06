@@ -5,13 +5,12 @@ namespace DigitalOrdering;
 [Serializable]
 public class Ingredient
 {
-    
     // clas extent
-    private static List<Ingredient> _ingredients = new List<Ingredient>();
-    
+    private static List<Ingredient> _ingredients = [];
+
     // static/class fields/attributes
     private static int IdCounter = 0;
-    
+
     // fields
     public int Id { get; }
     private string _name;
@@ -34,40 +33,44 @@ public class Ingredient
         Id = ++IdCounter;
         Name = name;
     }
-    
+
     // validation
     private static void ValidateStringMandatory(string name, string text)
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
     }
+
     private static void ValidateNameDuplication(Ingredient ingredient)
     {
-        if (_ingredients.FirstOrDefault(i => i.Name == ingredient.Name) == null); 
+        if (_ingredients.FirstOrDefault(i => i.Name == ingredient.Name) == null) ;
         else throw new ArgumentException($"ingredient {ingredient.Name} already exists");
     }
-    
+
     // get, delete, add, update CRUD 
     public static void AddIngredient(Ingredient ingredient)
-    {        
-        if(ingredient == null) throw new ArgumentException("Ingredient cannot be null");
+    {
+        if (ingredient == null) throw new ArgumentException("Ingredient cannot be null");
         ValidateNameDuplication(ingredient);
         _ingredients.Add(ingredient);
     }
+
     public static List<Ingredient> GetIngredients()
     {
-        return new List<Ingredient>(_ingredients);
+        return [.._ingredients];
     }
+
     public static void DeleteIngredient(Ingredient ingredient)
     {
-        if(ingredient == null) throw new ArgumentException("ingredient cannot be null");
+        if (ingredient == null) throw new ArgumentException("ingredient cannot be null");
         _ingredients.Remove(ingredient);
     }
+
     public void UpdateName(string newName)
     {
         Name = newName;
     }
-    
-    
+
+
     //  serialized and deserialized 
     public static void SaveIngredientJSON(string path)
     {
@@ -101,5 +104,4 @@ public class Ingredient
             throw new ArgumentException($"Error loading Ingredient file: {e.Message}");
         }
     }
-    
 }

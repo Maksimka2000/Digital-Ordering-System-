@@ -7,15 +7,15 @@ public class Promotion
 {
     
     // class extent
-    private static List<Promotion> _promotions = new List<Promotion>();
+    private static List<Promotion> _promotions = [];
     
-    // Class/static fileds/attributes
+    // Class/static fields/attributes
     private static int IdCounter = 0;  // add id counter
-    private static int MaxDiscountPercent = 99;
-    private static int MinDiscountPercent = 1;
+    private const int MaxDiscountPercent = 99;
+    private const int MinDiscountPercent = 1;
     
-    // Fields/attributesx
-    public int Id { get; } // no set! As asigned can't be changed 
+    // Fields/attributes
+    public int Id { get; } // no set! As assigned can't be changed 
     private int _discountPercent; // no set and get
     private string _name;
     private string _description;
@@ -59,7 +59,7 @@ public class Promotion
         Description = description;
     }
     
-    // validation meethods
+    // validation methods
     private static void ValidateDiscountPercentage(int discountPercent)
     {
         if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 5 to 95 max");
@@ -83,7 +83,7 @@ public class Promotion
     }
     public static List<Promotion> GetPromotions()
     {
-        return new List<Promotion>(_promotions);
+        return [.._promotions];
     }
     public static void DeletePromotion(Promotion promotion)
     {
