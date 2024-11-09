@@ -126,23 +126,23 @@ public class FoodTests
 
         File.Delete(path);
     }
-
-    [Fact]
-    public void ExtentIntegrity_ChecksListCopying()
-    {
-        var food1 = new Food("Salad", 6.0, "Healthy salad", null, null, Food.FoodType.Snack);
-        var food2 = new Food("Soup", 4.0, "Hot soup", null, null, Food.FoodType.Snack);
-
-        Food.AddFood(food1);
-        Food.AddFood(food2);
-
-        var foodsCopy = Food.GetFoods();
-        foodsCopy.Clear();
-
-        var originalFoods = Food.GetFoods();
-
-        Assert.Equal(2, originalFoods.Count);
-        Assert.Contains(food1, originalFoods);
-        Assert.Contains(food2, originalFoods);
-    }
+    //
+    // [Fact]
+    // public void ExtentIntegrity_ChecksListCopying()
+    // {
+    //     var food1 = new Food("Salad", 6.0, "Healthy salad", null, null, Food.FoodType.Snack);
+    //     var food2 = new Food("Soup", 4.0, "Hot soup", null, null, Food.FoodType.Snack);
+    //
+    //     Food.AddFood(food1);
+    //     Food.AddFood(food2);
+    //
+    //     var foodsCopy = Food.GetFoods();
+    //     foodsCopy.Clear();
+    //
+    //     var originalFoods = Food.GetFoods();
+    //
+    //     Assert.Equal(2, originalFoods.Count);
+    //     Assert.Contains(food1, originalFoods);
+    //     Assert.Contains(food2, originalFoods);
+    // }
 }

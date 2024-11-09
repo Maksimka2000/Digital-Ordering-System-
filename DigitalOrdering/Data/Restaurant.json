@@ -9,9 +9,9 @@
     "OpenHours": [
       {
         "Day": "Monday",
-        "OpenTime": null,
-        "CloseTime": null,
-        "IsOpen": false
+        "OpenTime": "09:00:00",
+        "CloseTime": "17:00:00",
+        "IsOpen": true
       },
       {
         "Day": "Tuesday",

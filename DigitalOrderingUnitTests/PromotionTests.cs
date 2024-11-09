@@ -1,10 +1,18 @@
 using DigitalOrdering;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DigitalOrderingUnitTests;
 
 public class PromotionTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public PromotionTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
@@ -48,11 +56,15 @@ public class PromotionTests
     [Fact]
     public void GetPromotions_ReturnsListOfPromotions()
     {
+        
+        _testOutputHelper.WriteLine(Promotion.GetPromotions().Count.ToString());
+        
         var promotion1 = new Promotion(10, "Black Friday", "Discount on Black Friday");
         var promotion2 = new Promotion(5, "Cyber Monday", "Discount on Cyber Monday");
         Promotion.AddPromotion(promotion1);
         Promotion.AddPromotion(promotion2);
 
+        
         var promotions = Promotion.GetPromotions();
 
         Assert.Equal(2, promotions.Count);

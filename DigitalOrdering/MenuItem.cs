@@ -27,7 +27,6 @@ public abstract class MenuItem
             _name = value;
         }
     }
-
     public double Price
     {
         get => _price;
@@ -37,7 +36,6 @@ public abstract class MenuItem
             _price = value;
         }
     }
-
     public string Description
     {
         get => _description;

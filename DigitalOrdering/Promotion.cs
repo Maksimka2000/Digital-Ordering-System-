@@ -62,7 +62,7 @@ public class Promotion
     // validation methods
     private static void ValidateDiscountPercentage(int discountPercent)
     {
-        if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 5 to 95 max");
+        if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 1 to 99 max");
     }
     private static void ValidateStringMandatory(string name, string text)
     {

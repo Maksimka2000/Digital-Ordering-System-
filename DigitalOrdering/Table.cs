@@ -23,17 +23,16 @@ public class Table
         get => _capacity;
         private set
         {
-            if (value <= 0) throw new ArgumentException("Capacity must be greater than zero.");
+            ValidateCapacity(value);
             _capacity = value;
         }
     }
-
     public string Alias
     {
         get => _alias;
         private set
         {
-            if (value != null && string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Alias cant be empty");
+            ValidateAlias(value);
             _alias = value;
         }
     }
@@ -49,6 +48,15 @@ public class Table
     }
 
     // validation
+    private static void ValidateCapacity(int value)
+    {
+        if (value <= 0) throw new ArgumentException("Capacity must be greater than zero.");
+    }
+    private static void ValidateAlias(string value)
+    {
+        if (value == string.Empty) throw new ArgumentException("Alias cant be empty");
+    }
+
 
     // get, delete, add, update CRUD 
     public static void AddTable(Table table)

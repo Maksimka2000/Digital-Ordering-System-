@@ -109,10 +109,11 @@ public class BeverageTests
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidArguments()
     {
-        // Act & Assert
         Assert.Throws<ArgumentException>(() =>
             new Beverage(null, 10.0, "Test", null, null, false, Beverage.BeverageType.Drinks));
         Assert.Throws<ArgumentException>(() =>
             new Beverage("Test", -5.0, "Test", null, null, false, Beverage.BeverageType.Drinks));
+        Assert.Throws<ArgumentException>(() =>
+            new Beverage("Test", 5.0, "", null, null, false, Beverage.BeverageType.Drinks));
     }
 }

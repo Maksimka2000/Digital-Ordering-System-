@@ -16,7 +16,7 @@ public class Restaurant
     // fields
     public int Id { get; }
     private string _name;
-    public Address Location { get; } // as assigned not changed never immutable 
+    private Address _location;
     private List<OpenHour> _openHours;
 
     // setters validation
@@ -35,11 +35,20 @@ public class Restaurant
         private set
         {
             ValidateWorkHours(value);
+            ValidateWorkHoursDays(value);
             _openHours = value;
         }
     }
-    
-    
+    public Address Location
+    {
+        get => _location;
+        private set
+        {
+            ValidateLocation(value);
+            _location = value;
+        }
+    }
+
     //constructor
     [JsonConstructor]
     public Restaurant(string name, Address location, List<OpenHour> openHours)
@@ -58,8 +67,16 @@ public class Restaurant
     private static void ValidateWorkHours(List<OpenHour> workHours)
     {
         if(workHours == null) throw new ArgumentException("work hours is null");
-        if (workHours == null || workHours.Count != 7) throw new ArgumentException("Work hours cannot be null or less than 7.");
+        
+    }
+    private static void ValidateWorkHoursDays(List<OpenHour> workHours)
+    {
+        if (workHours.Count != 7) throw new ArgumentException("Work hours cannot be less than 7");
         if (workHours.Select(wh => wh.Day).Distinct().Count() != 7) throw new ArgumentException("not all days specified.");
+    }
+    private static void ValidateLocation(Address value)
+    {
+        if(value == null ) throw new ArgumentNullException(" address cannot be null");
     }
     
     // get, delete, add, update.
@@ -73,7 +90,7 @@ public class Restaurant
     }
     public void UpdateName(string newName)
     {
-        Name = newName;  // Calls setter validation
+        Name = newName;  
     }
     
     // methods
@@ -154,6 +171,8 @@ public class OpenHour
         if (newOpenTime.HasValue && newCloseTime.HasValue)
             ValidateTime(newOpenTime, newCloseTime);
         
+        if(newOpenTime.HasValue ^ newCloseTime.HasValue) throw new ArgumentException($" both of them can be null or not null.");
+        
         OpenTime = newOpenTime;
         CloseTime = newCloseTime;
         IsOpen = !(OpenTime == null && CloseTime == null);
@@ -168,13 +187,34 @@ public class OpenHour
 [Serializable]
 public class Address
 {
-    public string Street { get; } // unmodified after creation (no setter)
-    public string City { get; } // unmodified after creation
+    private string _street;
+    private string _city;
+
+    public string Street 
+    { 
+        get => _street; 
+        private set
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Street cannot be null or empty.");
+            _street = value;
+        }
+    }
+    public string City 
+    { 
+        get => _city; 
+        private set
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("City cannot be null or empty.");
+            _city = value;
+        }
+    }
 
     [JsonConstructor]
     public Address(string street, string city)
     {
         Street = street;
-        City = city; 
+        City = city;
     }
 }

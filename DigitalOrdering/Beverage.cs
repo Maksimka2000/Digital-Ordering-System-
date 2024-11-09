@@ -22,7 +22,16 @@ public class Beverage : MenuItem
     public bool IsAlcohol { get; private set; }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public BeverageType BeverageT { get; private set; }
+    private BeverageType _beveragesType;
+    public BeverageType BeverageT
+    {
+        get => _beveragesType;
+        private set
+        {
+            ValidateBeverageType(value);
+            _beveragesType = value;
+        }
+    }
 
     // constructor
     [JsonConstructor]
@@ -32,6 +41,13 @@ public class Beverage : MenuItem
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
+    }
+    
+    //validation 
+    private static void ValidateBeverageType(BeverageType beverageType)
+    {
+        if (!Enum.IsDefined(typeof(BeverageType), beverageType)) throw new ArgumentException($"Invalid beverage type: {beverageType}");
+        
     }
 
     // Get, Add, Delete, Update

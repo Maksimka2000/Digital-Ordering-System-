@@ -9,8 +9,17 @@ public class OnlineOrder : Order
     private static List<OnlineOrder> _onlineOrders = [];
     
     // static fields
-    private static TimeSpan Duration = new TimeSpan(2, 0, 0);
-    
+    private static TimeSpan _duration = new TimeSpan(2, 0, 0);
+    public static TimeSpan Duration
+    {
+        get => _duration;
+        private set
+        {
+            ValidateDuration(value);
+            _duration = value;
+        }
+    }
+
     //fields
     private DateTime _dateAndTime;
     private string? _description;
@@ -31,7 +40,7 @@ public class OnlineOrder : Order
         get => _dateAndTime;
         private set
         {
-            // future validation
+            ValidateDateAndTime(value);
             _dateAndTime = value;
         }
     }
@@ -59,6 +68,14 @@ public class OnlineOrder : Order
     private static void ValidateStringOptional(string? value, string propertyName)
     {
         if (value == string.Empty)  throw new ArgumentException($"{propertyName} cannot be empty");
+    }
+    private static void ValidateDuration(TimeSpan value)
+    {
+        if(value < new TimeSpan (1, 0, 0)) throw new ArgumentException ("Duration must be greater than 1 hour");
+    }
+    private static void ValidateDateAndTime(DateTime value)
+    {
+        if( value < DateTime.Now.AddHours(3)) throw new ArgumentException("Date and time must be in the future and more than 3 hours ahead.");
     }
     
     

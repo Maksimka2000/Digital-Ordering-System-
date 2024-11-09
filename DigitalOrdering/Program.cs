@@ -4,7 +4,10 @@ using Newtonsoft.Json;
 // CreateObjects();
 LoadClassExtent();
 OutputAllObjectsCreated();
-SaveClassExtent();
+// SaveClassExtent();
+
+
+
 return;
 
 
@@ -408,9 +411,9 @@ void CreateObjects()
     Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Table.json"));
 
     // ==================================================== Registered client
-    RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", null, "s23454@pjatk.com", "546 545 544");
-    RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", "Arstv", null, "344 434 344");
-    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "Skr", "s488@gjsp.com", null);
+    RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", "s23454@pjatk.com", "546 545 544");
+    RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", null, "344 434 344", "Arstv");
+    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr");
     RegisteredClient.AddRegisteredClient(client1);
     RegisteredClient.AddRegisteredClient(client2);
     RegisteredClient.AddRegisteredClient(client3);
@@ -425,8 +428,8 @@ void CreateObjects()
     TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
 
     // =============================================== ONline order
-    OnlineOrder onlineOrder1 = new OnlineOrder(4, DateTime.Now, "heljfoadsf");
-    OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now);
+    OnlineOrder onlineOrder1 = new OnlineOrder(4, DateTime.Now.AddDays(333), "heljfoadsf");
+    OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now.AddYears(1));
     OnlineOrder.AddOnlineOrder(onlineOrder1);
     OnlineOrder.AddOnlineOrder(onlineOrder2);
     OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",

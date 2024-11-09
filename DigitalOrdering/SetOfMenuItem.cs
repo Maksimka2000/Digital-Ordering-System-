@@ -10,10 +10,50 @@ public class SetOfMenuItem : MenuItem
     private static List<SetOfMenuItem> _businessLunches = new List<SetOfMenuItem>();
     
     // static fields
-    private static int MaxNumberOfFood = 4;
-    private static int MinNumberOfFood = 2;
-    private static int MaxNumberOfBeverage = 1;
-    private static int MinNumberOfBeverage = 1;
+    private static int _maxNumberOfFood = 4;
+    private static int _minNumberOfFood = 2;
+    private static int _maxNumberOfBeverage = 1;
+    private static int _minNumberOfBeverage = 1;
+    
+    // seeter adn getter for static fileds validation 
+    public static int MaxNumberOfFood
+    {
+        get => _maxNumberOfFood;
+        private set
+        {
+            ValidateIntMaxNumberOfFood(value, "MaxNumberOfFood");
+            _maxNumberOfFood = value;
+        }
+    }
+    public static int MinNumberOfFood
+    {
+        get => _minNumberOfFood;
+        private set
+        {
+            ValidateIntMinNumberOfFood(value, "MinNumberOfFood");
+            _minNumberOfFood = value;
+        }
+    }
+    public static int MaxNumberOfBeverage
+    {
+        get => _maxNumberOfBeverage;
+        private set
+        {
+            ValidateIntMaxNumberOfBeverage(value, "MaxNumberOfBeverage");
+            _maxNumberOfBeverage = value;
+        }
+    }
+    public static int MinNumberOfBeverage
+    {
+        get => _minNumberOfBeverage;
+        private set
+        {
+            ValidateIntMinNumberOfBeverage(value, "MinNumberOfBeverage");
+            _minNumberOfBeverage = value;
+        }
+    }
+
+    
     
     // dependencies
     public List<Food> Foods { get; private set; } = new List<Food>();
@@ -28,8 +68,24 @@ public class SetOfMenuItem : MenuItem
         ValidateBeveragesInput(beverages);
         Beverages = beverages;
     }
-
+    
     // validation 
+    private static void ValidateIntMaxNumberOfBeverage(int value, string text)
+    {
+        if (value < 0 || value < MinNumberOfBeverage) throw new ArgumentOutOfRangeException("The value must be not less that 0 and " + MinNumberOfBeverage);
+    }
+    private static void ValidateIntMinNumberOfBeverage(int value, string minnumberoffood)
+    {
+        if (value < 0 || value > MaxNumberOfBeverage) throw new ArgumentOutOfRangeException("The value must be not less that 0 and must be less than" + MaxNumberOfBeverage);
+    }
+    private static void ValidateIntMaxNumberOfFood(int value, string text)
+    {
+        if (value < 0 || value < MinNumberOfFood) throw new ArgumentOutOfRangeException("The value must be not less that 0 and " + MinNumberOfFood);
+    }
+    private static void ValidateIntMinNumberOfFood(int value, string minnumberoffood)
+    {
+        if (value < 0 || value > MaxNumberOfFood) throw new ArgumentOutOfRangeException("The value must be not less that 0 and must be less than" + MaxNumberOfFood);
+    }
     private static void  ValidateFoodsInput(List<Food> foods)
     {
         if (!(foods.Count >= MinNumberOfFood && foods.Count <= MaxNumberOfFood)) throw new ArgumentException($"The number of foods must be between {MinNumberOfFood} and {MaxNumberOfFood}");
@@ -68,6 +124,23 @@ public class SetOfMenuItem : MenuItem
         if (index < 0 || index >= Beverages.Count) throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
         Beverages[index] = newBeverage;
         ValidateBeveragesInput(Beverages);
+    }
+
+    public static void UpdateMaxNumberOfBeverage(int value)
+    {
+        MaxNumberOfBeverage = value;
+    }
+    public static void UpdateMinNumberOfBeverage(int value)
+    {
+        MinNumberOfBeverage = value;
+    }
+    public static void UpdateMaxNumberOfFood(int value)
+    {
+        MaxNumberOfFood = value;
+    }
+    public static void UpdateMinNumberOfFood(int value)
+    {
+        MinNumberOfFood = value;
     }
     
 

@@ -1,8 +1,8 @@
 [
   {
-    "IsGuestesArrived": false,
+    "HaveGuestsArrived": false,
     "Description": "heljfoadsf",
-    "DateAndTime": "2024-11-04T04:35:44.1256929+01:00",
+    "DateAndTime": "2025-10-08T19:29:06.2076069+02:00",
     "StartTime": null,
     "Id": 3,
     "OrderPrice": 0.0,
@@ -10,9 +10,9 @@
     "NumberOfPeople": 4
   },
   {
-    "IsGuestesArrived": false,
+    "HaveGuestsArrived": false,
     "Description": null,
-    "DateAndTime": "2024-11-04T04:35:44.1267978+01:00",
+    "DateAndTime": "2025-11-09T19:29:06.2095871+01:00",
     "StartTime": null,
     "Id": 4,
     "OrderPrice": 0.0,

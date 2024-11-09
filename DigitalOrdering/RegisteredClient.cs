@@ -28,6 +28,7 @@ public class RegisteredClient : NonRegisteredClient
         private set
         {
             ValidatePassword(value);
+            ValidatePasswordRegex(value);
             _password = value;
         }
     }
@@ -45,7 +46,11 @@ public class RegisteredClient : NonRegisteredClient
         get => _email;
         private set
         {
-            ValidateEmail(value);
+            if (value != null)
+            {
+                ValidateEmail(value);
+                ValidateEmailRegex(value);
+            }
             _email = value;
         }
     }
@@ -62,15 +67,15 @@ public class RegisteredClient : NonRegisteredClient
 
     // constructor 
     [JsonConstructor]
-    public RegisteredClient(string name, string password, string? surname = null, string? email = null, string? phoneNumber = null) : base(name, phoneNumber)
+    public RegisteredClient(string name, string password, string? email = null, string? phoneNumber = null, string? surname = null) : base(name, phoneNumber)
     {
         Id = ++IdCounter;
         // name
         Password = password;
         Surname = surname;
+        ValidateEmailAndPhoneNumberInput(email, phoneNumber);
         Email = email;
         PhoneNumber = phoneNumber;
-        ValidateEmailAndPhoneNumberInput(email, phoneNumber);
         Bonus = 0;
     }
     
@@ -86,16 +91,23 @@ public class RegisteredClient : NonRegisteredClient
     }
     private static void ValidatePassword(string value)
     {
-        Regex PasswordRegex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$");
         if(string.IsNullOrEmpty(value)) throw new ArgumentException($"Password cannot be empty");
+    }
+    private static void ValidatePasswordRegex(string value)
+    {
+        Regex PasswordRegex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$");
         if(!PasswordRegex.IsMatch(value)) throw new ArgumentException($"Password is not valid");
         if(value.Length < 8) throw new ArgumentException($"Password must be at least 8 characters");
     }
     private static void ValidateEmail(string? value)
     {
-        Regex EmailRegex = new Regex(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
         if(value == string.Empty) throw new ArgumentException($"Email cannot be empty");
+    }
+    private static void ValidateEmailRegex(string value)
+    {
+        Regex EmailRegex = new Regex(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
         if(value != null && !EmailRegex.IsMatch(value)) throw new ArgumentException($"Email is not valid");
+        if(value.Length < 8) throw new ArgumentException($"Email must be at least 8 characters");
     }
     protected override void ValidatePhoneNumber(string? phoneNumber)
     {

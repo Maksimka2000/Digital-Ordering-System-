@@ -9,7 +9,6 @@ public abstract class Order
 
     // class fields
     private static int IdCounter = 0;
-
     private static double _service = 0.1;
 
     // class field setter validation
@@ -18,8 +17,7 @@ public abstract class Order
         get => _service * 100;
         private set
         {
-            if (value is < 0 or > 100)
-                throw new ArgumentException("Service must be between 0 and 100.");
+            ValidateService(value);
             _service = value / 100;
         }
     }
@@ -27,7 +25,7 @@ public abstract class Order
     // fields 
     public int Id { get; }
     public double OrderPrice { get; private set; }
-    public double TotalPrice { get; private set; }
+    public double TotalPrice { get; private set; } = 0;
     private int _numberOfPeople;
     public TimeSpan? StartTime { get; protected set; }
 
@@ -49,15 +47,19 @@ public abstract class Order
         Id = ++IdCounter;
         OrderPrice = 0;
         NumberOfPeople = numberOfPeople;
-        CalculateTotalPrice();
+        // CalculateTotalPrice();
     }
 
     // validation 
+    private static void ValidateService(double value)
+    {
+        if (value < 0 || value > 100) throw new ArgumentException("Service must be between 0 and 100.");
+    }
     private static void ValidateInteger(int value)
     {
         if (value <= 0) throw new ArgumentException("Number of people must be greater than zero.");
     }
-
+    
     // crud
     public static void ChangeService(double service)
     {

@@ -29,9 +29,28 @@ public class Food : MenuItem
     
     // fields
     [JsonConverter(typeof(StringEnumConverter))]
-    public DietaryPreferencesType? DietaryPreference { get; private set; }
+    private DietaryPreferencesType? _dietaryPreferences;
+    public DietaryPreferencesType? DietaryPreference
+    {
+        get => _dietaryPreferences;
+        private set
+        {
+            if(value != null) {ValidateDietaryPreference(value);}
+            _dietaryPreferences = value;
+        }
+    }
+
     [JsonConverter(typeof(StringEnumConverter))]
-    public FoodType FoodT { get; private set; }
+    private FoodType _foodType;
+    public FoodType FoodT
+    {
+        get => _foodType;
+        private set
+        {
+            ValidateFoodType(value);
+            _foodType = value;
+        }
+    }
 
     // constructor
     [JsonConstructor]
@@ -40,8 +59,20 @@ public class Food : MenuItem
         DietaryPreferencesType? dietaryPreference = null)
         : base(name, price, description, ingredients, promotion)
     {
-        DietaryPreference = dietaryPreference;
         FoodT = foodT;
+        DietaryPreference = dietaryPreference;
+    }
+    
+    
+    // validation 
+    private static void ValidateDietaryPreference (DietaryPreferencesType? dietaryPreference)
+    {
+        if (dietaryPreference != null && !Enum.IsDefined(typeof(DietaryPreferencesType), dietaryPreference)) throw new ArgumentException($"Invalid beverage type: {dietaryPreference}");
+        
+    }
+    private static void ValidateFoodType(FoodType value)
+    {
+        if (!Enum.IsDefined(typeof(FoodType), value)) throw new ArgumentException($"Invalid food type {value}");
     }
     
     // Get, Add, Delete, Update CRUD

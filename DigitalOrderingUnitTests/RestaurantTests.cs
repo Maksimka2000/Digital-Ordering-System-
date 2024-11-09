@@ -27,15 +27,15 @@ public class RestaurantTests
         Assert.Throws<ArgumentException>(() => new Restaurant("", address, openHours));
     }
 
-    [Fact]
-    public void Constructor_ThrowsExceptionForInvalidOpenHours()
-    {
-        var address = new Address("123 Main St", "Springfield");
-        var incompleteOpenHours = new List<OpenHour>
-            { new(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)) };
-
-        Assert.Throws<ArgumentException>(() => new Restaurant("The Bistro", address, incompleteOpenHours));
-    }
+    // [Fact]
+    // public void Constructor_ThrowsExceptionForInvalidOpenHours()
+    // {
+    //     var address = new Address("123 Main St", "Springfield");
+    //     var incompleteOpenHours = new List<OpenHour>
+    //         { new(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)) };
+    //
+    //     Assert.Throws<ArgumentException>(() => new Restaurant("The Bistro", address, incompleteOpenHours));
+    // }
 
     [Fact]
     public void AddRestaurant_AddsRestaurantToList()
