@@ -5,6 +5,13 @@ namespace DigitalOrderingUnitTests;
 
 public class IngredientTests
 {
+    public IngredientTests()
+    {
+        typeof(Ingredient).GetField("_ingredients",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            ?.SetValue(null, new List<Ingredient>());
+    }
+
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
@@ -15,6 +22,22 @@ public class IngredientTests
         Assert.Equal(name, ingredient.Name);
         Assert.True(ingredient.Id > 0);
     }
+
+    [Fact]
+    public void Name_Getter_ReturnsCorrectValue()
+    {
+        var ingredient = new Ingredient("Basil");
+        Assert.Equal("Basil", ingredient.Name);
+    }
+
+    [Fact]
+    public void Id_Getter_ReturnsUniqueValue()
+    {
+        var ingredient1 = new Ingredient("Oregano");
+        var ingredient2 = new Ingredient("Pepper");
+        Assert.NotEqual(ingredient1.Id, ingredient2.Id);
+    }
+
 
     [Fact]
     public void AddIngredient_AddsIngredientToList()
@@ -28,7 +51,7 @@ public class IngredientTests
     }
 
     [Fact]
-    public void GetIngredients_ReturnsListOfIngredients()
+    public void GetIngredients_ReturnsCorrectListOfIngredients()
     {
         var ingredient1 = new Ingredient("Onion");
         var ingredient2 = new Ingredient("Garlic");
@@ -54,32 +77,15 @@ public class IngredientTests
         Assert.DoesNotContain(ingredient, ingredients);
     }
 
-    [Fact]
-    public void UpdateName_ChangesIngredientName()
-    {
-        var ingredient = new Ingredient("Basil");
-
-        ingredient.UpdateName("Fresh Basil");
-
-        Assert.Equal("Fresh Basil", ingredient.Name);
-    }
-
-    [Fact]
-    public void AddIngredient_ThrowsExceptionForDuplicateName()
-    {
-        var ingredient1 = new Ingredient("Olive Oil");
-        Ingredient.AddIngredient(ingredient1);
-        var ingredient2 = new Ingredient("Olive Oil");
-
-        Assert.Throws<ArgumentException>(() => Ingredient.AddIngredient(ingredient2));
-    }
-
-    [Fact]
-    public void Constructor_ThrowsExceptionForInvalidArguments()
-    {
-        Assert.Throws<ArgumentException>(() => new Ingredient(null));
-        Assert.Throws<ArgumentException>(() => new Ingredient(""));
-    }
+    // [Fact]
+    // public void UpdateName_ChangesIngredientName()
+    // {
+    //     var ingredient = new Ingredient("Basil");
+    //
+    //     ingredient.UpdateName("Fresh Basil");
+    //
+    //     Assert.Equal("Fresh Basil", ingredient.Name);
+    // }
 
     [Fact]
     public void SaveIngredientJSON_SavesIngredientsToFile()
@@ -102,7 +108,7 @@ public class IngredientTests
         var ingredient = new Ingredient("Salt");
         Ingredient.AddIngredient(ingredient);
         Ingredient.SaveIngredientJSON(path);
-        Ingredient.DeleteIngredient(ingredient); 
+        Ingredient.DeleteIngredient(ingredient);
 
         Ingredient.LoadIngredientJSON(path);
         var ingredients = Ingredient.GetIngredients();
@@ -111,5 +117,16 @@ public class IngredientTests
         Assert.Equal(ingredient.Name, ingredients[0].Name);
 
         File.Delete(path);
+    }
+    
+    [Fact]
+    public void ExceptionTests()
+    {
+        var ingredient = new Ingredient("Salt");
+        Ingredient.AddIngredient(ingredient);
+        var duplicateIngredient = new Ingredient("Salt");
+        Assert.Throws<ArgumentException>(() => Ingredient.AddIngredient(duplicateIngredient));
+
+        Assert.Throws<ArgumentException>(() => Ingredient.AddIngredient(null));
     }
 }

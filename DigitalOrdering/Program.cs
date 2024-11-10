@@ -18,7 +18,7 @@ void LoadClassExtent()
         "Ingredients.json"));
     Food.LoadFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
     Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    SetOfMenuItem.LoadBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.LoadBusinessLunchJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
     Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
@@ -33,12 +33,12 @@ void LoadClassExtent()
 
 void SaveClassExtent()
 {
-    Promotion.SavePromotionJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Promotions.json"));
+    Promotion.SavePromotionJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Promotions.json"));
     Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Ingredients.json"));
     Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    SetOfMenuItem.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.SaveBusinessLunchJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
     Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
@@ -245,7 +245,7 @@ void CreateObjects()
     var promo3 = new Promotion(10, "Wednesday discount", "discount for clients on Wednesdays");
     Promotion.AddPromotion(promo3);
 
-    Promotion.SavePromotionJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Promotions.json"));
+    Promotion.SavePromotionJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Promotions.json"));
 
 //===================================================================== Create Ingredietn 
     var tomatoIngredient = new Ingredient("Tomato");
@@ -378,7 +378,7 @@ void CreateObjects()
         new List<Beverage> { beverage2 });
     SetOfMenuItem.AddBusinessLunch(businessLunch);
 
-    SetOfMenuItem.SaveBusinessLunchJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.SaveBusinessLunchJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "BusinessLunches.json"));
 
 

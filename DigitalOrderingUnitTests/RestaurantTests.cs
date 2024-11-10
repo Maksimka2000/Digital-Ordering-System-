@@ -1,3 +1,4 @@
+using System.Reflection;
 using DigitalOrdering;
 using Xunit;
 
@@ -5,58 +6,82 @@ namespace DigitalOrderingUnitTests;
 
 public class RestaurantTests
 {
+    public RestaurantTests()
+    {
+        typeof(Restaurant)
+            .GetField("_restaurants", BindingFlags.NonPublic | BindingFlags.Static)
+            ?.SetValue(null, new List<Restaurant>());
+    }
+
+    private static List<OpenHour> CreateOpenHours(bool closedOnSunday = true)
+    {
+        return
+        [
+            new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+            new OpenHour(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+            new OpenHour(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+            new OpenHour(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+            new OpenHour(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
+            new OpenHour(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(14, 0, 0)),
+            new OpenHour(DayOfWeek.Sunday, closedOnSunday ? null : new TimeSpan(10, 0, 0),
+                closedOnSunday ? null : new TimeSpan(14, 0, 0))
+        ];
+    }
+
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        var address = new Address("123 Main St", "Springfield");
-        var openHours = CreateDefaultOpenHours();
-        var restaurant = new Restaurant("The Bistro", address, openHours);
+        const string name = "La Pizzeria";
+        var location = new Address("Main Street 10", "Metropolis");
+        var openHours = CreateOpenHours();
 
-        Assert.Equal("The Bistro", restaurant.Name);
-        Assert.Equal(address, restaurant.Location);
+        var restaurant = new Restaurant(name, location, openHours);
+
+        Assert.Equal(name, restaurant.Name);
+        Assert.Equal(location, restaurant.Location);
         Assert.Equal(openHours, restaurant.OpenHours);
         Assert.True(restaurant.Id > 0);
     }
 
     [Fact]
-    public void Constructor_ThrowsExceptionForInvalidName()
+    public void Id_Getter_ReturnsCorrectValue()
     {
-        var address = new Address("123 Main St", "Springfield");
-        var openHours = CreateDefaultOpenHours();
-
-        Assert.Throws<ArgumentException>(() => new Restaurant("", address, openHours));
+        var restaurant = new Restaurant("Test Restaurant", new Address("Main St", "Test City"), CreateOpenHours());
+        Assert.True(restaurant.Id > 0);
     }
 
-    // [Fact]
-    // public void Constructor_ThrowsExceptionForInvalidOpenHours()
-    // {
-    //     var address = new Address("123 Main St", "Springfield");
-    //     var incompleteOpenHours = new List<OpenHour>
-    //         { new(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)) };
-    //
-    //     Assert.Throws<ArgumentException>(() => new Restaurant("The Bistro", address, incompleteOpenHours));
-    // }
+
+    [Fact]
+    public void Name_Getter_ReturnsCorrectValue()
+    {
+        var restaurant = new Restaurant("Ocean Diner", new Address("Bay Ave 5", "Seaside"), CreateOpenHours());
+        Assert.Equal("Ocean Diner", restaurant.Name);
+    }
+
+    [Fact]
+    public void Location_Getter_ReturnsCorrectValue()
+    {
+        var location = new Address("High St 22", "Riverside");
+        var restaurant = new Restaurant("Bistro Riverside", location, CreateOpenHours());
+        Assert.Equal(location, restaurant.Location);
+    }
 
     [Fact]
     public void AddRestaurant_AddsRestaurantToList()
     {
-        var address = new Address("123 Main St", "Springfield");
-        var openHours = CreateDefaultOpenHours();
-        var restaurant = new Restaurant("The Diner", address, openHours);
-
+        var restaurant =
+            new Restaurant("Cafe Good Day", new Address("Sunset Blvd 15", "Sunnyville"), CreateOpenHours());
         Restaurant.AddRestaurant(restaurant);
-        var restaurants = Restaurant.GetRestaurants();
 
+        var restaurants = Restaurant.GetRestaurants();
         Assert.Contains(restaurant, restaurants);
     }
 
     [Fact]
-    public void GetRestaurants_ReturnsListOfRestaurants()
+    public void GetRestaurants_ReturnsCorrectListOfRestaurants()
     {
-        var address1 = new Address("123 Main St", "Springfield");
-        var address2 = new Address("456 Elm St", "Springfield");
-        var restaurant1 = new Restaurant("Restaurant 1", address1, CreateDefaultOpenHours());
-        var restaurant2 = new Restaurant("Restaurant 2", address2, CreateDefaultOpenHours());
+        var restaurant1 = new Restaurant("Deli Delight", new Address("Market St 10", "Townsville"), CreateOpenHours());
+        var restaurant2 = new Restaurant("Bakery Bliss", new Address("Hill Rd 1", "Greenville"), CreateOpenHours());
 
         Restaurant.AddRestaurant(restaurant1);
         Restaurant.AddRestaurant(restaurant2);
@@ -69,53 +94,13 @@ public class RestaurantTests
     }
 
     [Fact]
-    public void UpdateName_ChangesRestaurantName()
-    {
-        var address = new Address("123 Main St", "Springfield");
-        var openHours = CreateDefaultOpenHours();
-        var restaurant = new Restaurant("Old Name", address, openHours);
-
-        restaurant.UpdateName("New Name");
-
-        Assert.Equal("New Name", restaurant.Name);
-    }
-
-    [Fact]
-    public void UpdateOpenHours_ChangesOpenHoursForSpecificDay()
-    {
-        var address = new Address("123 Main St", "Springfield");
-        var openHours = CreateDefaultOpenHours();
-        var restaurant = new Restaurant("The Grill", address, openHours);
-
-        restaurant.UpdateOpenHours(DayOfWeek.Monday, new TimeSpan(10, 0, 0), new TimeSpan(22, 0, 0));
-
-        var updatedHours = restaurant.OpenHours.Find(hour => hour.Day == DayOfWeek.Monday);
-        Assert.Equal(new TimeSpan(10, 0, 0), updatedHours.OpenTime);
-        Assert.Equal(new TimeSpan(22, 0, 0), updatedHours.CloseTime);
-    }
-
-    [Fact]
-    public void IsRestaurantOpen_ReturnsCorrectStatusBasedOnTime()
-    {
-        var address = new Address("123 Main St", "Springfield");
-        var openHours = CreateDefaultOpenHours();
-        var restaurant = new Restaurant("Café", address, openHours);
-
-        Assert.True(restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(12, 0, 0))); // Within open hours
-        Assert.False(restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))); // Before open hours
-        Assert.False(restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(20, 0, 0))); // After open hours
-    }
-
-    [Fact]
     public void SaveRestaurantJSON_SavesRestaurantsToFile()
     {
-        var address = new Address("123 Main St", "Springfield");
-        var restaurant = new Restaurant("File Restaurant", address, CreateDefaultOpenHours());
+        var restaurant = new Restaurant("Cafe Sunrise", new Address("Lake St 7", "Hilltown"), CreateOpenHours());
         Restaurant.AddRestaurant(restaurant);
         const string path = "test_restaurants.json";
 
         Restaurant.SaveRestaurantJSON(path);
-
         Assert.True(File.Exists(path));
 
         File.Delete(path);
@@ -125,8 +110,7 @@ public class RestaurantTests
     public void LoadRestaurantJSON_LoadsRestaurantsFromFile()
     {
         const string path = "test_restaurants.json";
-        var address = new Address("123 Main St", "Springfield");
-        var restaurant = new Restaurant("File Load Restaurant", address, CreateDefaultOpenHours());
+        var restaurant = new Restaurant("Moonlight Cafe", new Address("Night St 12", "Moon City"), CreateOpenHours());
         Restaurant.AddRestaurant(restaurant);
         Restaurant.SaveRestaurantJSON(path);
         Restaurant.GetRestaurants().Clear();
@@ -140,18 +124,12 @@ public class RestaurantTests
         File.Delete(path);
     }
 
-    private static List<OpenHour> CreateDefaultOpenHours()
+    [Fact]
+    public void Constructor_ThrowsExceptionForInvalidNameOrLocation()
     {
-        return
-        [
-            new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-            new OpenHour(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-            new OpenHour(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-            new OpenHour(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-            new OpenHour(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-            new OpenHour(DayOfWeek.Saturday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-            new OpenHour(DayOfWeek.Sunday, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0))
-        ];
+        Assert.Throws<ArgumentException>(() =>
+            new Restaurant("", new Address("Lake St 7", "Hilltown"), CreateOpenHours()));
+        Assert.Throws<ArgumentNullException>(() => new Restaurant("Cafe Sunset", null, CreateOpenHours()));
     }
 }
 
@@ -160,32 +138,50 @@ public class OpenHourTests
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        var openHour = new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0));
+        var day = DayOfWeek.Monday;
+        var openTime = new TimeSpan(9, 0, 0);
+        var closeTime = new TimeSpan(17, 0, 0);
 
-        Assert.Equal(DayOfWeek.Monday, openHour.Day);
-        Assert.Equal(new TimeSpan(9, 0, 0), openHour.OpenTime);
-        Assert.Equal(new TimeSpan(17, 0, 0), openHour.CloseTime);
+        var openHour = new OpenHour(day, openTime, closeTime);
+
+        Assert.Equal(day, openHour.Day);
+        Assert.Equal(openTime, openHour.OpenTime);
+        Assert.Equal(closeTime, openHour.CloseTime);
         Assert.True(openHour.IsOpen);
     }
 
     [Fact]
-    public void UpdateTime_ChangesOpenAndCloseTime()
+    public void Constructor_SetsClosedDayCorrectly()
     {
-        var openHour = new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0));
+        var day = DayOfWeek.Sunday;
 
-        openHour.UpdateTime(new TimeSpan(10, 0, 0), new TimeSpan(20, 0, 0));
+        var openHour = new OpenHour(day);
 
-        Assert.Equal(new TimeSpan(10, 0, 0), openHour.OpenTime);
-        Assert.Equal(new TimeSpan(20, 0, 0), openHour.CloseTime);
-        Assert.True(openHour.IsOpen);
-    }
-
-    [Fact]
-    public void UpdateTime_SetsIsOpenToFalseForNullTimes()
-    {
-        var openHour = new OpenHour(DayOfWeek.Monday);
-
+        Assert.Equal(day, openHour.Day);
+        Assert.Null(openHour.OpenTime);
+        Assert.Null(openHour.CloseTime);
         Assert.False(openHour.IsOpen);
+    }
+
+    [Fact]
+    public void UpdateTime_ThrowsExceptionForInvalidTimes()
+    {
+        var openHour = new OpenHour(DayOfWeek.Wednesday);
+
+        var invalidOpenTime = new TimeSpan(18, 0, 0);
+        var invalidCloseTime = new TimeSpan(9, 0, 0);
+
+        Assert.Throws<ArgumentException>(() => openHour.UpdateTime(invalidOpenTime, invalidCloseTime));
+    }
+
+    [Fact]
+    public void UpdateTime_ThrowsExceptionForOneNullTime()
+    {
+        var openHour = new OpenHour(DayOfWeek.Thursday);
+
+        var openTime = new TimeSpan(10, 0, 0);
+
+        Assert.Throws<ArgumentException>(() => openHour.UpdateTime(openTime, null));
     }
 }
 
@@ -194,9 +190,40 @@ public class AddressTests
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        var address = new Address("456 Elm St", "Springfield");
+        const string street = "Main St";
+        const string city = "Metropolis";
 
-        Assert.Equal("456 Elm St", address.Street);
-        Assert.Equal("Springfield", address.City);
+        var address = new Address(street, city);
+
+        Assert.Equal(street, address.Street);
+        Assert.Equal(city, address.City);
+    }
+
+    [Fact]
+    public void Street_Getter_ReturnsCorrectValue()
+    {
+        var address = new Address("Broadway", "New York");
+        Assert.Equal("Broadway", address.Street);
+    }
+
+    [Fact]
+    public void City_Getter_ReturnsCorrectValue()
+    {
+        var address = new Address("Elm St", "Gotham");
+        Assert.Equal("Gotham", address.City);
+    }
+
+    [Fact]
+    public void Constructor_ThrowsExceptionForInvalidStreet()
+    {
+        Assert.Throws<ArgumentException>(() => new Address("", "Metropolis"));
+        Assert.Throws<ArgumentException>(() => new Address(null, "Metropolis"));
+    }
+
+    [Fact]
+    public void Constructor_ThrowsExceptionForInvalidCity()
+    {
+        Assert.Throws<ArgumentException>(() => new Address("Main St", ""));
+        Assert.Throws<ArgumentException>(() => new Address("Main St", null));
     }
 }

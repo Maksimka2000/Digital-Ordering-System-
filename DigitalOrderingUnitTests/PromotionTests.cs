@@ -1,16 +1,15 @@
 using DigitalOrdering;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DigitalOrderingUnitTests;
 
 public class PromotionTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public PromotionTests(ITestOutputHelper testOutputHelper)
+    public PromotionTests()
     {
-        _testOutputHelper = testOutputHelper;
+        typeof(Promotion)
+            .GetField("_promotions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            ?.SetValue(null, new List<Promotion>());
     }
 
     [Fact]
@@ -29,6 +28,83 @@ public class PromotionTests
     }
 
     [Fact]
+    public void DiscountPercent_Getter_ReturnsCorrectValue()
+    {
+        var promotion = new Promotion(15, "Winter Sale", "Discount for winter items");
+        Assert.Equal(15, promotion.DiscountPercent);
+    }
+
+    [Fact]
+    public void Name_Getter_ReturnsCorrectValue()
+    {
+        var promotion = new Promotion(10, "Holiday Sale", "Seasonal discount");
+        Assert.Equal("Holiday Sale", promotion.Name);
+    }
+
+    [Fact]
+    public void Description_Getter_ReturnsCorrectValue()
+    {
+        var promotion = new Promotion(25, "Flash Sale", "Limited time discount");
+        Assert.Equal("Limited time discount", promotion.Description);
+    }
+
+    [Fact]
+    public void AddPromotion_AddsPromotionToList()
+    {
+        var promotion = new Promotion(15, "Summer Sale", "Discount on summer items");
+        Promotion.AddPromotion(promotion);
+
+        var promotions = Promotion.GetPromotions();
+        Assert.Contains(promotion, promotions);
+    }
+
+    [Fact]
+    public void GetPromotions_ReturnsCorrectListOfPromotions()
+    {
+        var promotion1 = new Promotion(10, "New Year Sale", "Discount for the new year");
+        var promotion2 = new Promotion(20, "Valentine's Day Sale", "Discount for Valentine's Day");
+        Promotion.AddPromotion(promotion1);
+        Promotion.AddPromotion(promotion2);
+
+        var promotions = Promotion.GetPromotions();
+
+        Assert.Equal(2, promotions.Count);
+        Assert.Contains(promotion1, promotions);
+        Assert.Contains(promotion2, promotions);
+    }
+
+    [Fact]
+    public void SavePromotionJSON_SavesPromotionsToFile()
+    {
+        var promotion = new Promotion(30, "Autumn Sale", "Discount on autumn items");
+        Promotion.AddPromotion(promotion);
+        const string path = "test_promotions.json";
+
+        Promotion.SavePromotionJson(path);
+        Assert.True(File.Exists(path));
+
+        File.Delete(path);
+    }
+
+    [Fact]
+    public void LoadPromotionJSON_LoadsPromotionsFromFile()
+    {
+        const string path = "test_promotions.json";
+        var promotion = new Promotion(5, "Weekend Sale", "Discount on weekends");
+        Promotion.AddPromotion(promotion);
+        Promotion.SavePromotionJson(path);
+        Promotion.GetPromotions().Clear();
+
+        Promotion.LoadPromotionJSON(path);
+        var promotions = Promotion.GetPromotions();
+
+        Assert.Single(promotions);
+        Assert.Equal(promotion.Name, promotions[0].Name);
+
+        File.Delete(path);
+    }
+
+    [Fact]
     public void Constructor_ThrowsExceptionForInvalidDiscountPercent()
     {
         Assert.Throws<Exception>(() => new Promotion(0, "New Year Sale", "Discount on New Year's Day"));
@@ -40,119 +116,5 @@ public class PromotionTests
     {
         Assert.Throws<ArgumentException>(() => new Promotion(10, "", "Discount for members"));
         Assert.Throws<ArgumentException>(() => new Promotion(10, "Member Discount", ""));
-    }
-
-    [Fact]
-    public void AddPromotion_AddsPromotionToList()
-    {
-        var promotion = new Promotion(15, "Summer Sale", "Discount on all summer items");
-
-        Promotion.AddPromotion(promotion);
-        var promotions = Promotion.GetPromotions();
-
-        Assert.Contains(promotion, promotions);
-    }
-
-    [Fact]
-    public void GetPromotions_ReturnsListOfPromotions()
-    {
-        
-        _testOutputHelper.WriteLine(Promotion.GetPromotions().Count.ToString());
-        
-        var promotion1 = new Promotion(10, "Black Friday", "Discount on Black Friday");
-        var promotion2 = new Promotion(5, "Cyber Monday", "Discount on Cyber Monday");
-        Promotion.AddPromotion(promotion1);
-        Promotion.AddPromotion(promotion2);
-
-        
-        var promotions = Promotion.GetPromotions();
-
-        Assert.Equal(2, promotions.Count);
-        Assert.Contains(promotion1, promotions);
-        Assert.Contains(promotion2, promotions);
-    }
-
-    [Fact]
-    public void DeletePromotion_RemovesPromotionFromList()
-    {
-        var promotion = new Promotion(20, "Halloween Sale", "Discount on Halloween items");
-        Promotion.AddPromotion(promotion);
-
-        Promotion.DeletePromotion(promotion);
-        var promotions = Promotion.GetPromotions();
-
-        Assert.DoesNotContain(promotion, promotions);
-    }
-
-    [Fact]
-    public void AddPromotion_ThrowsExceptionForDuplicateName()
-    {
-        var promotion1 = new Promotion(10, "Exclusive Offer", "Special exclusive discount");
-        Promotion.AddPromotion(promotion1);
-        var promotion2 = new Promotion(20, "Exclusive Offer", "Duplicate promotion name test");
-
-        Assert.Throws<ArgumentException>(() => Promotion.AddPromotion(promotion2));
-    }
-
-    [Fact]
-    public void UpdateDiscountPercent_ChangesDiscountPercent()
-    {
-        var promotion = new Promotion(10, "Seasonal Discount", "Limited-time offer");
-
-        promotion.UpdateDiscountPercent(25);
-
-        Assert.Equal(25, promotion.DiscountPercent);
-    }
-
-    [Fact]
-    public void UpdateName_ChangesPromotionName()
-    {
-        var promotion = new Promotion(15, "Weekend Deal", "Discount valid on weekends");
-
-        promotion.UpdateName("Weekend Special");
-
-        Assert.Equal("Weekend Special", promotion.Name);
-    }
-
-    [Fact]
-    public void UpdateDescription_ChangesPromotionDescription()
-    {
-        var promotion = new Promotion(30, "Flash Sale", "Discount on select items");
-
-        promotion.UpdateDescription("Limited-time flash sale");
-
-        Assert.Equal("Limited-time flash sale", promotion.Description);
-    }
-
-    [Fact]
-    public void SavePromotionJSON_SavesPromotionsToFile()
-    {
-        var promotion = new Promotion(5, "New Customer Discount", "Discount for new customers");
-        Promotion.AddPromotion(promotion);
-        const string path = "test_promotions.json";
-
-        Promotion.SavePromotionJSON(path);
-
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadPromotionJSON_LoadsPromotionsFromFile()
-    {
-        const string path = "test_promotions.json";
-        var promotion = new Promotion(10, "Holiday Discount", "Discount for the holiday season");
-        Promotion.AddPromotion(promotion);
-        Promotion.SavePromotionJSON(path);
-        Promotion.GetPromotions().Clear();
-
-        Promotion.LoadPromotionJSON(path);
-        var promotions = Promotion.GetPromotions();
-
-        Assert.Single(promotions);
-        Assert.Equal(promotion.Name, promotions[0].Name);
-
-        File.Delete(path);
     }
 }

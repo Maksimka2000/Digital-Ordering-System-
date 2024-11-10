@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
+using DidgitalOrdering;
+using DigitalOrdering;
 using Newtonsoft.Json;
 
 namespace DigitalOrdering;
@@ -9,7 +11,7 @@ public class RegisteredClient : NonRegisteredClient
 {
     
     //class extent
-    private static List<RegisteredClient> _registeredClients = new List<RegisteredClient>();
+    private static List<RegisteredClient> _registeredClients = [];
     
     //static fields
     private static int IdCounter = 0;
@@ -72,6 +74,7 @@ public class RegisteredClient : NonRegisteredClient
         Id = ++IdCounter;
         // name
         Password = password;
+        _password = password;
         Surname = surname;
         ValidateEmailAndPhoneNumberInput(email, phoneNumber);
         Email = email;
@@ -87,7 +90,7 @@ public class RegisteredClient : NonRegisteredClient
     private static void ValidateSurname(string? value)
     {
         if(value == string.Empty) throw new ArgumentException($"Surname cannot be empty");
-        if(value != null && value.Length < 2) throw new ArgumentException($"Surname must be at least 2 characters");
+        if(value is { Length: < 2 }) throw new ArgumentException($"Surname must be at least 2 characters");
     }
     private static void ValidatePassword(string value)
     {
@@ -95,8 +98,8 @@ public class RegisteredClient : NonRegisteredClient
     }
     private static void ValidatePasswordRegex(string value)
     {
-        Regex PasswordRegex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$");
-        if(!PasswordRegex.IsMatch(value)) throw new ArgumentException($"Password is not valid");
+        var passwordRegex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$");
+        if(!passwordRegex.IsMatch(value)) throw new ArgumentException($"Password is not valid");
         if(value.Length < 8) throw new ArgumentException($"Password must be at least 8 characters");
     }
     private static void ValidateEmail(string? value)
@@ -105,9 +108,9 @@ public class RegisteredClient : NonRegisteredClient
     }
     private static void ValidateEmailRegex(string value)
     {
-        Regex EmailRegex = new Regex(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
-        if(value != null && !EmailRegex.IsMatch(value)) throw new ArgumentException($"Email is not valid");
-        if(value.Length < 8) throw new ArgumentException($"Email must be at least 8 characters");
+        var emailRegex = new Regex(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
+        if(value != null && !emailRegex.IsMatch(value)) throw new ArgumentException($"Email is not valid");
+        if(value is { Length: < 8 }) throw new ArgumentException($"Email must be at least 8 characters");
     }
     protected override void ValidatePhoneNumber(string? phoneNumber)
     {
@@ -122,7 +125,7 @@ public class RegisteredClient : NonRegisteredClient
     }
     public static List<RegisteredClient> GetRegisteredClients()
     {
-        return new List<RegisteredClient>(_registeredClients);
+        return [.._registeredClients];
     }
     public void UpdatePassword(string newPassword)
     {
@@ -163,7 +166,7 @@ public class RegisteredClient : NonRegisteredClient
     {
         try
         {
-            string json = JsonConvert.SerializeObject(_registeredClients, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(_registeredClients, Formatting.Indented);
             File.WriteAllText(path, json);
             Console.WriteLine($"File RegisteredClient saved successfully at {path}");
         }
@@ -179,7 +182,7 @@ public class RegisteredClient : NonRegisteredClient
         {
             if (File.Exists(path))
             {
-                string json = File.ReadAllText(path);
+                var json = File.ReadAllText(path);
                 _registeredClients = JsonConvert.DeserializeObject<List<RegisteredClient>>(json);
                 Console.WriteLine($"File RegisteredClient loaded successfully at {path}");
             }

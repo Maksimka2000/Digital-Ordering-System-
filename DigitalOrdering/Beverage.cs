@@ -23,6 +23,7 @@ public class Beverage : MenuItem
 
     [JsonConverter(typeof(StringEnumConverter))]
     private BeverageType _beveragesType;
+
     public BeverageType BeverageT
     {
         get => _beveragesType;
@@ -42,19 +43,19 @@ public class Beverage : MenuItem
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
     }
-    
+
     //validation 
     private static void ValidateBeverageType(BeverageType beverageType)
     {
-        if (!Enum.IsDefined(typeof(BeverageType), beverageType)) throw new ArgumentException($"Invalid beverage type: {beverageType}");
-        
+        if (!Enum.IsDefined(typeof(BeverageType), beverageType))
+            throw new ArgumentException($"Invalid beverage type: {beverageType}");
     }
 
     // Get, Add, Delete, Update
     public static void AddBeverage(Beverage beverage)
     {
         if (beverage == null) throw new ArgumentException("Game cannot be null");
-        else _beverages.Add(beverage);
+        _beverages.Add(beverage);
     }
 
     public static List<Beverage> GetBeverages()

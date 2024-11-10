@@ -5,6 +5,13 @@ namespace DigitalOrderingUnitTests;
 
 public class BeverageTests
 {
+    public BeverageTests()
+    {
+        typeof(Beverage).GetField("_beverages",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            ?.SetValue(null, new List<Beverage>());
+    }
+
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
@@ -34,6 +41,21 @@ public class BeverageTests
     }
 
     [Fact]
+    public void BeverageType_Getter_ReturnsCorrectValue()
+    {
+        var beverage = new Beverage("Espresso", 2.5, "Strong coffee", null, null, false,
+            Beverage.BeverageType.Cafeteria);
+        Assert.Equal(Beverage.BeverageType.Cafeteria, beverage.BeverageT);
+    }
+
+    [Fact]
+    public void IsAlcohol_Getter_ReturnsCorrectValue()
+    {
+        var beverage = new Beverage("Beer", 4.0, "Refreshing beer", null, null, true, Beverage.BeverageType.Drinks);
+        Assert.True(beverage.IsAlcohol);
+    }
+
+    [Fact]
     public void AddBeverage_AddsBeverageToList()
     {
         var beverage = new Beverage("Espresso", 2.5, "Strong coffee", null, null, false,
@@ -46,9 +68,10 @@ public class BeverageTests
     }
 
     [Fact]
-    public void GetBeverages_ReturnsListOfBeverages()
+    public void GetBeverages_ReturnsCorrectList()
     {
-        var beverage1 = new Beverage("Latte", 3.5, "Milk coffee", null, null, false, Beverage.BeverageType.Cafeteria);
+        var beverage1 = new Beverage("Espresso", 2.5, "Strong coffee", null, null, false,
+            Beverage.BeverageType.Cafeteria);
         var beverage2 = new Beverage("Whiskey", 12.0, "Smooth whiskey", null, null, true, Beverage.BeverageType.Drinks);
         Beverage.AddBeverage(beverage1);
         Beverage.AddBeverage(beverage2);

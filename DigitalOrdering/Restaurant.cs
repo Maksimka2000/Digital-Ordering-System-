@@ -6,10 +6,9 @@ namespace DigitalOrdering;
 [Serializable]
 public class Restaurant
 {
-    
     // class extent
     private static List<Restaurant> _restaurants = [];
-    
+
     // static fields
     private static int IdCounter = 0;
 
@@ -29,6 +28,7 @@ public class Restaurant
             _name = value;
         }
     }
+
     public List<OpenHour> OpenHours
     {
         get => _openHours;
@@ -39,6 +39,7 @@ public class Restaurant
             _openHours = value;
         }
     }
+
     public Address Location
     {
         get => _location;
@@ -58,41 +59,46 @@ public class Restaurant
         Location = location;
         OpenHours = openHours;
     }
-    
+
     // validation
     private static void ValidateStringMandatory(string value, string text)
     {
         if (string.IsNullOrEmpty(value)) throw new ArgumentException($"{text} cannot be null or empty");
     }
+
     private static void ValidateWorkHours(List<OpenHour> workHours)
     {
-        if(workHours == null) throw new ArgumentException("work hours is null");
-        
+        if (workHours == null) throw new ArgumentException("work hours is null");
     }
+
     private static void ValidateWorkHoursDays(List<OpenHour> workHours)
     {
         if (workHours.Count != 7) throw new ArgumentException("Work hours cannot be less than 7");
-        if (workHours.Select(wh => wh.Day).Distinct().Count() != 7) throw new ArgumentException("not all days specified.");
+        if (workHours.Select(wh => wh.Day).Distinct().Count() != 7)
+            throw new ArgumentException("not all days specified.");
     }
+
     private static void ValidateLocation(Address value)
     {
-        if(value == null ) throw new ArgumentNullException(" address cannot be null");
+        if (value == null) throw new ArgumentNullException(" address cannot be null");
     }
-    
+
     // get, delete, add, update.
     public static List<Restaurant> GetRestaurants()
     {
         return [.._restaurants];
     }
+
     public static void AddRestaurant(Restaurant restaurant)
     {
         _restaurants.Add(restaurant);
     }
+
     public void UpdateName(string newName)
     {
-        Name = newName;  
+        Name = newName;
     }
-    
+
     // methods
     public bool IsRestaurantOpen(DayOfWeek dayOfWeek, TimeSpan currentTime)
     {
@@ -104,10 +110,11 @@ public class Restaurant
     {
         var day = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
         day.UpdateTime(openTime, closeTime);
-        Console.WriteLine($"time successfull updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}" )}");
+        Console.WriteLine(
+            $"time successfull updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}")}");
     }
-    
-    
+
+
     //  serialized and deserialized 
     public static void SaveRestaurantJSON(string path)
     {
@@ -140,47 +147,43 @@ public class Restaurant
         {
             throw new ArgumentException($"Error loading Restaurant file: {e.Message}");
         }
-        
     }
-    
-    
 }
-
-
 
 // are custom objects, Complex attributes
 [Serializable]
 public class OpenHour
 {
-    
     [JsonConverter(typeof(StringEnumConverter))]
     public DayOfWeek Day { get; private set; }
+
     public TimeSpan? OpenTime { get; private set; }
     public TimeSpan? CloseTime { get; private set; }
-    public bool IsOpen {get; private set;}
-    
+    public bool IsOpen { get; private set; }
+
     [JsonConstructor]
     public OpenHour(DayOfWeek day, TimeSpan? openTime = null, TimeSpan? closeTime = null)
     {
         Day = day;
         UpdateTime(openTime, closeTime);
     }
-    
+
     public void UpdateTime(TimeSpan? newOpenTime, TimeSpan? newCloseTime)
     {
         if (newOpenTime.HasValue && newCloseTime.HasValue)
             ValidateTime(newOpenTime, newCloseTime);
-        
-        if(newOpenTime.HasValue ^ newCloseTime.HasValue) throw new ArgumentException($" both of them can be null or not null.");
-        
+
+        if (newOpenTime.HasValue ^ newCloseTime.HasValue)
+            throw new ArgumentException($" both of them can be null or not null.");
+
         OpenTime = newOpenTime;
         CloseTime = newCloseTime;
         IsOpen = !(OpenTime == null && CloseTime == null);
     }
-    
+
     private static void ValidateTime(TimeSpan? openTime, TimeSpan? closeTime)
     {
-        if(openTime >= closeTime) throw new ArgumentException("Closing time must be later than opening time");
+        if (openTime >= closeTime) throw new ArgumentException("Closing time must be later than opening time");
     }
 }
 
@@ -190,9 +193,9 @@ public class Address
     private string _street;
     private string _city;
 
-    public string Street 
-    { 
-        get => _street; 
+    public string Street
+    {
+        get => _street;
         private set
         {
             if (string.IsNullOrEmpty(value))
@@ -200,9 +203,10 @@ public class Address
             _street = value;
         }
     }
-    public string City 
-    { 
-        get => _city; 
+
+    public string City
+    {
+        get => _city;
         private set
         {
             if (string.IsNullOrEmpty(value))

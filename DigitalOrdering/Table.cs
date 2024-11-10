@@ -8,10 +8,7 @@ public class Table
     // class extent
     private static List<Table> _tables = [];
 
-    // static fields
     private static int IdCounter = 0;
-
-    // fields
     public int Id { get; }
     private string? _alias;
     private int _capacity;
@@ -27,12 +24,14 @@ public class Table
             _capacity = value;
         }
     }
+
     public string Alias
     {
         get => _alias;
         private set
         {
-            ValidateAlias(value);
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Alias cannot be null or empty.");
             _alias = value;
         }
     }
@@ -52,6 +51,7 @@ public class Table
     {
         if (value <= 0) throw new ArgumentException("Capacity must be greater than zero.");
     }
+
     private static void ValidateAlias(string value)
     {
         if (value == string.Empty) throw new ArgumentException("Alias cant be empty");

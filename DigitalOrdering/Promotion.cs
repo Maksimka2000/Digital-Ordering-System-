@@ -55,6 +55,8 @@ public class Promotion
     {
         Id = ++IdCounter;
         DiscountPercent = discountPercent;
+        _name = name;
+        _description = description;
         Name = name;
         Description = description;
     }
@@ -104,11 +106,11 @@ public class Promotion
     }
     
     // Serialized and deserialized 
-    public static void SavePromotionJSON(string path)
+    public static void SavePromotionJson(string path)
     {
         try
         {
-            string json = JsonConvert.SerializeObject(_promotions, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(_promotions, Formatting.Indented);
             File.WriteAllText(path, json);
             Console.WriteLine($"File Promotion saved successfully at {path}");
         }
