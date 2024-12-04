@@ -24,7 +24,7 @@ public class Food : MenuItem
         Desert = 1,
         Snack = 2
     }
-
+    
     // class extent
     private static List<Food> _foods = [];
     

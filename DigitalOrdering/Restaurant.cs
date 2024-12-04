@@ -102,16 +102,23 @@ public class Restaurant
     // methods
     public bool IsRestaurantOpen(DayOfWeek dayOfWeek, TimeSpan currentTime)
     {
-        var openHoursDay = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
+        var openHoursDay = GetOpenHour(dayOfWeek);
         return openHoursDay.IsOpen && openHoursDay.OpenTime <= currentTime && openHoursDay.CloseTime >= currentTime;
     }
 
     public void UpdateOpenHours(DayOfWeek dayOfWeek, TimeSpan? openTime, TimeSpan? closeTime)
     {
-        var day = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
+        var day = GetOpenHour(dayOfWeek);
         day.UpdateTime(openTime, closeTime);
         Console.WriteLine(
             $"time successfull updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}")}");
+    }
+
+    private OpenHour GetOpenHour(DayOfWeek dayOfWeek)
+    {
+        var openHour = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
+        if ( openHour == null ) throw new KeyNotFoundException($"No open hours found for day {dayOfWeek}");
+        return openHour;
     }
 
 
@@ -185,6 +192,11 @@ public class OpenHour
     {
         if (openTime >= closeTime) throw new ArgumentException("Closing time must be later than opening time");
     }
+
+    public string GetOpenHour()
+    {
+        return $"{Day}: {(IsOpen ? (OpenTime + "" + CloseTime)  : "closed" )}";
+    }
 }
 
 [Serializable]
@@ -220,5 +232,10 @@ public class Address
     {
         Street = street;
         City = city;
+    }
+
+    public string GetAdress()
+    {
+        return $"{Street}, {City}";
     }
 }

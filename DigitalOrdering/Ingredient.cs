@@ -33,6 +33,24 @@ public class Ingredient
         Id = ++IdCounter;
         Name = name;
     }
+    
+    // association field
+    // associations fields reverse 
+    private List<MenuItem> _IngredientInMenuItems;
+    
+    // associations methods
+    public List<MenuItem> GetIngredientInTheMenuItems(MenuItem menuItem)
+    {
+        return [.._IngredientInMenuItems];
+    }
+    public void AddIngredientInTheMenuItems(MenuItem menuItem)
+    {
+        if ( menuItem == null) throw new ArgumentException("MenuItem is null");
+        if ( _IngredientInMenuItems.Contains(menuItem)) return;
+        
+        _IngredientInMenuItems.Add(menuItem);
+        menuItem.AddMenuItemIngredient(this);
+    }
 
     // validation
     private static void ValidateStringMandatory(string name, string text)

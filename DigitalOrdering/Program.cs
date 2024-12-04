@@ -3,8 +3,16 @@ using Newtonsoft.Json;
 
 // CreateObjects();
 LoadClassExtent();
-OutputAllObjectsCreated();
+// OutputAllObjectsCreated();
 // SaveClassExtent();
+
+
+
+
+
+
+
+
 
 
 

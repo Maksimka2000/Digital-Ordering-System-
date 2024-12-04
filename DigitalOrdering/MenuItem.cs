@@ -7,7 +7,7 @@ namespace DigitalOrdering;
 public abstract class MenuItem
 {
     // class extent
-
+    
     // static fields 
     private static int IdCounter = 0;
 
@@ -46,27 +46,23 @@ public abstract class MenuItem
         }
     }
 
-    // dependencies
-    public List<Ingredient>? _ingredients;
-    public Promotion? _promotion;
-
-    //dependencies setter validation
-    public List<Ingredient>? Ingredients
-    {
-        get => _ingredients;
-        private set
-        {
-            ValidateIngredientsList(value);
-            _ingredients = value;
-        }
-    }
-
-    public Promotion? Promotion
-    {
-        get => _promotion;
-        private set => _promotion = value; // Allows setting Promotion to null if necessary
-    }
-
+   
+    // //dependencies setter validation
+    // public List<Ingredient>? Ingredients
+    // {
+    //     get => _ingredients;
+    //     private set
+    //     {
+    //         ValidateIngredientsList(value);
+    //         _ingredients = value;
+    //     }
+    // }
+    // public Promotion? Promotion
+    // {
+    //     get => _promotion;
+    //     private set => _promotion = value; // Allows setting Promotion to null if necessary
+    // }
+    
     // constructor
     [JsonConstructor]
     protected MenuItem(string name, double price, string description, List<Ingredient>? ingredients = null,
@@ -76,8 +72,38 @@ public abstract class MenuItem
         Name = name;
         Price = price;
         Description = description;
-        Ingredients = ingredients;
-        Promotion = promotion;
+        // Ingredients = ingredients;
+        // Promotion = promotion;
+    }
+    
+    // association filed
+    private List<Ingredient>? _menuItemIngredients;
+    private Promotion? _menuItemPromotion;
+    
+    // associations methods
+    public List<Ingredient>? GetMenuItemIngredients()
+    {
+        return [.._menuItemIngredients];
+    }
+    public void AddMenuItemIngredient(Ingredient ingredient)
+    {
+        if ( ingredient == null) throw new ArgumentException("MenuItem is null");
+        if ( _menuItemIngredients.Contains(ingredient)) return;
+        
+        _menuItemIngredients.Add(ingredient);
+        ingredient.AddIngredientInTheMenuItems(this);
+    }
+
+    public Promotion? GetMenuItemPromotion()
+    {
+        return _menuItemPromotion;
+    }
+    public void AddMenuItemPromotion(Promotion promotion)
+    {
+        if (promotion == null) throw new ArgumentException("MenuItem is null");
+        if (_menuItemPromotion == null) return;
+        _menuItemPromotion = promotion;
+        promotion.AddPromotionInMenuItem(this);
     }
 
     // validation
@@ -98,10 +124,10 @@ public abstract class MenuItem
     }
 
     // CRUD
-    public virtual List<Ingredient> GetIngredients()
-    {
-        return new List<Ingredient>(Ingredients);
-    }
+    // public virtual List<Ingredient> GetIngredients()
+    // {
+    //     return new List<Ingredient>(Ingredients);
+    // }
 
     public void UpdateName(string newName)
     {
@@ -118,13 +144,13 @@ public abstract class MenuItem
         Description = newDescription;
     }
 
-    public void UpdateIngredients(List<Ingredient>? newIngredients)
-    {
-        Ingredients = newIngredients;
-    }
-
-    public void UpdatePromotion(Promotion? newPromotion)
-    {
-        Promotion = newPromotion;
-    }
+    // public void UpdateIngredients(List<Ingredient>? newIngredients)
+    // {
+    //     Ingredients = newIngredients;
+    // }
+    //
+    // public void UpdatePromotion(Promotion? newPromotion)
+    // {
+    //     Promotion = newPromotion;
+    // }
 }

@@ -1,10 +1,6 @@
 [
   {
     "Id": 1,
-    "Location": {
-      "Street": "Zlota 43",
-      "City": "Warszawa"
-    },
     "Name": "Miscusi",
     "OpenHours": [
       {
@@ -49,6 +45,10 @@
         "CloseTime": null,
         "IsOpen": false
       }
-    ]
+    ],
+    "Location": {
+      "Street": "Zlota 43",
+      "City": "Warszawa"
+    }
   }
 ]

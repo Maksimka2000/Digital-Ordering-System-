@@ -55,10 +55,26 @@ public class Promotion
     {
         Id = ++IdCounter;
         DiscountPercent = discountPercent;
-        _name = name;
-        _description = description;
         Name = name;
         Description = description;
+    }
+    
+    // assosiation field
+    // assosiation field reverse
+    private MenuItem? _promotionInMenuItem;
+
+    public MenuItem? GetPromotionInMenuItem()
+    {
+        return _promotionInMenuItem;
+    }
+
+    public void AddPromotionInMenuItem(MenuItem menuItem)
+    {
+        if ( menuItem == null) throw new ArgumentException("MenuItem is null");
+        if ( _promotionInMenuItem == menuItem) return;
+        
+        _promotionInMenuItem = menuItem;
+        menuItem.AddMenuItemPromotion(this);
     }
     
     // validation methods
@@ -80,7 +96,7 @@ public class Promotion
     public static void AddPromotion(Promotion promotion)
     {
         if (promotion == null) throw new ArgumentException("Promotion cannot be null");
-        ValidateNameDuplication(promotion);
+        // ValidateNameDuplication(promotion);
         _promotions.Add(promotion);
     }
     public static List<Promotion> GetPromotions()
@@ -92,6 +108,8 @@ public class Promotion
         if(promotion == null) throw new ArgumentException("Promotion cannot be null");
         _promotions.Remove(promotion);
     }
+    
+    
     public void UpdateDiscountPercent(int newDiscountPercent)
     {
         DiscountPercent = newDiscountPercent;

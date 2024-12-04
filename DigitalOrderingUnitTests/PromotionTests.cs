@@ -93,6 +93,7 @@ public class PromotionTests
         var promotion = new Promotion(5, "Weekend Sale", "Discount on weekends");
         Promotion.AddPromotion(promotion);
         Promotion.SavePromotionJson(path);
+        
         Promotion.GetPromotions().Clear();
 
         Promotion.LoadPromotionJSON(path);
