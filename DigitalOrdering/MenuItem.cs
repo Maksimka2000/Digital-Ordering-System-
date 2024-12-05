@@ -17,7 +17,7 @@ public abstract class MenuItem
     public double _price;
     public string _description;
 
-    //setters validation
+    //setters and getters implemention
     public string Name
     {
         get => _name;
@@ -45,74 +45,77 @@ public abstract class MenuItem
             _description = value;
         }
     }
-
-   
-    // //dependencies setter validation
-    // public List<Ingredient>? Ingredients
-    // {
-    //     get => _ingredients;
-    //     private set
-    //     {
-    //         ValidateIngredientsList(value);
-    //         _ingredients = value;
-    //     }
-    // }
-    // public Promotion? Promotion
-    // {
-    //     get => _promotion;
-    //     private set => _promotion = value; // Allows setting Promotion to null if necessary
-    // }
     
     // constructor
     [JsonConstructor]
-    protected MenuItem(string name, double price, string description, List<Ingredient>? ingredients = null,
-        Promotion? promotion = null)
+    protected MenuItem(string name, double price, string description, List<Ingredient>? ingredients = null, Promotion? promotion = null)
     {
         Id = ++IdCounter;
         Name = name;
         Price = price;
         Description = description;
-        // Ingredients = ingredients;
-        // Promotion = promotion;
+        if (ingredients != null) UpdateIngredients(ingredients);
+        if (promotion != null) AddPromotion(promotion);
     }
     
     // association filed
-    private List<Ingredient>? _menuItemIngredients;
-    private Promotion? _menuItemPromotion;
-    
-    // associations methods
-    public List<Ingredient>? GetMenuItemIngredients()
+    private List<Ingredient> _ingredients = new();
+    private Promotion? _promotion = null;
+    // associations getters and setters
+    public List<Ingredient> Ingredients
     {
-        return [.._menuItemIngredients];
+        get => [.._ingredients];
     }
-    public void AddMenuItemIngredient(Ingredient ingredient)
+    public Promotion? Promotion
     {
-        if ( ingredient == null) throw new ArgumentException("MenuItem is null");
-        if ( _menuItemIngredients.Contains(ingredient)) return;
-        
-        _menuItemIngredients.Add(ingredient);
-        ingredient.AddIngredientInTheMenuItems(this);
+        get => _promotion;
     }
 
-    public Promotion? GetMenuItemPromotion()
+    // associations methods
+    public void AddPromotion(Promotion promotion)
     {
-        return _menuItemPromotion;
+        if (promotion == null) throw new ArgumentException("Promotion in MenuItem while AddPromotionToMenuItem method called obj is null");
+        if (_promotion == promotion){ Console.WriteLine($"There is  already a promotion: {promotion.Name} in MenuItem: {this.Name}"); return; }
+        if (_promotion != null){ Console.WriteLine($"There is  already some different promotion: {this.Promotion?.Name} in MenuItem: {this.Name}, first delete previous and add new"); return; }
+        _promotion = promotion;
+        promotion.AddMenuItemToPromotion(this);
     }
-    public void AddMenuItemPromotion(Promotion promotion)
+    public void RemovePromotion(Promotion promotion)
     {
-        if (promotion == null) throw new ArgumentException("MenuItem is null");
-        if (_menuItemPromotion == null) return;
-        _menuItemPromotion = promotion;
-        promotion.AddPromotionInMenuItem(this);
+        if (promotion == null) throw new ArgumentException("Promotion in MenuItem while RemovePromotionToMenuItem method called obj is null");
+        if (_promotion != promotion) { Console.WriteLine($"Promotion {promotion.Name} you want to remove is not in the MenuItem {this.Name}"); return; }
+        _promotion = null;
+        promotion.RemoveMenuItemFromPromotion(this);
     }
+    public void AddIngredient(Ingredient ingredient)
+    {
+        //validate
+        if ( ingredient == null) throw new ArgumentException("Ingredient in MenuItem while AddIngredient method called obj is null");
+        //duplication validation
+        if ( _ingredients.Contains(ingredient)){ Console.WriteLine($"Ingredient: {ingredient.Name} already added to MenuItem: {this.Name}"); return;}
+        //
+        _ingredients.Add(ingredient);
+        ingredient.AddMenuItemToIngredient(this);
+    }
+    public void RemoveIngredient(Ingredient ingredient)
+    {
+        // validate 
+        if ( ingredient == null) throw new ArgumentException("Ingredient in MenuItem while RemoveIngredient method called obj is null");
+        // existance validation
+        if ( !_ingredients.Contains(ingredient)){ Console.WriteLine($"Ingredient: {ingredient.Name} doesn't exist in MenuItem: {this.Name}"); return;}
+        //
+        _ingredients.Remove(ingredient);
+        ingredient.RemoveMenuItemFromIngredient(this);
+    }
+    public void UpdateIngredients(List<Ingredient> ingredients)
+    {
+        if (ingredients == null || ingredients.Count == 0) throw new ArgumentException($"Ingredients list cannot be empty and null in the {nameof(MenuItem)}, {nameof(UpdateIngredients)} method ");
+        if (_ingredients.ToList().Count > 0) foreach (var ingredient in _ingredients.ToList()) RemoveIngredient(ingredient);
+        foreach (var ingredient in ingredients) AddIngredient(ingredient);
+    }
+    
 
     // validation
-    private static void ValidateIngredientsList(List<Ingredient>? ingredients)
-    {
-        if (ingredients != null && ingredients.Count == 0)
-            throw new ArgumentException($"Ingrediesnts list cannot be empty");
-    }
-
     private static void ValidateStringMandatory(string name, string text)
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
@@ -124,11 +127,6 @@ public abstract class MenuItem
     }
 
     // CRUD
-    // public virtual List<Ingredient> GetIngredients()
-    // {
-    //     return new List<Ingredient>(Ingredients);
-    // }
-
     public void UpdateName(string newName)
     {
         Name = newName;
@@ -143,14 +141,4 @@ public abstract class MenuItem
     {
         Description = newDescription;
     }
-
-    // public void UpdateIngredients(List<Ingredient>? newIngredients)
-    // {
-    //     Ingredients = newIngredients;
-    // }
-    //
-    // public void UpdatePromotion(Promotion? newPromotion)
-    // {
-    //     Promotion = newPromotion;
-    // }
 }

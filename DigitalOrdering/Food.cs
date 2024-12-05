@@ -80,7 +80,7 @@ public class Food : MenuItem
     public static void AddFood(Food food)
     {
         if(food == null) throw new ArgumentException("food cannot be null");
-        else _foods.Add(food);
+        _foods.Add(food);
     }
     public static List<Food> GetFoods()
     {

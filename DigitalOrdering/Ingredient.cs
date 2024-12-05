@@ -36,22 +36,25 @@ public class Ingredient
     
     // association field
     // associations fields reverse 
-    private List<MenuItem> _IngredientInMenuItems;
+    private List<MenuItem> _ingredientInMenuItems = new();
+    public List<MenuItem> IngredientInMenuItems { get =>  [.._ingredientInMenuItems]; }
     
     // associations methods
-    public List<MenuItem> GetIngredientInTheMenuItems(MenuItem menuItem)
+    public void AddMenuItemToIngredient(MenuItem menuItem)
     {
-        return [.._IngredientInMenuItems];
+        if ( menuItem == null) throw new ArgumentException("MenuItem in Ingredient is null while AddMenuItemToIngredient");
+        if ( _ingredientInMenuItems.Contains(menuItem)) return;
+        _ingredientInMenuItems.Add(menuItem);
+        menuItem.AddIngredient(this);
     }
-    public void AddIngredientInTheMenuItems(MenuItem menuItem)
+    public void RemoveMenuItemFromIngredient(MenuItem menuItem)
     {
-        if ( menuItem == null) throw new ArgumentException("MenuItem is null");
-        if ( _IngredientInMenuItems.Contains(menuItem)) return;
-        
-        _IngredientInMenuItems.Add(menuItem);
-        menuItem.AddMenuItemIngredient(this);
+        if(menuItem == null) throw new ArgumentException("MenuItem in Ingredient is null while RemoveMenuItemFromIngredient");   
+        if(!_ingredientInMenuItems.Contains(menuItem)) return;
+        _ingredientInMenuItems.Remove(menuItem);
+        menuItem.RemoveIngredient(this);
     }
-
+    
     // validation
     private static void ValidateStringMandatory(string name, string text)
     {

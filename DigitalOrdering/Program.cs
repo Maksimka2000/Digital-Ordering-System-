@@ -1,8 +1,8 @@
 ﻿using DigitalOrdering;
 using Newtonsoft.Json;
 
-// CreateObjects();
-LoadClassExtent();
+CreateObjects();
+// LoadClassExtent();
 // OutputAllObjectsCreated();
 // SaveClassExtent();
 
@@ -84,7 +84,7 @@ void OutputAllObjectsCreated()
             $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
         Console.WriteLine(food.Promotion == null
             ? "                    No promotion"
-            : $"                   Promotion [Name: {food.Promotion.Name}, Description: {food.Promotion.Description}]");
+            : $"                    Promotion [ name: {food.Promotion.Name}, Description: {food.Promotion.Description}]");
         Console.Write(food.Ingredients == null
             ? "                    No ingredients"
             : "                    There are ingredients: [");

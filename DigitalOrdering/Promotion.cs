@@ -62,19 +62,25 @@ public class Promotion
     // assosiation field
     // assosiation field reverse
     private MenuItem? _promotionInMenuItem;
-
-    public MenuItem? GetPromotionInMenuItem()
+    public MenuItem? PromotionInMenuItem
     {
-        return _promotionInMenuItem;
+        get => _promotionInMenuItem;
     }
-
-    public void AddPromotionInMenuItem(MenuItem menuItem)
+    // assosiation methods
+    public void AddMenuItemToPromotion(MenuItem menuItem)
     {
-        if ( menuItem == null) throw new ArgumentException("MenuItem is null");
-        if ( _promotionInMenuItem == menuItem) return;
-        
+        if ( menuItem == null) throw new ArgumentException("MenuItem in Promotion while AddMenuItemToPromotion method called obj is null");
+        if ( _promotionInMenuItem == menuItem) {Console.WriteLine($"MenuItem: {menuItem.Name} already in promotion: {this.Name}"); return;}
+        if ( _promotionInMenuItem != null) {Console.WriteLine($"There is already menuItem {_promotionInMenuItem.Name} in promotion: {this.Name}" ); return;}
         _promotionInMenuItem = menuItem;
-        menuItem.AddMenuItemPromotion(this);
+        menuItem.AddPromotion(this);
+    }
+    public void RemoveMenuItemFromPromotion(MenuItem menuItem)
+    {
+        if(menuItem == null) throw new ArgumentException("MenuItem in Promotion while RemoveMenuItemFromPromotion method called obj is null");
+        if(_promotionInMenuItem != menuItem) { Console.WriteLine($"MenuItem: {menuItem.Name} you want to remove is not in promotion: {this.Name}"); return;}
+        _promotionInMenuItem = null;
+        menuItem.RemovePromotion(this);
     }
     
     // validation methods
