@@ -1,133 +1,42 @@
 [
   {
-    "_name": "Cappuccino",
-    "_price": 3.99,
-    "_description": "Classic Italian coffee",
-    "_ingredients": null,
-    "_promotion": null,
     "IsAlcohol": false,
     "BeverageT": "Cafeteria",
     "Id": 6,
     "Name": "Cappuccino",
     "Price": 3.99,
-    "Description": "Classic Italian coffee",
-    "Ingredients": null,
-    "Promotion": null
+    "Description": "Classic Italian coffee"
   },
   {
-    "_name": "Mojito",
-    "_price": 7.99,
-    "_description": "Refreshing cocktail with mint and lime",
-    "_ingredients": null,
-    "_promotion": {
-      "Id": 1,
-      "DiscountPercent": 30,
-      "Name": "new year",
-      "Description": "discount for the new year"
-    },
     "IsAlcohol": true,
     "BeverageT": "Cocktails",
     "Id": 7,
     "Name": "Mojito",
     "Price": 7.99,
-    "Description": "Refreshing cocktail with mint and lime",
-    "Ingredients": null,
-    "Promotion": {
-      "Id": 1,
-      "DiscountPercent": 30,
-      "Name": "new year",
-      "Description": "discount for the new year"
-    }
+    "Description": "Refreshing cocktail with mint and lime"
   },
   {
-    "_name": "Iced Tea",
-    "_price": 2.99,
-    "_description": "Cold brewed tea with lemon",
-    "_ingredients": null,
-    "_promotion": {
-      "Id": 2,
-      "DiscountPercent": 50,
-      "Name": "welcome back",
-      "Description": "discount for returning clients"
-    },
     "IsAlcohol": false,
     "BeverageT": "Cafeteria",
     "Id": 8,
     "Name": "Iced Tea",
     "Price": 2.99,
-    "Description": "Cold brewed tea with lemon",
-    "Ingredients": null,
-    "Promotion": {
-      "Id": 2,
-      "DiscountPercent": 50,
-      "Name": "welcome back",
-      "Description": "discount for returning clients"
-    }
+    "Description": "Cold brewed tea with lemon"
   },
   {
-    "_name": "Negroni",
-    "_price": 8.99,
-    "_description": "Classic Italian cocktail",
-    "_ingredients": [
-      {
-        "Id": 21,
-        "Name": "Gin"
-      },
-      {
-        "Id": 22,
-        "Name": "Vermouth"
-      },
-      {
-        "Id": 23,
-        "Name": "Campari"
-      }
-    ],
-    "_promotion": {
-      "Id": 3,
-      "DiscountPercent": 10,
-      "Name": "Wednesday discount",
-      "Description": "discount for clients on Wednesdays"
-    },
     "IsAlcohol": true,
     "BeverageT": "Cocktails",
     "Id": 9,
     "Name": "Negroni",
     "Price": 8.99,
-    "Description": "Classic Italian cocktail",
-    "Ingredients": [
-      {
-        "Id": 21,
-        "Name": "Gin"
-      },
-      {
-        "Id": 22,
-        "Name": "Vermouth"
-      },
-      {
-        "Id": 23,
-        "Name": "Campari"
-      }
-    ],
-    "Promotion": {
-      "Id": 3,
-      "DiscountPercent": 10,
-      "Name": "Wednesday discount",
-      "Description": "discount for clients on Wednesdays"
-    }
+    "Description": "Classic Italian cocktail"
   },
   {
-    "_name": "Lemonade",
-    "_price": 2.99,
-    "_description": "Refreshing lemon juice and sugar",
-    "_ingredients": null,
-    "_promotion": null,
     "IsAlcohol": false,
     "BeverageT": "Drinks",
     "Id": 10,
     "Name": "Lemonade",
     "Price": 2.99,
-    "Description": "Refreshing lemon juice and sugar",
-    "Ingredients": null,
-    "Promotion": null
+    "Description": "Refreshing lemon juice and sugar"
   }
 ]

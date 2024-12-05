@@ -26,7 +26,6 @@ public class SetOfMenuItem : MenuItem
             _maxNumberOfFood = value;
         }
     }
-
     public static int MinNumberOfFood
     {
         get => _minNumberOfFood;
@@ -36,7 +35,6 @@ public class SetOfMenuItem : MenuItem
             _minNumberOfFood = value;
         }
     }
-
     public static int MaxNumberOfBeverage
     {
         get => _maxNumberOfBeverage;
@@ -46,7 +44,6 @@ public class SetOfMenuItem : MenuItem
             _maxNumberOfBeverage = value;
         }
     }
-
     public static int MinNumberOfBeverage
     {
         get => _minNumberOfBeverage;
@@ -59,18 +56,18 @@ public class SetOfMenuItem : MenuItem
 
 
     // dependencies
-    public List<Food> Foods { get; private set; }
-    public List<Beverage> Beverages { get; private set; }
+    // public List<Food> Foods { get; private set; }
+    // public List<Beverage> Beverages { get; private set; }
 
     // constructor
     [JsonConstructor]
     public SetOfMenuItem(string name, double price, string description, List<Food> foods, List<Beverage> beverages) :
         base(name, price, description)
     {
-        ValidateFoodsInput(foods);
-        Foods = foods;
-        ValidateBeveragesInput(beverages);
-        Beverages = beverages;
+        // ValidateFoodsInput(foods);
+        // Foods = foods;
+        // ValidateBeveragesInput(beverages);
+        // Beverages = beverages;
     }
 
     // validation 
@@ -79,27 +76,23 @@ public class SetOfMenuItem : MenuItem
         if (value < 0 || value < MinNumberOfBeverage)
             throw new ArgumentOutOfRangeException("The value must be not less that 0 and " + MinNumberOfBeverage);
     }
-
     private static void ValidateIntMinNumberOfBeverage(int value, string minNumOfFood)
     {
         if (value < 0 || value > MaxNumberOfBeverage)
             throw new ArgumentOutOfRangeException("The value must be not less that 0 and must be less than" +
                                                   MaxNumberOfBeverage);
     }
-
     private static void ValidateIntMaxNumberOfFood(int value, string text)
     {
         if (value < 0 || value < MinNumberOfFood)
             throw new ArgumentOutOfRangeException("The value must be not less that 0 and " + MinNumberOfFood);
     }
-
     private static void ValidateIntMinNumberOfFood(int value, string minNumOfFood)
     {
         if (value < 0 || value > MaxNumberOfFood)
             throw new ArgumentOutOfRangeException("The value must be not less that 0 and must be less than" +
                                                   MaxNumberOfFood);
     }
-
     private static void ValidateFoodsInput(ICollection foods)
     {
         if (!(foods.Count >= MinNumberOfFood && foods.Count <= MaxNumberOfFood))
@@ -129,25 +122,24 @@ public class SetOfMenuItem : MenuItem
         _businessLunches.Remove(setOfMenuItem);
     }
 
-    public void UpdateFood(int index, Food newFood)
-    {
-        ArgumentNullException.ThrowIfNull(newFood);
-        
-        if (index < 0 || index >= Foods.Count)
-            throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
-        Foods[index] = newFood;
-        ValidateFoodsInput(Foods);
-    }
-
-    public void UpdateBeverage(int index, Beverage newBeverage)
-    {
-        ArgumentNullException.ThrowIfNull(newBeverage);
-        
-        if (index < 0 || index >= Beverages.Count)
-            throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
-        Beverages[index] = newBeverage;
-        ValidateBeveragesInput(Beverages);
-    }
+    // public void UpdateFood(int index, Food newFood)
+    // {
+    //     ArgumentNullException.ThrowIfNull(newFood);
+    //     
+    //     if (index < 0 || index >= Foods.Count)
+    //         throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+    //     Foods[index] = newFood;
+    //     ValidateFoodsInput(Foods);
+    // }
+    // public void UpdateBeverage(int index, Beverage newBeverage)
+    // {
+    //     ArgumentNullException.ThrowIfNull(newBeverage);
+    //     
+    //     if (index < 0 || index >= Beverages.Count)
+    //         throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+    //     Beverages[index] = newBeverage;
+    //     ValidateBeveragesInput(Beverages);
+    // }
 
     public static void UpdateMaxNumberOfBeverage(int value)
     {
@@ -177,11 +169,11 @@ public class SetOfMenuItem : MenuItem
         {
             var json = JsonConvert.SerializeObject(_businessLunches, Formatting.Indented);
             File.WriteAllText(path, json);
-            Console.WriteLine($"File BusinessLunch saved successfully at {path}");
+            Console.WriteLine($"File SetOfMenuItem saved successfully at {path}");
         }
         catch (Exception e)
         {
-            throw new ArgumentException($"Error saving BusinessLunch file: {e.Message}");
+            throw new ArgumentException($"Error saving SetOfMenuItem file: {e.Message}");
         }
     }
 
@@ -195,11 +187,11 @@ public class SetOfMenuItem : MenuItem
                 _businessLunches = JsonConvert.DeserializeObject<List<SetOfMenuItem>>(json);
                 Console.WriteLine($"File BusinessLunch loaded successfully at {path}");
             }
-            else throw new ArgumentException($"Error loading BusinessLunch file: path: {path} doesn't exist ");
+            else throw new ArgumentException($"Error loading SetOfMenuItem file: path: {path} doesn't exist ");
         }
         catch (Exception e)
         {
-            throw new ArgumentException($"Error loading BusinessLunch file: {e.Message}");
+            throw new ArgumentException($"Error loading SetOfMenuItem file: {e.Message}");
         }
     }
 }

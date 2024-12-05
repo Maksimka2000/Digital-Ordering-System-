@@ -25,13 +25,12 @@ public class Table
         }
     }
 
-    public string Alias
+    public string? Alias
     {
         get => _alias;
         private set
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Alias cannot be null or empty.");
+            ValidateAlias(value);
             _alias = value;
         }
     }

@@ -34,27 +34,6 @@ public class Ingredient
         Name = name;
     }
     
-    // association field
-    // associations fields reverse 
-    private List<MenuItem> _ingredientInMenuItems = new();
-    public List<MenuItem> IngredientInMenuItems { get =>  [.._ingredientInMenuItems]; }
-    
-    // associations methods
-    public void AddMenuItemToIngredient(MenuItem menuItem)
-    {
-        if ( menuItem == null) throw new ArgumentException("MenuItem in Ingredient is null while AddMenuItemToIngredient");
-        if ( _ingredientInMenuItems.Contains(menuItem)) return;
-        _ingredientInMenuItems.Add(menuItem);
-        menuItem.AddIngredient(this);
-    }
-    public void RemoveMenuItemFromIngredient(MenuItem menuItem)
-    {
-        if(menuItem == null) throw new ArgumentException("MenuItem in Ingredient is null while RemoveMenuItemFromIngredient");   
-        if(!_ingredientInMenuItems.Contains(menuItem)) return;
-        _ingredientInMenuItems.Remove(menuItem);
-        menuItem.RemoveIngredient(this);
-    }
-    
     // validation
     private static void ValidateStringMandatory(string name, string text)
     {
