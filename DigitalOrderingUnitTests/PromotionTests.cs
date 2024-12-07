@@ -47,63 +47,63 @@ public class PromotionTests
         var promotion = new Promotion(25, "Flash Sale", "Limited time discount");
         Assert.Equal("Limited time discount", promotion.Description);
     }
+    //
+    // [Fact]
+    // public void AddPromotion_AddsPromotionToList()
+    // {
+    //     var promotion = new Promotion(15, "Summer Sale", "Discount on summer items");
+    //     Promotion.AddPromotion(promotion);
+    //
+    //     var promotions = Promotion.GetPromotions();
+    //     Assert.Contains(promotion, promotions);
+    // }
 
-    [Fact]
-    public void AddPromotion_AddsPromotionToList()
-    {
-        var promotion = new Promotion(15, "Summer Sale", "Discount on summer items");
-        Promotion.AddPromotion(promotion);
+    // [Fact]
+    // public void GetPromotions_ReturnsCorrectListOfPromotions()
+    // {
+    //     var promotion1 = new Promotion(10, "New Year Sale", "Discount for the new year");
+    //     var promotion2 = new Promotion(20, "Valentine's Day Sale", "Discount for Valentine's Day");
+    //     Promotion.AddPromotion(promotion1);
+    //     Promotion.AddPromotion(promotion2);
+    //
+    //     var promotions = Promotion.GetPromotions();
+    //
+    //     Assert.Equal(2, promotions.Count);
+    //     Assert.Contains(promotion1, promotions);
+    //     Assert.Contains(promotion2, promotions);
+    // }
+    //
+    // [Fact]
+    // public void SavePromotionJSON_SavesPromotionsToFile()
+    // {
+    //     var promotion = new Promotion(30, "Autumn Sale", "Discount on autumn items");
+    //     Promotion.AddPromotion(promotion);
+    //     const string path = "test_promotions.json";
+    //
+    //     Promotion.SavePromotionJson(path);
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
 
-        var promotions = Promotion.GetPromotions();
-        Assert.Contains(promotion, promotions);
-    }
-
-    [Fact]
-    public void GetPromotions_ReturnsCorrectListOfPromotions()
-    {
-        var promotion1 = new Promotion(10, "New Year Sale", "Discount for the new year");
-        var promotion2 = new Promotion(20, "Valentine's Day Sale", "Discount for Valentine's Day");
-        Promotion.AddPromotion(promotion1);
-        Promotion.AddPromotion(promotion2);
-
-        var promotions = Promotion.GetPromotions();
-
-        Assert.Equal(2, promotions.Count);
-        Assert.Contains(promotion1, promotions);
-        Assert.Contains(promotion2, promotions);
-    }
-
-    [Fact]
-    public void SavePromotionJSON_SavesPromotionsToFile()
-    {
-        var promotion = new Promotion(30, "Autumn Sale", "Discount on autumn items");
-        Promotion.AddPromotion(promotion);
-        const string path = "test_promotions.json";
-
-        Promotion.SavePromotionJson(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadPromotionJSON_LoadsPromotionsFromFile()
-    {
-        const string path = "test_promotions.json";
-        var promotion = new Promotion(5, "Weekend Sale", "Discount on weekends");
-        Promotion.AddPromotion(promotion);
-        Promotion.SavePromotionJson(path);
-        
-        Promotion.GetPromotions().Clear();
-
-        Promotion.LoadPromotionJSON(path);
-        var promotions = Promotion.GetPromotions();
-
-        Assert.Single(promotions);
-        Assert.Equal(promotion.Name, promotions[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void LoadPromotionJSON_LoadsPromotionsFromFile()
+    // {
+    //     const string path = "test_promotions.json";
+    //     var promotion = new Promotion(5, "Weekend Sale", "Discount on weekends");
+    //     Promotion.AddPromotion(promotion);
+    //     Promotion.SavePromotionJson(path);
+    //     
+    //     Promotion.GetPromotions().Clear();
+    //
+    //     Promotion.LoadPromotionJSON(path);
+    //     var promotions = Promotion.GetPromotions();
+    //
+    //     Assert.Single(promotions);
+    //     Assert.Equal(promotion.Name, promotions[0].Name);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidDiscountPercent()

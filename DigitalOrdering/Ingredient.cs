@@ -34,6 +34,30 @@ public class Ingredient
         Name = name;
     }
     
+    //association reverse 
+    private List<MenuItem> _ingredientInMenuItems = new();
+    [JsonIgnore]
+    public List<MenuItem> IngredientInMenuItems => _ingredientInMenuItems;
+    //association reverse methods
+    public void AddMenuItemToIngredient(MenuItem menuItem)
+    {
+        if(menuItem == null) throw new ArgumentNullException($"MenuItem: '{menuItem.Name}' in AddMenuItemToIngredient Ingredient: '{Name}' is null");
+        if (!_ingredientInMenuItems.Contains(menuItem))
+        {
+            _ingredientInMenuItems.Add(menuItem);
+            menuItem.AddIngredient(this);
+        }
+    }
+    public void RemoveMenuItemFromIngredient(MenuItem menuItem)
+    {
+        if (menuItem == null) throw new ArgumentNullException($"MenuItem: '{menuItem.Name}' in RemoveMenuItemFromIngredient Ingredient: '{Name}' is null");
+        if (_ingredientInMenuItems.Contains(menuItem))
+        {
+            _ingredientInMenuItems.Remove(menuItem);
+            menuItem.RemoveIngredient(this);
+        }
+    }
+    
     // validation
     private static void ValidateStringMandatory(string name, string text)
     {

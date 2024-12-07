@@ -105,15 +105,16 @@ public class Restaurant
         var openHoursDay = GetOpenHour(dayOfWeek);
         return openHoursDay.IsOpen && openHoursDay.OpenTime <= currentTime && openHoursDay.CloseTime >= currentTime;
     }
-
     public void UpdateOpenHours(DayOfWeek dayOfWeek, TimeSpan? openTime, TimeSpan? closeTime)
     {
         var day = GetOpenHour(dayOfWeek);
         day.UpdateTime(openTime, closeTime);
-        Console.WriteLine(
-            $"time successfull updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}")}");
+        Console.WriteLine($"time succesfully updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}")}");
     }
-
+    public void UpdateOpenHours(List<OpenHour> newOpenHour)
+    {
+        OpenHours = newOpenHour;
+    }
     private OpenHour GetOpenHour(DayOfWeek dayOfWeek)
     {
         var openHour = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
@@ -193,9 +194,9 @@ public class OpenHour
         if (openTime >= closeTime) throw new ArgumentException("Closing time must be later than opening time");
     }
 
-    public string GetOpenHour()
+    public string ToString()
     {
-        return $"{Day}: {(IsOpen ? (OpenTime + "" + CloseTime)  : "closed" )}";
+        return $"{Day}: {(IsOpen ? (OpenTime + " : " + CloseTime)  : "closed" )}";
     }
 }
 
@@ -204,6 +205,7 @@ public class Address
 {
     private string _street;
     private string _city;
+    private string _streetNumber;
 
     public string Street
     {
@@ -215,27 +217,35 @@ public class Address
             _street = value;
         }
     }
-
     public string City
     {
         get => _city;
         private set
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("City cannot be null or empty.");
+            if (string.IsNullOrEmpty(value)) throw new ArgumentException("City cannot be null or empty.");
             _city = value;
+        }
+    }
+    public string StreetNumber
+    {
+        get => _streetNumber;
+        private set
+        {
+            if (string.IsNullOrEmpty(value)) throw new ArgumentException("Street Number cannot be null or empty.");
+            _streetNumber = value;
         }
     }
 
     [JsonConstructor]
-    public Address(string street, string city)
+    public Address(string street, string city, string streetNumber)
     {
         Street = street;
         City = city;
+        StreetNumber = streetNumber;
     }
 
-    public string GetAdress()
+    public string ToString()
     {
-        return $"{Street}, {City}";
+        return $"adress: {Street} {StreetNumber}, {City}";
     }
 }

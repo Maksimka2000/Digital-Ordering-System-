@@ -29,8 +29,9 @@ public class Food : MenuItem
     private static List<Food> _foods = [];
     
     // fields
-    [JsonConverter(typeof(StringEnumConverter))]
+    
     private DietaryPreferencesType? _dietaryPreferences;
+    [JsonConverter(typeof(StringEnumConverter))]
     public DietaryPreferencesType? DietaryPreference
     {
         get => _dietaryPreferences;
@@ -63,7 +64,6 @@ public class Food : MenuItem
         FoodT = foodT;
         DietaryPreference = dietaryPreference;
     }
-    
     
     // validation 
     private static void ValidateDietaryPreference (DietaryPreferencesType? dietaryPreference)

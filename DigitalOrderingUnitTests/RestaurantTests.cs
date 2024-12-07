@@ -32,7 +32,7 @@ public class RestaurantTests
     public void Constructor_SetsPropertiesCorrectly()
     {
         const string name = "La Pizzeria";
-        var location = new Address("Main Street 10", "Metropolis");
+        var location = new Address("Main Street 10", "Metropolis", "22");
         var openHours = CreateOpenHours();
 
         var restaurant = new Restaurant(name, location, openHours);
@@ -46,7 +46,7 @@ public class RestaurantTests
     [Fact]
     public void Id_Getter_ReturnsCorrectValue()
     {
-        var restaurant = new Restaurant("Test Restaurant", new Address("Main St", "Test City"), CreateOpenHours());
+        var restaurant = new Restaurant("Test Restaurant", new Address("Main St", "Test City", "22"), CreateOpenHours());
         Assert.True(restaurant.Id > 0);
     }
 
@@ -54,14 +54,14 @@ public class RestaurantTests
     [Fact]
     public void Name_Getter_ReturnsCorrectValue()
     {
-        var restaurant = new Restaurant("Ocean Diner", new Address("Bay Ave 5", "Seaside"), CreateOpenHours());
+        var restaurant = new Restaurant("Ocean Diner", new Address("Bay Ave 5", "Seaside", "22"), CreateOpenHours());
         Assert.Equal("Ocean Diner", restaurant.Name);
     }
 
     [Fact]
     public void Location_Getter_ReturnsCorrectValue()
     {
-        var location = new Address("High St 22", "Riverside");
+        var location = new Address("High St 22", "Riverside", "22");
         var restaurant = new Restaurant("Bistro Riverside", location, CreateOpenHours());
         Assert.Equal(location, restaurant.Location);
     }
@@ -70,7 +70,7 @@ public class RestaurantTests
     public void AddRestaurant_AddsRestaurantToList()
     {
         var restaurant =
-            new Restaurant("Cafe Good Day", new Address("Sunset Blvd 15", "Sunnyville"), CreateOpenHours());
+            new Restaurant("Cafe Good Day", new Address("Sunset Blvd 15", "Sunnyville", "22"), CreateOpenHours());
         Restaurant.AddRestaurant(restaurant);
 
         var restaurants = Restaurant.GetRestaurants();
@@ -80,8 +80,8 @@ public class RestaurantTests
     [Fact]
     public void GetRestaurants_ReturnsCorrectListOfRestaurants()
     {
-        var restaurant1 = new Restaurant("Deli Delight", new Address("Market St 10", "Townsville"), CreateOpenHours());
-        var restaurant2 = new Restaurant("Bakery Bliss", new Address("Hill Rd 1", "Greenville"), CreateOpenHours());
+        var restaurant1 = new Restaurant("Deli Delight", new Address("Market St 10", "Townsville", "22"), CreateOpenHours());
+        var restaurant2 = new Restaurant("Bakery Bliss", new Address("Hill Rd 1", "Greenville", "22"), CreateOpenHours());
 
         Restaurant.AddRestaurant(restaurant1);
         Restaurant.AddRestaurant(restaurant2);
@@ -96,7 +96,7 @@ public class RestaurantTests
     [Fact]
     public void SaveRestaurantJSON_SavesRestaurantsToFile()
     {
-        var restaurant = new Restaurant("Cafe Sunrise", new Address("Lake St 7", "Hilltown"), CreateOpenHours());
+        var restaurant = new Restaurant("Cafe Sunrise", new Address("Lake St 7", "Hilltown", "22"), CreateOpenHours());
         Restaurant.AddRestaurant(restaurant);
         const string path = "test_restaurants.json";
 
@@ -110,7 +110,7 @@ public class RestaurantTests
     public void LoadRestaurantJSON_LoadsRestaurantsFromFile()
     {
         const string path = "test_restaurants.json";
-        var restaurant = new Restaurant("Moonlight Cafe", new Address("Night St 12", "Moon City"), CreateOpenHours());
+        var restaurant = new Restaurant("Moonlight Cafe", new Address("Night St 12", "Moon City", "22"), CreateOpenHours());
         Restaurant.AddRestaurant(restaurant);
         Restaurant.SaveRestaurantJSON(path);
         Restaurant.GetRestaurants().Clear();
@@ -128,7 +128,7 @@ public class RestaurantTests
     public void Constructor_ThrowsExceptionForInvalidNameOrLocation()
     {
         Assert.Throws<ArgumentException>(() =>
-            new Restaurant("", new Address("Lake St 7", "Hilltown"), CreateOpenHours()));
+            new Restaurant("", new Address("Lake St 7", "Hilltown", "22"), CreateOpenHours()));
         Assert.Throws<ArgumentNullException>(() => new Restaurant("Cafe Sunset", null, CreateOpenHours()));
     }
 }
@@ -192,38 +192,40 @@ public class AddressTests
     {
         const string street = "Main St";
         const string city = "Metropolis";
+        const string streetNumber = "22";
 
-        var address = new Address(street, city);
+        var address = new Address(street, city, streetNumber);
 
         Assert.Equal(street, address.Street);
         Assert.Equal(city, address.City);
+        Assert.Equal(streetNumber, address.StreetNumber);
     }
 
     [Fact]
     public void Street_Getter_ReturnsCorrectValue()
     {
-        var address = new Address("Broadway", "New York");
+        var address = new Address("Broadway", "New York", "22");
         Assert.Equal("Broadway", address.Street);
     }
 
     [Fact]
     public void City_Getter_ReturnsCorrectValue()
     {
-        var address = new Address("Elm St", "Gotham");
+        var address = new Address("Elm St", "Gotham", "22");
         Assert.Equal("Gotham", address.City);
     }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidStreet()
     {
-        Assert.Throws<ArgumentException>(() => new Address("", "Metropolis"));
-        Assert.Throws<ArgumentException>(() => new Address(null, "Metropolis"));
+        Assert.Throws<ArgumentException>(() => new Address("", "Metropolis", "22"));
+        Assert.Throws<ArgumentException>(() => new Address(null, "Metropolis", "22"));
     }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidCity()
     {
-        Assert.Throws<ArgumentException>(() => new Address("Main St", ""));
-        Assert.Throws<ArgumentException>(() => new Address("Main St", null));
+        Assert.Throws<ArgumentException>(() => new Address("Main St", "", "22"));
+        Assert.Throws<ArgumentException>(() => new Address("Main St", null, "22"));
     }
 }

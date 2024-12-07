@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DigitalOrdering;
 
@@ -6,22 +7,35 @@ namespace DigitalOrdering;
 public class Promotion
 {
     
-    // class extent
-    private static List<Promotion> _promotions = [];
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum PromotionType
+    {
+        Regular = 0
+    }
     
     // Class/static fields/attributes
-    private static int IdCounter = 0;  // add id counter
-    private const int MaxDiscountPercent = 99;
-    private const int MinDiscountPercent = 1;
+    private const double MaxDiscountPercent = 99.99;
+    private const double MinDiscountPercent = 0.01;
     
     // Fields/attributes
     public int Id { get; } // no set! As assigned can't be changed 
-    private int _discountPercent; // no set and get
+    private double _discountPercent; 
     private string _name;
-    private string _description;
+    private string? _description;
+    private PromotionType _type;
     
     // setters validation 
-    public int DiscountPercent
+    [JsonConverter(typeof(StringEnumConverter))]
+    public PromotionType Type
+    {
+        get => _type;
+        private set
+        {
+            if(!Enum.IsDefined(typeof(PromotionType), value)) throw new ArgumentException("Promotion type is not defined in Promotion class.");
+            _type = value;
+        }
+    }
+    public double DiscountPercent
     {
         get => _discountPercent;
         private set
@@ -39,59 +53,45 @@ public class Promotion
             _name = value;
         }
     }
-    public string Description
+    public string? Description
     {
         get => _description;
         private set
         {
-            ValidateStringMandatory(value, "Description in Promotion");
-            _description = value;
+            if (value != null)
+            {
+                ValidateStringOptional(value, "Description in Promotion");
+                _description = value;
+            }
         }
     }
     
     // constructor
     [JsonConstructor]
-    public Promotion(int discountPercent, string name, string description)
+    public Promotion(double discountPercent, string name, string description = null, PromotionType type = PromotionType.Regular)
     {
-        Id = ++IdCounter;
         DiscountPercent = discountPercent;
         Name = name;
         Description = description;
+        Type = type;
     }
     
     // validation methods
-    private static void ValidateDiscountPercentage(int discountPercent)
+    private static void ValidateDiscountPercentage(double discountPercent)
     {
-        if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 1 to 99 max");
+        if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 0.01 min to 99.99 max");
     }
     private static void ValidateStringMandatory(string name, string text)
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
     }
-    private static void ValidateNameDuplication(Promotion promotion)
+
+    private static void ValidateStringOptional(string value, string text)
     {
-        if (_promotions.FirstOrDefault(i => i.Name == promotion.Name) == null) ;
-        else throw new ArgumentException($"promotion {promotion.Name} already exists");
+        if(value == string.Empty) throw new ArgumentException($"{text} cannot be empty");
     }
     
     // get, add, delete, set  on class
-    public static void AddPromotion(Promotion promotion)
-    {
-        if (promotion == null) throw new ArgumentException("Promotion cannot be null");
-        // ValidateNameDuplication(promotion);
-        _promotions.Add(promotion);
-    }
-    public static List<Promotion> GetPromotions()
-    {
-        return [.._promotions];
-    }
-    public static void DeletePromotion(Promotion promotion)
-    {
-        if(promotion == null) throw new ArgumentException("Promotion cannot be null");
-        _promotions.Remove(promotion);
-    }
-    
-    
     public void UpdateDiscountPercent(int newDiscountPercent)
     {
         DiscountPercent = newDiscountPercent;
@@ -104,38 +104,17 @@ public class Promotion
     {
         Description = newDescription;
     }
-    
-    // Serialized and deserialized 
-    public static void SavePromotionJson(string path)
-    {
-        try
-        {
-            var json = JsonConvert.SerializeObject(_promotions, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File Promotion saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving Promotion file: {e.Message}");
-        }
-    }
 
-    public static void LoadPromotionJSON(string path)
+    public void RemoveDescription()
     {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _promotions = JsonConvert.DeserializeObject<List<Promotion>>(json);
-                // foreach (var promotion in promotions) { new Promotion(promotion.DiscountPercent, promotion.Name, promotion.Description); }
-                Console.WriteLine($"File Promotion loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading Promotion file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading Promotion file: {e.Message}");
-        }
+        Description = null;
+    }
+    public void UpdateType(PromotionType newType)
+    {
+        Type = newType;
+    }
+    public string ToString()
+    {
+        return $"name: {Name}, description: {Description}, discount: {DiscountPercent}, type: {Type}";
     }
 }

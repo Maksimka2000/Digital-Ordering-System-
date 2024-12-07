@@ -48,7 +48,8 @@
     ],
     "Location": {
       "Street": "Zlota 43",
-      "City": "Warszawa"
+      "City": "Warszawa",
+      "StreetNumber": "22"
     }
   }
 ]
