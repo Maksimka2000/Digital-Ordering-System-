@@ -1,6 +1,7 @@
 [
   {
     "Id": 11,
+    "IsAvailable": true,
     "Name": "Business Special",
     "Price": 19.99,
     "Description": "A combination of three foods and a drink",

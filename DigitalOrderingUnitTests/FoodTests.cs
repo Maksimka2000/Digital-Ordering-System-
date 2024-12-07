@@ -26,7 +26,7 @@ public class FoodTests
         const Food.FoodType foodType = Food.FoodType.Pasta;
         Food.DietaryPreferencesType? dietaryPreference = Food.DietaryPreferencesType.GlutenFree;
 
-        var food = new Food(name, price, description, ingredients, promotion, foodType, dietaryPreference);
+        var food = new Food(name, price, description, foodType, ingredients, dietaryPreference, promotion);
 
         Assert.Equal(name, food.Name);
         Assert.Equal(price, food.Price);
@@ -40,22 +40,22 @@ public class FoodTests
     [Fact]
     public void FoodType_Getter_ReturnsCorrectValue()
     {
-        var food = new Food("Salad", 8.0, "Fresh garden salad", null, null, Food.FoodType.Snack);
+        var food = new Food("Salad", 8.0, "Fresh garden salad", Food.FoodType.Snack, null, null);
         Assert.Equal(Food.FoodType.Snack, food.FoodT);
     }
 
     [Fact]
     public void DietaryPreference_Getter_ReturnsCorrectValue()
     {
-        var food = new Food("Vegan Burger", 10.0, "Delicious vegan burger", null, null, Food.FoodType.Snack,
-            Food.DietaryPreferencesType.Vegan);
+        var food = new Food("Vegan Burger", 10.0, "Delicious vegan burger", Food.FoodType.Snack,
+            null, Food.DietaryPreferencesType.Vegan, null);
         Assert.Equal(Food.DietaryPreferencesType.Vegan, food.DietaryPreference);
     }
 
     [Fact]
     public void AddFood_AddsFoodToList()
     {
-        var food = new Food("Salad", 8.0, "Fresh garden salad", null, null, Food.FoodType.Snack);
+        var food = new Food("Salad", 8.0, "Fresh garden salad", Food.FoodType.Snack, null, null);
 
         Food.AddFood(food);
         var foods = Food.GetFoods();
@@ -66,8 +66,8 @@ public class FoodTests
     [Fact]
     public void GetFoods_ReturnsCorrectListOfFoods()
     {
-        var food1 = new Food("Soup", 5.0, "Tomato soup", null, null, Food.FoodType.Snack);
-        var food2 = new Food("Cake", 3.5, "Chocolate cake", null, null, Food.FoodType.Desert);
+        var food1 = new Food("Soup", 5.0, "Tomato soup", Food.FoodType.Snack, null, null);
+        var food2 = new Food("Cake", 3.5, "Chocolate cake", Food.FoodType.Desert, null, null);
         Food.AddFood(food1);
         Food.AddFood(food2);
 
@@ -82,7 +82,7 @@ public class FoodTests
     [Fact]
     public void DeleteFood_RemovesFoodFromList()
     {
-        var food = new Food("Pizza", 10.0, "Cheese pizza", null, null, Food.FoodType.Snack);
+        var food = new Food("Pizza", 10.0, "Cheese pizza", Food.FoodType.Snack, null, null);
         Food.AddFood(food);
 
         Food.DeleteFood(food);
@@ -94,7 +94,7 @@ public class FoodTests
     [Fact]
     public void SaveFoodJSON_SavesFoodsToFile()
     {
-        var food = new Food("Burger", 7.5, "Beef burger", null, null, Food.FoodType.Snack);
+        var food = new Food("Burger", 7.5, "Beef burger", Food.FoodType.Snack, null, null);
         Food.AddFood(food);
         const string path = "test_food.json";
 
@@ -109,7 +109,7 @@ public class FoodTests
     public void LoadFoodJSON_LoadsFoodsFromFile()
     {
         const string path = "test_food.json";
-        var food = new Food("Sandwich", 6.0, "Ham sandwich", null, null, Food.FoodType.Snack);
+        var food = new Food("Sandwich", 6.0, "Ham sandwich", Food.FoodType.Snack, null, null);
         Food.AddFood(food);
         Food.SaveFoodJSON(path);
         Food.DeleteFood(food);
@@ -126,7 +126,7 @@ public class FoodTests
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidArguments()
     {
-        Assert.Throws<ArgumentException>(() => new Food(null, 10.0, "Test", null, null, Food.FoodType.Snack));
-        Assert.Throws<ArgumentException>(() => new Food("Test", -5.0, "Test", null, null, Food.FoodType.Snack));
+        Assert.Throws<ArgumentException>(() => new Food(null, 10.0, "Test", Food.FoodType.Snack, null, null));
+        Assert.Throws<ArgumentException>(() => new Food("Test", -5.0, "Test", Food.FoodType.Snack, null, null));
     }
 }

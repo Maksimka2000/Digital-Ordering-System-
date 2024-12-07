@@ -76,11 +76,11 @@ void OutputAllObjectsCreated()
             $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
         Console.WriteLine(food.Promotion == null
             ? "                    No promotion"
-            : $"                    Promotion [ name: {food.Promotion.Name}, Description: {food.Promotion.Description} and {food.Promotion.ToString()}]");
-        Console.Write(food.Ingredients == null
+            : $"                    Promotion [ name: {food.Promotion.Name}. And {food.Promotion}]");
+        Console.Write(food.Ingredients.Count == 0
             ? "                    No ingredients"
             : "                    There are ingredients: [");
-        if (food.Ingredients != null)
+        if (food.Ingredients.Count > 0)
         {
             foreach (var ingredient in food.Ingredients)
             {
@@ -99,13 +99,13 @@ void OutputAllObjectsCreated()
     {
         Console.WriteLine(
             $"beverage id: {beverage.Id}, Name: {beverage.Name}, Price: {beverage.Price}, Description: {beverage.Description}, BeverageType: {beverage.BeverageT}");
-        // Console.WriteLine(beverage.Promotion == null
-        //     ? "                    No promotion"
-        //     : $"                    Promotion [ name: {beverage.Promotion.Name}, Description: {beverage.Promotion.Description}]");
-        Console.Write(beverage.Ingredients == null
+        Console.WriteLine(beverage.Promotion == null
+            ? "                    No promotion"
+            : $"                    Promotion [ name: {beverage.Promotion.Name}. And {beverage.Promotion}]");
+        Console.Write(beverage.Ingredients.Count == 0
             ? "                    No ingredients"
             : "                    There are ingredients: [");
-        if (beverage.Ingredients != null)
+        if (beverage.Ingredients.Count > 0)
         {
             foreach (var ingredient in beverage.Ingredients)
             {
@@ -313,53 +313,47 @@ void CreateObjects()
     var promo2 = new Promotion(10.0, "He[ppy", "nothi", Promotion.PromotionType.Regular);
     var promo3 = new Promotion(70.0, "buy season");
     
-    var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs",
-        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, promo1, Food.FoodType.Pasta,
-        Food.DietaryPreferencesType.Vegan);
+    var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", Food.FoodType.Pasta,
+        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, Food.DietaryPreferencesType.Vegan, promo1);
     Food.AddFood(food1);
 
-    var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan",
-        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, promo1, Food.FoodType.Pasta,
-        Food.DietaryPreferencesType.Vegan);
+    var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", Food.FoodType.Pasta,
+        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, Food.DietaryPreferencesType.Vegan);
     Food.AddFood(food2);
 
     var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil",
-        new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, promo3,
-        Food.FoodType.Pasta, Food.DietaryPreferencesType.GlutenFree);
+        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, Food.DietaryPreferencesType.GlutenFree, promo3);
     Food.AddFood(food3);
 
     var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes",
-        new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, promo2,
-        Food.FoodType.Pasta, Food.DietaryPreferencesType.LactoseFree);
+        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, Food.DietaryPreferencesType.LactoseFree, promo2);
     Food.AddFood(food4);
 
     var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter",
-        new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient }, null,
-        Food.FoodType.Pasta);
+        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient });
     Food.AddFood(food5);
 
     Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
 
 // ======================================================== Create Beverages
-    var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee", null, null, false,
-        Beverage.BeverageType.Cafeteria);
+    var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee",
+        Beverage.BeverageType.Cafeteria, false, null, null);
     Beverage.AddBeverage(beverage1);
 
-    var beverage2 = new Beverage("Mojito", 7.99, "Refreshing cocktail with mint and lime", null, null, true,
-        Beverage.BeverageType.Cocktails);
+    var beverage2 = new Beverage("Mojito", 7.99, "Refreshing cocktail with mint and lime",
+        Beverage.BeverageType.Cocktails, true, null, null);
     Beverage.AddBeverage(beverage2);
 
-    var beverage3 = new Beverage("Iced Tea", 2.99, "Cold brewed tea with lemon", null, null, false,
-        Beverage.BeverageType.Cafeteria);
+    var beverage3 = new Beverage("Iced Tea", 2.99, "Cold brewed tea with lemon",
+        Beverage.BeverageType.Cafeteria, false, null, null);
     Beverage.AddBeverage(beverage3);
 
     var beverage4 = new Beverage("Negroni", 8.99, "Classic Italian cocktail",
-        new List<Ingredient> { ginIngredient, vermouthIngredient, campariIngredient }, promo3, true,
-        Beverage.BeverageType.Cocktails);
+        Beverage.BeverageType.Cocktails, true, new List<Ingredient> { ginIngredient, vermouthIngredient, campariIngredient }, promo3);
     Beverage.AddBeverage(beverage4);
 
-    var beverage5 = new Beverage("Lemonade", 2.99, "Refreshing lemon juice and sugar", null, null, false,
-        Beverage.BeverageType.Drinks);
+    var beverage5 = new Beverage("Lemonade", 2.99, "Refreshing lemon juice and sugar",
+        Beverage.BeverageType.Drinks, false, null, null);
     Beverage.AddBeverage(beverage5);
 
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));

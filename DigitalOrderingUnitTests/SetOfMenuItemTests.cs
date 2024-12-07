@@ -18,7 +18,7 @@ public class SetOfMenuItemTests
         var foods = new List<Food>();
         for (var i = 0; i < count; i++)
         {
-            foods.Add(new Food("Food " + i, 10.0, "Test Food", null, null, Food.FoodType.Snack));
+            foods.Add(new Food("Food " + i, 10.0, "Test Food", Food.FoodType.Snack, null, null));
         }
 
         return foods;
@@ -29,8 +29,8 @@ public class SetOfMenuItemTests
         var beverages = new List<Beverage>();
         for (var i = 0; i < count; i++)
         {
-            beverages.Add(new Beverage("Beverage " + i, 5.0, "Test Beverage", null, null, false,
-                Beverage.BeverageType.Drinks));
+            beverages.Add(new Beverage("Beverage " + i, 5.0, "Test Beverage",
+                Beverage.BeverageType.Drinks, false, null, null));
         }
 
         return beverages;

@@ -57,8 +57,9 @@ public class Food : MenuItem
     // constructor
     [JsonConstructor]
     public Food(string name, double price, string description,
-        List<Ingredient>? ingredients, Promotion? promotion, FoodType foodT,
-        DietaryPreferencesType? dietaryPreference = null)
+        FoodType foodT,
+        List<Ingredient>? ingredients,
+        DietaryPreferencesType? dietaryPreference = null, Promotion? promotion = null)
         : base(name, price, description, ingredients, promotion)
     {
         FoodT = foodT;

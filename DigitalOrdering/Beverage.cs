@@ -37,7 +37,8 @@ public class Beverage : MenuItem
     // constructor
     [JsonConstructor]
     public Beverage(string name, double price, string description,
-        List<Ingredient>? ingredients, Promotion? promotion, bool isAlcohol, BeverageType beverageT) : base(name, price,
+        BeverageType beverageT, bool isAlcohol,
+        List<Ingredient>? ingredients = null, Promotion? promotion = null) : base(name, price,
         description, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;

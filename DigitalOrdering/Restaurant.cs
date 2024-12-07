@@ -31,7 +31,7 @@ public class Restaurant
 
     public List<OpenHour> OpenHours
     {
-        get => _openHours;
+        get => [.._openHours];
         private set
         {
             ValidateWorkHours(value);
@@ -42,7 +42,7 @@ public class Restaurant
 
     public Address Location
     {
-        get => _location;
+        get => _location.Clone();
         private set
         {
             ValidateLocation(value);
@@ -194,7 +194,7 @@ public class OpenHour
         if (openTime >= closeTime) throw new ArgumentException("Closing time must be later than opening time");
     }
 
-    public string ToString()
+    public override string ToString()
     {
         return $"{Day}: {(IsOpen ? (OpenTime + " : " + CloseTime)  : "closed" )}";
     }
@@ -244,8 +244,13 @@ public class Address
         StreetNumber = streetNumber;
     }
 
-    public string ToString()
+    public override string ToString()
     {
         return $"adress: {Street} {StreetNumber}, {City}";
+    }
+
+    public Address Clone()
+    {
+        return new Address(Street, City, StreetNumber);
     }
 }

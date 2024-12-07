@@ -29,7 +29,7 @@ public class BeverageTests
         const bool isAlcohol = true;
         var beverageType = Beverage.BeverageType.Cocktails;
 
-        var beverage = new Beverage(name, price, description, ingredients, promotion, isAlcohol, beverageType);
+        var beverage = new Beverage(name, price, description, beverageType, isAlcohol, ingredients, promotion);
 
         Assert.Equal(name, beverage.Name);
         Assert.Equal(price, beverage.Price);
@@ -43,23 +43,23 @@ public class BeverageTests
     [Fact]
     public void BeverageType_Getter_ReturnsCorrectValue()
     {
-        var beverage = new Beverage("Espresso", 2.5, "Strong coffee", null, null, false,
-            Beverage.BeverageType.Cafeteria);
+        var beverage = new Beverage("Espresso", 2.5, "Strong coffee",
+            Beverage.BeverageType.Cafeteria, false, null, null);
         Assert.Equal(Beverage.BeverageType.Cafeteria, beverage.BeverageT);
     }
 
     [Fact]
     public void IsAlcohol_Getter_ReturnsCorrectValue()
     {
-        var beverage = new Beverage("Beer", 4.0, "Refreshing beer", null, null, true, Beverage.BeverageType.Drinks);
+        var beverage = new Beverage("Beer", 4.0, "Refreshing beer", Beverage.BeverageType.Drinks, true, null, null);
         Assert.True(beverage.IsAlcohol);
     }
 
     [Fact]
     public void AddBeverage_AddsBeverageToList()
     {
-        var beverage = new Beverage("Espresso", 2.5, "Strong coffee", null, null, false,
-            Beverage.BeverageType.Cafeteria);
+        var beverage = new Beverage("Espresso", 2.5, "Strong coffee",
+            Beverage.BeverageType.Cafeteria, false, null, null);
 
         Beverage.AddBeverage(beverage);
         var beverages = Beverage.GetBeverages();
@@ -70,9 +70,9 @@ public class BeverageTests
     [Fact]
     public void GetBeverages_ReturnsCorrectList()
     {
-        var beverage1 = new Beverage("Espresso", 2.5, "Strong coffee", null, null, false,
-            Beverage.BeverageType.Cafeteria);
-        var beverage2 = new Beverage("Whiskey", 12.0, "Smooth whiskey", null, null, true, Beverage.BeverageType.Drinks);
+        var beverage1 = new Beverage("Espresso", 2.5, "Strong coffee",
+            Beverage.BeverageType.Cafeteria, false, null, null);
+        var beverage2 = new Beverage("Whiskey", 12.0, "Smooth whiskey", Beverage.BeverageType.Drinks, true, null, null);
         Beverage.AddBeverage(beverage1);
         Beverage.AddBeverage(beverage2);
 
@@ -86,7 +86,7 @@ public class BeverageTests
     [Fact]
     public void DeleteBeverage_RemovesBeverageFromList()
     {
-        var beverage = new Beverage("Tea", 1.5, "Green tea", null, null, false, Beverage.BeverageType.Cafeteria);
+        var beverage = new Beverage("Tea", 1.5, "Green tea", Beverage.BeverageType.Cafeteria, false, null, null);
         Beverage.AddBeverage(beverage);
 
         Beverage.DeleteBeverage(beverage);
@@ -98,8 +98,8 @@ public class BeverageTests
     [Fact]
     public void SaveBeverageJSON_SavesBeveragesToFile()
     {
-        var beverage = new Beverage("Coca Cola", 1.0, "Classic cola drink", null, null, false,
-            Beverage.BeverageType.Drinks);
+        var beverage = new Beverage("Coca Cola", 1.0, "Classic cola drink",
+            Beverage.BeverageType.Drinks, false, null, null);
         Beverage.AddBeverage(beverage);
         const string path = "test_beverages.json";
 
@@ -114,8 +114,8 @@ public class BeverageTests
     public void LoadBeverageJSON_LoadsBeveragesFromFile()
     {
         const string path = "test_beverages.json";
-        var beverage = new Beverage("Pepsi", 1.0, "Classic cola drink", null, null, false,
-            Beverage.BeverageType.Drinks);
+        var beverage = new Beverage("Pepsi", 1.0, "Classic cola drink",
+            Beverage.BeverageType.Drinks, false, null, null);
         Beverage.AddBeverage(beverage);
         Beverage.SaveBeverageJSON(path);
         Beverage.DeleteBeverage(beverage);
@@ -133,10 +133,10 @@ public class BeverageTests
     public void Constructor_ThrowsExceptionForInvalidArguments()
     {
         Assert.Throws<ArgumentException>(() =>
-            new Beverage(null, 10.0, "Test", null, null, false, Beverage.BeverageType.Drinks));
+            new Beverage(null, 10.0, "Test", Beverage.BeverageType.Drinks, false, null, null));
         Assert.Throws<ArgumentException>(() =>
-            new Beverage("Test", -5.0, "Test", null, null, false, Beverage.BeverageType.Drinks));
+            new Beverage("Test", -5.0, "Test", Beverage.BeverageType.Drinks, false, null, null));
         Assert.Throws<ArgumentException>(() =>
-            new Beverage("Test", 5.0, "", null, null, false, Beverage.BeverageType.Drinks));
+            new Beverage("Test", 5.0, "", Beverage.BeverageType.Drinks, false, null, null));
     }
 }

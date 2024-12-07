@@ -15,6 +15,7 @@ public abstract class MenuItem
     private double _price;
     private string _description;
     private Promotion? _promotion;
+    public bool IsAvailable { get; private set; }
 
     //setters and getters    
     public string Name
@@ -46,7 +47,7 @@ public abstract class MenuItem
     }
     public Promotion? Promotion
     {
-        get => _promotion;
+        get => _promotion == null ? null : _promotion.Clone();
         private set
         {
             _promotion = value;
@@ -63,6 +64,7 @@ public abstract class MenuItem
         Description = description;
         if (ingredients != null) foreach (Ingredient ingredient in ingredients) AddIngredient(ingredient);
         Promotion = promotion;
+        IsAvailable = true;
     }
     
     // association
@@ -116,6 +118,15 @@ public abstract class MenuItem
     }
     
     //methods
+    public void Unavailable()
+    {
+        IsAvailable = false;
+    }
+
+    public void Available()
+    {
+        IsAvailable = true;
+    }
     public void AddPromotion(Promotion promotion)
     {
         Promotion = promotion;
@@ -124,6 +135,35 @@ public abstract class MenuItem
     {
         Promotion = null;
     }
+
+    // methods updating the promotion 
+    public void UpdateDiscountPercentPromotion(double newDiscountPromotion)
+    {
+        if (_promotion != null) _promotion.UpdateDiscountPercent(newDiscountPromotion);
+        else Console.WriteLine("No Promotion to update");
+        
+    }
+    public void UpdateNamePromotion(string newName)
+    {
+        if (_promotion != null) _promotion.UpdateName(newName);
+        else Console.WriteLine("No Promotion to update");
+    }
+    public void UpdateDescriptionPromotion(string newDescription)
+    {
+        if (_promotion != null) _promotion.UpdateDescription(newDescription);
+        else Console.WriteLine("No Promotion to update");
+    }
+    public void RemoveDescriptionPromotion()
+    {
+        if (_promotion != null) _promotion.RemoveDescription();
+        else Console.WriteLine("No Promotion to update");
+    }
+    public void UpdateTypePromotion(Promotion.PromotionType newPromotionType)
+    {
+        if (_promotion != null) _promotion.UpdateType(newPromotionType);
+        else Console.WriteLine("No Promotion to update");
+    }
+    
     
     
     

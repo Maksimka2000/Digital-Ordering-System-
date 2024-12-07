@@ -68,7 +68,7 @@ public class Promotion
     
     // constructor
     [JsonConstructor]
-    public Promotion(double discountPercent, string name, string description = null, PromotionType type = PromotionType.Regular)
+    public Promotion(double discountPercent, string name, string? description = null, PromotionType type = PromotionType.Regular)
     {
         DiscountPercent = discountPercent;
         Name = name;
@@ -92,7 +92,7 @@ public class Promotion
     }
     
     // get, add, delete, set  on class
-    public void UpdateDiscountPercent(int newDiscountPercent)
+    public void UpdateDiscountPercent(double newDiscountPercent)
     {
         DiscountPercent = newDiscountPercent;
     }
@@ -113,8 +113,14 @@ public class Promotion
     {
         Type = newType;
     }
-    public string ToString()
+    
+    // other
+    public override string ToString()
     {
         return $"name: {Name}, description: {Description}, discount: {DiscountPercent}, type: {Type}";
+    }
+    public Promotion Clone()
+    {
+        return new Promotion(DiscountPercent, Name, Description, Type);
     }
 }
