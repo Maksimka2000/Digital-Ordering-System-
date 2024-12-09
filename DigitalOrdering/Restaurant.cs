@@ -19,6 +19,7 @@ public class Restaurant
     private List<OpenHour> _openHours;
 
     // setters validation
+    public List<OpenHour> OpenHours => [.._openHours];
     public string Name
     {
         get => _name;
@@ -28,18 +29,7 @@ public class Restaurant
             _name = value;
         }
     }
-
-    public List<OpenHour> OpenHours
-    {
-        get => [.._openHours];
-        private set
-        {
-            ValidateWorkHours(value);
-            ValidateWorkHoursDays(value);
-            _openHours = value;
-        }
-    }
-
+    
     public Address Location
     {
         get => _location.Clone();
@@ -57,7 +47,15 @@ public class Restaurant
         Id = ++IdCounter;
         Name = name;
         Location = location;
-        OpenHours = openHours;
+        UpdateOpenHours(openHours);
+    }
+    
+    // multi-value attribute methods
+    public void UpdateOpenHours(List<OpenHour> newOpenHours)
+    {
+        ValidateWorkHours(newOpenHours);
+        ValidateWorkHoursDays(newOpenHours);
+        _openHours = newOpenHours;
     }
 
     // validation
@@ -105,15 +103,11 @@ public class Restaurant
         var openHoursDay = GetOpenHour(dayOfWeek);
         return openHoursDay.IsOpen && openHoursDay.OpenTime <= currentTime && openHoursDay.CloseTime >= currentTime;
     }
-    public void UpdateOpenHours(DayOfWeek dayOfWeek, TimeSpan? openTime, TimeSpan? closeTime)
+    public void UpdateOpenHour(DayOfWeek dayOfWeek, TimeSpan? openTime, TimeSpan? closeTime)
     {
         var day = GetOpenHour(dayOfWeek);
         day.UpdateTime(openTime, closeTime);
         Console.WriteLine($"time succesfully updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}")}");
-    }
-    public void UpdateOpenHours(List<OpenHour> newOpenHour)
-    {
-        OpenHours = newOpenHour;
     }
     private OpenHour GetOpenHour(DayOfWeek dayOfWeek)
     {

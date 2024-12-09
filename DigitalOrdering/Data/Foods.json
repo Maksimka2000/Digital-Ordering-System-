@@ -1,6 +1,6 @@
 [
   {
-    "DietaryPreference": "Vegan",
+    "DietaryPreferences": [],
     "FoodT": "Pasta",
     "Id": 1,
     "IsAvailable": true,
@@ -8,7 +8,6 @@
     "Price": 12.99,
     "Description": "Classic pasta with bacon and eggs",
     "Promotion": {
-      "Id": 0,
       "Type": "Regular",
       "DiscountPercent": 10.0,
       "Name": "new year",
@@ -30,14 +29,21 @@
     ]
   },
   {
-    "DietaryPreference": "Vegan",
+    "DietaryPreferences": [
+      "GlutenFree"
+    ],
     "FoodT": "Pasta",
     "Id": 2,
     "IsAvailable": true,
     "Name": "Penne Alfredo",
     "Price": 14.99,
     "Description": "Creamy Alfredo pasta with Parmesan",
-    "Promotion": null,
+    "Promotion": {
+      "Type": "Regular",
+      "DiscountPercent": 10.0,
+      "Name": "He[ppy",
+      "Description": "nothi"
+    },
     "Ingredients": [
       {
         "Id": 11,
@@ -54,7 +60,9 @@
     ]
   },
   {
-    "DietaryPreference": "GlutenFree",
+    "DietaryPreferences": [
+      "Vegan"
+    ],
     "FoodT": "Pasta",
     "Id": 3,
     "IsAvailable": true,
@@ -62,7 +70,6 @@
     "Price": 13.99,
     "Description": "Pasta with fresh vegetables and olive oil",
     "Promotion": {
-      "Id": 0,
       "Type": "Regular",
       "DiscountPercent": 70.0,
       "Name": "buy season",
@@ -88,7 +95,10 @@
     ]
   },
   {
-    "DietaryPreference": "LactoseFree",
+    "DietaryPreferences": [
+      "LactoseFree",
+      "GlutenFree"
+    ],
     "FoodT": "Pasta",
     "Id": 4,
     "IsAvailable": true,
@@ -96,7 +106,6 @@
     "Price": 10.99,
     "Description": "Pasta with garlic, olive oil, red pepper flakes",
     "Promotion": {
-      "Id": 0,
       "Type": "Regular",
       "DiscountPercent": 10.0,
       "Name": "He[ppy",
@@ -118,7 +127,7 @@
     ]
   },
   {
-    "DietaryPreference": null,
+    "DietaryPreferences": [],
     "FoodT": "Pasta",
     "Id": 5,
     "IsAvailable": true,

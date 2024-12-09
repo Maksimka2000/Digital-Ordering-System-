@@ -18,7 +18,6 @@ public class Promotion
     private const double MinDiscountPercent = 0.01;
     
     // Fields/attributes
-    public int Id { get; } // no set! As assigned can't be changed 
     private double _discountPercent; 
     private string _name;
     private string? _description;

@@ -41,7 +41,6 @@
     "Price": 8.99,
     "Description": "Classic Italian cocktail",
     "Promotion": {
-      "Id": 0,
       "Type": "Regular",
       "DiscountPercent": 70.0,
       "Name": "buy season",

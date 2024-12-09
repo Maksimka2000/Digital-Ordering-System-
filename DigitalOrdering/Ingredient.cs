@@ -36,8 +36,9 @@ public class Ingredient
     
     //association reverse 
     private List<MenuItem> _ingredientInMenuItems = new();
+    //associateion reverse getter
     [JsonIgnore]
-    public List<MenuItem> IngredientInMenuItems => _ingredientInMenuItems;
+    public List<MenuItem> IngredientInMenuItems => [.._ingredientInMenuItems];
     //association reverse methods
     public void AddMenuItemToIngredient(MenuItem menuItem)
     {
@@ -74,7 +75,6 @@ public class Ingredient
     public static void AddIngredient(Ingredient ingredient)
     {
         if (ingredient == null) throw new ArgumentException("Ingredient cannot be null");
-        ValidateNameDuplication(ingredient);
         _ingredients.Add(ingredient);
     }
 

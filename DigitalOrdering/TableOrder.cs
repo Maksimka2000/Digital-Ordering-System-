@@ -22,9 +22,7 @@ public class TableOrder : Order
     [JsonConstructor]
     public TableOrder(int numberOfPeople) : base(numberOfPeople)
     {
-        QRCodeScanTime =
-            new TimeSpan(DateTime.Now
-                .Ticks); // change soon. We assign the value here when the user first requested the web page and taking when the user sent the order form and then if the device is the same asingn value to hte qr code
+        QRCodeScanTime = new TimeSpan(DateTime.Now.Ticks); // change soon. We assign the value here when the user first requested the web page and taking when the user sent the order form and then if the device is the same asingn value to hte qr code
         StartTime = new TimeSpan(DateTime.Now.Ticks);
     }
 

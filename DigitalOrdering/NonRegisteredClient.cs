@@ -40,7 +40,6 @@ public class NonRegisteredClient
     public NonRegisteredClient(string name, string? phoneNumber)
     {
         Name = name;
-        _name = name;
         PhoneNumber = phoneNumber;
     }
 

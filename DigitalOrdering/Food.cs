@@ -1,5 +1,4 @@
-﻿using DigitalOrdering;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace DigitalOrdering;
@@ -29,21 +28,11 @@ public class Food : MenuItem
     private static List<Food> _foods = [];
     
     // fields
-    
-    private DietaryPreferencesType? _dietaryPreferences;
-    [JsonConverter(typeof(StringEnumConverter))]
-    public DietaryPreferencesType? DietaryPreference
-    {
-        get => _dietaryPreferences;
-        private set
-        {
-            if(value != null) {ValidateDietaryPreference(value);}
-            _dietaryPreferences = value;
-        }
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
+    private List<DietaryPreferencesType> _dietaryPreferences = [];
     private FoodType _foodType;
+    
+    // setters and getters
+    public List<DietaryPreferencesType> DietaryPreferences => _dietaryPreferences; // don't work inf [.._dietaryPreferences] somewhy
     public FoodType FoodT
     {
         get => _foodType;
@@ -59,11 +48,61 @@ public class Food : MenuItem
     public Food(string name, double price, string description,
         FoodType foodT,
         List<Ingredient>? ingredients,
-        DietaryPreferencesType? dietaryPreference = null, Promotion? promotion = null)
+        List<DietaryPreferencesType>? dietaryPreference = null, Promotion? promotion = null)
         : base(name, price, description, ingredients, promotion)
     {
         FoodT = foodT;
-        DietaryPreference = dietaryPreference;
+        if(dietaryPreference != null) UpdateDietaryPreferencesType(dietaryPreference);
+    }
+
+    // methods for the multi-value attribute
+    public void AddDietaryPreferencesType(DietaryPreferencesType dietaryPreference)
+    {
+        ValidateDietaryPreference(dietaryPreference);
+        if (!_dietaryPreferences.Contains(dietaryPreference))
+            _dietaryPreferences.Add(dietaryPreference);
+    }
+    public void RemoveDietaryPreferencesType(DietaryPreferencesType dietaryPreference)
+    {
+        if (_dietaryPreferences.Contains(dietaryPreference))
+            _dietaryPreferences.Remove(dietaryPreference);
+    }
+    public void UpdateDietaryPreferencesType(List<DietaryPreferencesType>? dietaryPreferences)
+    {
+        if (dietaryPreferences != null && dietaryPreferences.Count > 0)
+        {
+            if(_dietaryPreferences.Count > 0)
+                foreach (DietaryPreferencesType dietaryPreference in _dietaryPreferences)
+                    RemoveDietaryPreferencesType(dietaryPreference);
+            else
+                foreach (DietaryPreferencesType dietaryPreference in dietaryPreferences)
+                    AddDietaryPreferencesType(dietaryPreference);
+        } else throw new ArgumentNullException($"epmty lists and null is not allowed in UpdateDietaryPreferencesType().");
+    }
+    
+    // associations reverse 
+    private List<SetOfMenuItem> _foodInSetOfMenuItems = new();
+    // associations reverse getter
+    [JsonIgnore]
+    public List<SetOfMenuItem> FoodInSetOfMenuItems => [.._foodInSetOfMenuItems];
+    // associations reverse methods
+    public void AddSetOfMenuItemsToFood(SetOfMenuItem setOfMenuItem)
+    {
+        if (setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}. SetOfMenuItems can not be null in the AddSetOfMenuItems method.");
+        if (!_foodInSetOfMenuItems.Contains(setOfMenuItem))
+        {
+            _foodInSetOfMenuItems.Add(setOfMenuItem);
+            setOfMenuItem.AddFood(this);
+        }
+    }
+    public void RemoveSetOfMenuItemsFromFood(SetOfMenuItem setOfMenuItem)
+    {
+        if (setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}. SetOfMenuItems can not be null in the RemoveSetOfMenuItemFromFood method.");
+        if (_foodInSetOfMenuItems.Contains(setOfMenuItem))
+        {
+            _foodInSetOfMenuItems.Remove(setOfMenuItem);
+            setOfMenuItem.RemoveFood(this);
+        }
     }
     
     // validation 
@@ -77,7 +116,7 @@ public class Food : MenuItem
         if (!Enum.IsDefined(typeof(FoodType), value)) throw new ArgumentException($"Invalid food type {value}");
     }
     
-    // Get, Add, Delete, Update CRUD
+    // methods on Object (add,remove,delete,modify)
     public static void AddFood(Food food)
     {
         if(food == null) throw new ArgumentException("food cannot be null");

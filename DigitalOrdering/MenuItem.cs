@@ -62,7 +62,7 @@ public abstract class MenuItem
         Name = name;
         Price = price;
         Description = description;
-        if (ingredients != null) foreach (Ingredient ingredient in ingredients) AddIngredient(ingredient);
+        if (ingredients != null) UpdateIngredients(ingredients);
         Promotion = promotion;
         IsAvailable = true;
     }
@@ -74,7 +74,7 @@ public abstract class MenuItem
     // association methods
     public void AddIngredient(Ingredient ingredient)
     {
-        if(ingredient == null) throw new ArgumentNullException($"Ingredient: '{ingredient.Name}' in AddIngredient can't be null");
+        if(ingredient == null) throw new ArgumentNullException($" {this.Name}: Ingredient in AddIngredient can't be null");
         if (!_ingredients.Contains(ingredient))
         {
             _ingredients.Add(ingredient);
@@ -84,12 +84,22 @@ public abstract class MenuItem
     }
     public void RemoveIngredient(Ingredient ingredient)
     {
-        if(ingredient == null) throw new ArgumentNullException($"Ingredient: '{ingredient.Name}' in RemoveIngredient can't be null");
+        if(ingredient == null) throw new ArgumentNullException($" {this.Name}: Ingredient in RemoveIngredient can't be null");
         if (_ingredients.Contains(ingredient))
         {
             _ingredients.Remove(ingredient);
             // reverse connection
             ingredient.RemoveMenuItemFromIngredient(this);
+        }
+    }
+    public void UpdateIngredients(List<Ingredient>? ingredients)
+    {
+        if (ingredients != null && ingredients.Count != 0)
+        {
+            if (_ingredients.Count > 0) 
+                foreach (Ingredient ingredient in _ingredients) 
+                    RemoveIngredient(ingredient);
+            foreach (Ingredient ingredient in ingredients) AddIngredient(ingredient);
         }
     }
     

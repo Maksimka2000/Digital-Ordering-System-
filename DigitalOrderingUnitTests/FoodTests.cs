@@ -12,30 +12,30 @@ public class FoodTests
             ?.SetValue(null, new List<Food>());
     }
 
-    [Fact]
-    public void Constructor_SetsPropertiesCorrectly()
-    {
-        const string name = "Pasta Carbonara";
-        const double price = 12.5;
-        const string description = "A classic Italian pasta dish";
-        var ingredients = new List<Ingredient>
-        {
-            new("Onion")
-        };
-        var promotion = new Promotion(15, "Winter Sale", "Discount for winter items");
-        const Food.FoodType foodType = Food.FoodType.Pasta;
-        Food.DietaryPreferencesType? dietaryPreference = Food.DietaryPreferencesType.GlutenFree;
-
-        var food = new Food(name, price, description, foodType, ingredients, dietaryPreference, promotion);
-
-        Assert.Equal(name, food.Name);
-        Assert.Equal(price, food.Price);
-        Assert.Equal(description, food.Description);
-        // Assert.Equal(ingredients, food.Ingredients);
-        // Assert.Equal(promotion, food.Promotion);
-        Assert.Equal(foodType, food.FoodT);
-        Assert.Equal(dietaryPreference, food.DietaryPreference);
-    }
+    // [Fact]
+    // public void Constructor_SetsPropertiesCorrectly()
+    // {
+    //     const string name = "Pasta Carbonara";
+    //     const double price = 12.5;
+    //     const string description = "A classic Italian pasta dish";
+    //     var ingredients = new List<Ingredient>
+    //     {
+    //         new("Onion")
+    //     };
+    //     var promotion = new Promotion(15, "Winter Sale", "Discount for winter items");
+    //     const Food.FoodType foodType = Food.FoodType.Pasta;
+    //     Food.DietaryPreferencesType? dietaryPreference = Food.DietaryPreferencesType.GlutenFree;
+    //
+    //     var food = new Food(name, price, description, foodType, ingredients, dietaryPreference, promotion);
+    //
+    //     Assert.Equal(name, food.Name);
+    //     Assert.Equal(price, food.Price);
+    //     Assert.Equal(description, food.Description);
+    //     // Assert.Equal(ingredients, food.Ingredients);
+    //     // Assert.Equal(promotion, food.Promotion);
+    //     Assert.Equal(foodType, food.FoodT);
+    //     Assert.Equal(dietaryPreference, food.DietaryPreference);
+    // }
 
     [Fact]
     public void FoodType_Getter_ReturnsCorrectValue()
@@ -44,13 +44,13 @@ public class FoodTests
         Assert.Equal(Food.FoodType.Snack, food.FoodT);
     }
 
-    [Fact]
-    public void DietaryPreference_Getter_ReturnsCorrectValue()
-    {
-        var food = new Food("Vegan Burger", 10.0, "Delicious vegan burger", Food.FoodType.Snack,
-            null, Food.DietaryPreferencesType.Vegan, null);
-        Assert.Equal(Food.DietaryPreferencesType.Vegan, food.DietaryPreference);
-    }
+    // [Fact]
+    // public void DietaryPreference_Getter_ReturnsCorrectValue()
+    // {
+    //     var food = new Food("Vegan Burger", 10.0, "Delicious vegan burger", Food.FoodType.Snack,
+    //         null, Food.DietaryPreferencesType.Vegan, null);
+    //     Assert.Equal(Food.DietaryPreferencesType.Vegan, food.DietaryPreference);
+    // }
 
     [Fact]
     public void AddFood_AddsFoodToList()

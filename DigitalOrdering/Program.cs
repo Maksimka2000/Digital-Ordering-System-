@@ -26,7 +26,7 @@ void LoadClassExtent()
         "Ingredients.json"));
     Food.LoadFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
     Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    SetOfMenuItem.LoadBusinessLunchJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.LoadSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "SetOfMenuItem.json"));
     Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
@@ -45,7 +45,7 @@ void SaveClassExtent()
         "Ingredients.json"));
     Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    SetOfMenuItem.SaveBusinessLunchJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "SetOfMenuItem.json"));
     Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "Restaurant.json"));
@@ -58,22 +58,35 @@ void SaveClassExtent()
         "OnlineOrder.json"));
 }
 
-
 void OutputAllObjectsCreated()
 {
-// //---------------------------------------------------- Load Ingredietns
+    //---------------------------------------------------- Load Ingredietns
     Console.WriteLine("================================  Ingredients ==================");
     foreach (Ingredient ingredient in Ingredient.GetIngredients())
     {
         Console.WriteLine($"Ingredietn id: {ingredient.Id}, Name: {ingredient.Name}");
     }
     
-// // // ------------------------------------------------------ Load Food
+    // ------------------------------------------------------ Load Food
     Console.WriteLine("================================  Food ==================");
     foreach (Food food in Food.GetFoods())
     {
-        Console.WriteLine(
-            $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, DietaryPrference: {food.DietaryPreference}, foodType: {food.FoodT} ");
+        Console.WriteLine();
+        Console.Write(
+            $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, foodType: {food.FoodT}, DietaryPreference: ");
+        if (food.DietaryPreferences.Count > 0)
+        {
+            Console.Write("[");
+            foreach (var dietaryPreference in food.DietaryPreferences)
+                Console.Write($"{dietaryPreference}, ");
+            Console.WriteLine("]");
+        }
+        else
+        {
+            Console.Write("No dietary preferences");
+        }
+        Console.WriteLine();
+        
         Console.WriteLine(food.Promotion == null
             ? "                    No promotion"
             : $"                    Promotion [ name: {food.Promotion.Name}. And {food.Promotion}]");
@@ -81,19 +94,13 @@ void OutputAllObjectsCreated()
             ? "                    No ingredients"
             : "                    There are ingredients: [");
         if (food.Ingredients.Count > 0)
-        {
             foreach (var ingredient in food.Ingredients)
-            {
                 Console.Write($"{ingredient.Name}, ");
-            }
-
             Console.Write("] ");
-        }
-
         Console.WriteLine("");
     }
 
-// // ------------------------------------------------------ Load beverage
+    // ------------------------------------------------------ Load beverage
     Console.WriteLine("================================ Beverages ==================");
     foreach (Beverage beverage in Beverage.GetBeverages())
     {
@@ -111,71 +118,69 @@ void OutputAllObjectsCreated()
             {
                 Console.Write($"{ingredient.Name}, ");
             }
-
             Console.Write("] ");
         }
-
         Console.WriteLine();
     }
 
-// // ------------------------------------------------------ Load BusinessLunches
-    // Console.WriteLine("================================  BusinessLunches ==================");
-    // foreach (SetOfMenuItem businessLunch in SetOfMenuItem.GetBusinessLunches())
-    // {
-    //     Console.WriteLine(
-    //         $"Business Lunch id: {businessLunch.Id}, Name: {businessLunch.Name}, Price: {businessLunch.Price}, Description: {businessLunch.Description}");
-    //     Console.WriteLine(businessLunch.Promotion == null
-    //         ? "                    No promotion"
-    //         : $"                    Promotion name: {businessLunch.Promotion.Name}, Description: {businessLunch.Promotion.Description}");
-    //     Console.WriteLine(businessLunch.Ingredients == null
-    //         ? "                    No ingredients"
-    //         : "                    There are ingredients:");
-    //
-    //     Console.WriteLine($"                    There are {businessLunch.Foods.Count} foods: ");
-    //     foreach (var food in businessLunch.Foods)
-    //     {
-    //         Console.Write("                           [");
-    //         Console.Write($"food name: {food.Name}");
-    //         Console.Write(
-    //             $". Promotion for this food: {(food.Promotion == null ? "No Promotion" : food.Promotion.Name)}");
-    //         Console.Write(
-    //             $". Ingredients in the food: {(food.Ingredients == null ? "No ingredients" : "There are ingredients: [")}");
-    //         if (food.Ingredients != null)
-    //         {
-    //             foreach (var ingredient in food.Ingredients)
-    //             {
-    //                 Console.Write($"{ingredient.Name}, ");
-    //             }
-    //
-    //             Console.Write("] ");
-    //         }
-    //
-    //         Console.WriteLine("]");
-    //     }
-    //
-    //
-    //     Console.WriteLine($"                    There are {businessLunch.Beverages.Count} beverages: ");
-    //     foreach (var beverage in businessLunch.Beverages)
-    //     {
-    //         Console.Write("                           [");
-    //         Console.Write($"Beverage name: {beverage.Name}");
-    //         Console.Write(
-    //             $". Promotion for this beverage: {(beverage.Promotion == null ? "No Promotion" : beverage.Promotion.Name)}");
-    //         Console.Write(
-    //             $". Ingredients in the beverage: {(beverage.Ingredients == null ? "No ingredients" : "There are ingredients: [")}");
-    //         if (beverage.Ingredients != null)
-    //         {
-    //             foreach (var ingredient in beverage.Ingredients)
-    //             {
-    //                 Console.Write($"{ingredient.Name}, ");
-    //             }
-    //
-    //             Console.Write("] ");
-    //         }
-    //
-    //         Console.WriteLine("]");
-    //     }
-    // }
+    // ------------------------------------------------------ SetOfMenuItems
+    Console.WriteLine("================================  SetOfMenuItems ==================");
+    foreach (SetOfMenuItem setOfMenuItems in SetOfMenuItem.GetSetOfMenuItems())
+    {
+        Console.WriteLine(
+            $"SetOfMenuItems id: {setOfMenuItems.Id}, Name: {setOfMenuItems.Name}, Price: {setOfMenuItems.Price}, Description: {setOfMenuItems.Description}");
+        
+        Console.WriteLine($"                    There are {setOfMenuItems.Foods.Count} foods: ");
+        if (setOfMenuItems.Foods.Count > 0)
+        {
+            foreach (var food in setOfMenuItems.Foods)
+            {
+                Console.Write("                           [");
+                Console.Write($"food name: {food.Name}");
+                Console.Write(
+                    $". Promotion for this food: {(food.Promotion == null ? "No Promotion" : food.Promotion.Name)}");
+                Console.Write(
+                    $". Ingredients in the food: {(food.Ingredients.Count == 0 ? "No ingredients" : " [")}");
+                if (food.Ingredients.Count > 0)
+                {
+                    foreach (var ingredient in food.Ingredients)
+                    {
+                        Console.Write($"{ingredient.Name}, ");
+                    }
+                    Console.Write("] ");
+                }
+                Console.WriteLine("]");
+            }
+        }
+        
+        Console.WriteLine($"                    There are {setOfMenuItems.Beverages.Count} beverages: ");
+        if (setOfMenuItems.Beverages.Count > 0)
+        {
+            foreach (var beverage in setOfMenuItems.Beverages)
+            {
+                Console.Write("                           [");
+                Console.Write($"Beverage name: {beverage.Name}");
+                Console.Write(
+                    $". Promotion for this beverage: {(beverage.Promotion == null ? "No Promotion" : beverage.Promotion.Name)}");
+                Console.Write(
+                    $". Ingredients in the beverage: {(beverage.Ingredients.Count == 0 ? "No ingredients" : "There are ingredients: [")}");
+                if (beverage.Ingredients.Count > 0)
+                {
+                    foreach (var ingredient in beverage.Ingredients)
+                    {
+                        Console.Write($"{ingredient.Name}, ");
+                    }
+                    Console.Write("] ");
+                }
+                Console.WriteLine("]");
+            }
+        }
+        
+        Console.Write($"                    Is available on: [");
+        foreach (var day in setOfMenuItems.Days) Console.Write($"{day}, ");
+        Console.Write($"] from {setOfMenuItems.StartTime} to {setOfMenuItems.EndTime}");
+        Console.WriteLine();
+    }
 
     // ========================================== Load Restaurant
     Console.WriteLine("=========================================== Restaurant ===========================");
@@ -191,9 +196,9 @@ void OutputAllObjectsCreated()
         }
 
         Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
-        restaurant.UpdateOpenHours(DayOfWeek.Monday, new TimeSpan(7, 0, 0), new TimeSpan(18, 0, 0));
+        restaurant.UpdateOpenHour(DayOfWeek.Monday, new TimeSpan(7, 0, 0), new TimeSpan(18, 0, 0));
         Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
-        restaurant.UpdateOpenHours(DayOfWeek.Monday, null, null);
+        restaurant.UpdateOpenHour(DayOfWeek.Monday, null, null);
         Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
     }
 
@@ -231,9 +236,7 @@ void OutputAllObjectsCreated()
 }
 
 void CreateObjects()
-{ 
-    /// ================================DO not delete just in case)
-
+{
 //===================================================================== Create Ingredietn 
     var tomatoIngredient = new Ingredient("Tomato");
     Ingredient.AddIngredient(tomatoIngredient);
@@ -314,19 +317,19 @@ void CreateObjects()
     var promo3 = new Promotion(70.0, "buy season");
     
     var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", Food.FoodType.Pasta,
-        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, Food.DietaryPreferencesType.Vegan, promo1);
+        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, null, promo1);
     Food.AddFood(food1);
 
     var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", Food.FoodType.Pasta,
-        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, Food.DietaryPreferencesType.Vegan);
+        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.GlutenFree}, promo2);
     Food.AddFood(food2);
 
     var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil",
-        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, Food.DietaryPreferencesType.GlutenFree, promo3);
+        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.Vegan}, promo3);
     Food.AddFood(food3);
 
     var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes",
-        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, Food.DietaryPreferencesType.LactoseFree, promo2);
+        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.LactoseFree, Food.DietaryPreferencesType.GlutenFree}, promo2);
     Food.AddFood(food4);
 
     var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter",
@@ -359,16 +362,28 @@ void CreateObjects()
     Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
 
 // ======================================================== Create Business Lunch
-    var businessLunch = new SetOfMenuItem("Business Special", 19.99,
+    var businessLunch1 = new SetOfMenuItem("Business Special", 19.99,
         "A combination of three foods and a drink", new List<Food> { food1, food2, food3 },
         new List<Beverage> { beverage2 });
-    SetOfMenuItem.AddBusinessLunch(businessLunch);
+    SetOfMenuItem.AddSetOfMenuItems(businessLunch1);
+    
+    var businessLunch2 = new SetOfMenuItem("WeekEnd Promo Special", 19.99,
+        "A combination of two food beyound your imagination and a drink", new List<Food> { food4, food5 },
+        new List<Beverage> { beverage2, beverage3 });
+    SetOfMenuItem.AddSetOfMenuItems(businessLunch2);
+    
+    var businessLunch3 = new SetOfMenuItem("New special prom", 19.99,
+        "WIthour beverages and in monday and friday", new List<Food> { food1, food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday});
+    SetOfMenuItem.AddSetOfMenuItems(businessLunch3);
+    
+    var businessLunch4 = new SetOfMenuItem("New special prom", 19.99,
+        "WIthour beverages and in monday and friday", new List<Food> {food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday}, new TimeSpan(10,0,0), new TimeSpan(15,0,0));
+    SetOfMenuItem.AddSetOfMenuItems(businessLunch4);
 
-    SetOfMenuItem.SaveBusinessLunchJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
         "SetOfMenuItem.json"));
-
-
-    // ========================================================= Create Restaurant
+    
+// ========================================================= Create Restaurant
 
     Address address = new Address("Zlota 43", "Warszawa", "22");
     List<OpenHour> workHours = new List<OpenHour>

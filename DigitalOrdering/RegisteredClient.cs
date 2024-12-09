@@ -72,9 +72,7 @@ public class RegisteredClient : NonRegisteredClient
     public RegisteredClient(string name, string password, string? email = null, string? phoneNumber = null, string? surname = null) : base(name, phoneNumber)
     {
         Id = ++IdCounter;
-        // name
         Password = password;
-        _password = password;
         Surname = surname;
         ValidateEmailAndPhoneNumberInput(email, phoneNumber);
         Email = email;

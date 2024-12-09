@@ -20,10 +20,9 @@ public class Beverage : MenuItem
 
     // fields
     public bool IsAlcohol { get; private set; }
-
-    [JsonConverter(typeof(StringEnumConverter))]
     private BeverageType _beveragesType;
 
+    //getters and setters
     public BeverageType BeverageT
     {
         get => _beveragesType;
@@ -44,6 +43,31 @@ public class Beverage : MenuItem
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
     }
+    
+    //association reverse
+    private List<SetOfMenuItem> _beverageInSetOfMenuItems = new();
+    //association reverse getter
+    [JsonIgnore]
+    public List<SetOfMenuItem> BeverageInSetOfMenuItems => [.._beverageInSetOfMenuItems];
+    //association reverse methods
+    public void AddSetOfMenuItemsToBeverage(SetOfMenuItem setOfMenuItem)
+    {
+        if(setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}, SetOfMenuItem can't be null in AddBeverageInSetOfMenuItem method");
+        if (!_beverageInSetOfMenuItems.Contains(setOfMenuItem))
+        {
+            _beverageInSetOfMenuItems.Add(setOfMenuItem);
+            setOfMenuItem.AddBeverage(this);
+        }
+    }
+    public void RemoveSetOfMenuItemsFromBeverage(SetOfMenuItem setOfMenuItem)
+    {
+        if(setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}, SetOfMenuItem can't be null in RemoveSetOfMenuItemsFromBeverage method");
+        if (_beverageInSetOfMenuItems.Contains(setOfMenuItem))
+        {
+            _beverageInSetOfMenuItems.Remove(setOfMenuItem);
+            setOfMenuItem.RemoveBeverage(this);
+        }
+    }
 
     //validation 
     private static void ValidateBeverageType(BeverageType beverageType)
@@ -52,18 +76,16 @@ public class Beverage : MenuItem
             throw new ArgumentException($"Invalid beverage type: {beverageType}");
     }
 
-    // Get, Add, Delete, Update
+    // methods on Object
     public static void AddBeverage(Beverage beverage)
     {
         if (beverage == null) throw new ArgumentException("Game cannot be null");
         _beverages.Add(beverage);
     }
-
     public static List<Beverage> GetBeverages()
     {
         return [.._beverages];
     }
-
     public static void DeleteBeverage(Beverage beverage)
     {
         _beverages.Remove(beverage);
