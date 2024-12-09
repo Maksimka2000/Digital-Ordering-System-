@@ -103,7 +103,6 @@ public class Promotion
     {
         Description = newDescription;
     }
-
     public void RemoveDescription()
     {
         Description = null;

@@ -128,7 +128,28 @@ public class Food : MenuItem
     }
     public static void DeleteFood(Food food)
     {
-        _foods.Remove(food);
+        if (_foods.Contains(food))
+        {
+            if (food._foodInSetOfMenuItems.Count > 0)
+            {
+                foreach (var setOfMenuItem in food._foodInSetOfMenuItems)
+                {
+                    // food.RemoveSetOfMenuItemsFromFood(setOfMenuItem);
+                    setOfMenuItem.RemoveFood(food);
+                    Console.WriteLine($"Set of menu items named: {setOfMenuItem.Name} id: {setOfMenuItem.Id} was modified by RemoveFood. So mind of the {food.Name}  does not exist in SetOfMenuItem anymore, modify you SetOfMenuItem as soon as possible.");
+                }
+            }
+            if (food.Ingredients.Count > 0)
+            {
+                foreach (var ingredient in food._ingredients)
+                { 
+                    // food.RemoveIngredient(ingredient);
+                    ingredient.RemoveMenuItemFromIngredient(food);
+                }
+            }
+            
+            _foods.Remove(food);
+        }
     }
 
     

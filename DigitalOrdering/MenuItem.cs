@@ -47,11 +47,9 @@ public abstract class MenuItem
     }
     public Promotion? Promotion
     {
-        get => _promotion == null ? null : _promotion.Clone();
-        private set
-        {
-            _promotion = value;
-        }
+        get => _promotion?.Clone();
+        private set => _promotion = value;
+        
     }
 
     // constructor
@@ -68,7 +66,7 @@ public abstract class MenuItem
     }
     
     // association
-    private List<Ingredient> _ingredients = new();
+    protected List<Ingredient> _ingredients = new();
     // association getter 
     public List<Ingredient> Ingredients => [.._ingredients];
     // association methods
@@ -128,15 +126,16 @@ public abstract class MenuItem
     }
     
     //methods
-    public void Unavailable()
+    public void MakeUnavailable()
     {
         IsAvailable = false;
     }
-
-    public void Available()
+    public void MakeAvailable()
     {
         IsAvailable = true;
     }
+    
+    // other methods
     public void AddPromotion(Promotion promotion)
     {
         Promotion = promotion;
@@ -151,7 +150,6 @@ public abstract class MenuItem
     {
         if (_promotion != null) _promotion.UpdateDiscountPercent(newDiscountPromotion);
         else Console.WriteLine("No Promotion to update");
-        
     }
     public void UpdateNamePromotion(string newName)
     {

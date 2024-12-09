@@ -112,6 +112,7 @@ public class SetOfMenuItem : MenuItem
         if (_beverages.Contains(beverage))
         {
             _beverages.Remove(beverage);
+            Console.WriteLine($"{this.Name} was modified by RemoveBeverage. So mind of the {beverage.Name}  doens't exist in SetOfMenuItem anymore..");
             beverage.RemoveSetOfMenuItemsFromBeverage(this);
         }
     }
@@ -147,6 +148,25 @@ public class SetOfMenuItem : MenuItem
     }
     public static void DeleteSetOfMenuItems(SetOfMenuItem setOfMenuItem)
     {
+        if (_setOfMenuItems.Contains(setOfMenuItem))
+        {
+            if (setOfMenuItem._foods.Count > 0)
+            {
+                foreach (var food in setOfMenuItem._foods)
+                {
+                    food.RemoveSetOfMenuItemsFromFood(setOfMenuItem);
+                }
+            }
+
+            if (setOfMenuItem._beverages.Count > 0)
+            {
+                foreach (var beverage in setOfMenuItem._beverages)
+                {
+                    beverage.RemoveSetOfMenuItemsFromBeverage(setOfMenuItem);
+                }
+            }
+        }
+        
         _setOfMenuItems.Remove(setOfMenuItem);
     }
 
