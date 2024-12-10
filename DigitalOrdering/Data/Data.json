@@ -1,0 +1,595 @@
+{
+  "$id": "1",
+  "Ingredients": [
+    {
+      "$id": "2",
+      "Name": "Tomato"
+    },
+    {
+      "$id": "3",
+      "Name": "Mozzarella"
+    },
+    {
+      "$id": "4",
+      "Name": "Basil"
+    },
+    {
+      "$id": "5",
+      "Name": "Olive Oil"
+    },
+    {
+      "$id": "6",
+      "Name": "Garlic"
+    },
+    {
+      "$id": "7",
+      "Name": "Salt"
+    },
+    {
+      "$id": "8",
+      "Name": "Pepper"
+    },
+    {
+      "$id": "9",
+      "Name": "Chicken"
+    },
+    {
+      "$id": "10",
+      "Name": "Mushrooms"
+    },
+    {
+      "$id": "11",
+      "Name": "Parmesan"
+    },
+    {
+      "$id": "12",
+      "Name": "Pasta"
+    },
+    {
+      "$id": "13",
+      "Name": "Cream"
+    },
+    {
+      "$id": "14",
+      "Name": "Spinach"
+    },
+    {
+      "$id": "15",
+      "Name": "Broccoli"
+    },
+    {
+      "$id": "16",
+      "Name": "Zucchini"
+    },
+    {
+      "$id": "17",
+      "Name": "Shrimp"
+    },
+    {
+      "$id": "18",
+      "Name": "Bacon"
+    },
+    {
+      "$id": "19",
+      "Name": "Egg"
+    },
+    {
+      "$id": "20",
+      "Name": "Red Pepper Flakes"
+    },
+    {
+      "$id": "21",
+      "Name": "Onions"
+    },
+    {
+      "$id": "22",
+      "Name": "Gin"
+    },
+    {
+      "$id": "23",
+      "Name": "Vermouth"
+    },
+    {
+      "$id": "24",
+      "Name": "Campari"
+    }
+  ],
+  "Foods": [
+    {
+      "$id": "25",
+      "DietaryPreferences": [],
+      "FoodT": 0,
+      "IsAvailable": true,
+      "Name": "Spaghetti Carbonara",
+      "Price": 12.99,
+      "Description": "Classic pasta with bacon and eggs",
+      "Promotion": {
+        "$id": "26",
+        "Type": "Regular",
+        "DiscountPercent": 10.0,
+        "Name": "new year",
+        "Description": "it is purpose delete this in february"
+      },
+      "Ingredients": [
+        {
+          "$ref": "12"
+        },
+        {
+          "$ref": "18"
+        },
+        {
+          "$ref": "19"
+        }
+      ]
+    },
+    {
+      "$id": "27",
+      "DietaryPreferences": [
+        0
+      ],
+      "FoodT": 0,
+      "IsAvailable": true,
+      "Name": "Penne Alfredo",
+      "Price": 14.99,
+      "Description": "Creamy Alfredo pasta with Parmesan",
+      "Promotion": {
+        "$id": "28",
+        "Type": "Regular",
+        "DiscountPercent": 10.0,
+        "Name": "He[ppy",
+        "Description": "nothi"
+      },
+      "Ingredients": [
+        {
+          "$ref": "12"
+        },
+        {
+          "$ref": "13"
+        },
+        {
+          "$ref": "11"
+        }
+      ]
+    },
+    {
+      "$id": "29",
+      "DietaryPreferences": [
+        1
+      ],
+      "FoodT": 0,
+      "IsAvailable": true,
+      "Name": "Fettuccine Primavera",
+      "Price": 13.99,
+      "Description": "Pasta with fresh vegetables and olive oil",
+      "Promotion": {
+        "$id": "30",
+        "Type": "Regular",
+        "DiscountPercent": 70.0,
+        "Name": "buy season",
+        "Description": null
+      },
+      "Ingredients": [
+        {
+          "$ref": "12"
+        },
+        {
+          "$ref": "15"
+        },
+        {
+          "$ref": "16"
+        },
+        {
+          "$ref": "14"
+        }
+      ]
+    },
+    {
+      "$id": "31",
+      "DietaryPreferences": [
+        3,
+        0
+      ],
+      "FoodT": 0,
+      "IsAvailable": true,
+      "Name": "Spaghetti Aglio e Olio",
+      "Price": 10.99,
+      "Description": "Pasta with garlic, olive oil, red pepper flakes",
+      "Promotion": {
+        "$ref": "28"
+      },
+      "Ingredients": [
+        {
+          "$ref": "12"
+        },
+        {
+          "$ref": "6"
+        },
+        {
+          "$ref": "20"
+        }
+      ]
+    },
+    {
+      "$id": "32",
+      "DietaryPreferences": [],
+      "FoodT": 0,
+      "IsAvailable": true,
+      "Name": "Linguine Shrimp Scampi",
+      "Price": 16.99,
+      "Description": "Linguine with shrimp in garlic butter",
+      "Promotion": null,
+      "Ingredients": [
+        {
+          "$ref": "12"
+        },
+        {
+          "$ref": "17"
+        },
+        {
+          "$ref": "6"
+        },
+        {
+          "$ref": "5"
+        }
+      ]
+    }
+  ],
+  "Beverages": [
+    {
+      "$id": "33",
+      "IsAlcohol": false,
+      "BeverageT": 0,
+      "IsAvailable": true,
+      "Name": "Cappuccino",
+      "Price": 3.99,
+      "Description": "Classic Italian coffee",
+      "Promotion": null,
+      "Ingredients": []
+    },
+    {
+      "$id": "34",
+      "IsAlcohol": true,
+      "BeverageT": 1,
+      "IsAvailable": true,
+      "Name": "Mojito",
+      "Price": 7.99,
+      "Description": "Refreshing cocktail with mint and lime",
+      "Promotion": null,
+      "Ingredients": []
+    },
+    {
+      "$id": "35",
+      "IsAlcohol": false,
+      "BeverageT": 0,
+      "IsAvailable": true,
+      "Name": "Iced Tea",
+      "Price": 2.99,
+      "Description": "Cold brewed tea with lemon",
+      "Promotion": null,
+      "Ingredients": []
+    },
+    {
+      "$id": "36",
+      "IsAlcohol": true,
+      "BeverageT": 1,
+      "IsAvailable": true,
+      "Name": "Negroni",
+      "Price": 8.99,
+      "Description": "Classic Italian cocktail",
+      "Promotion": {
+        "$ref": "30"
+      },
+      "Ingredients": [
+        {
+          "$ref": "22"
+        },
+        {
+          "$ref": "23"
+        },
+        {
+          "$ref": "24"
+        }
+      ]
+    },
+    {
+      "$id": "37",
+      "IsAlcohol": false,
+      "BeverageT": 2,
+      "IsAvailable": true,
+      "Name": "Lemonade",
+      "Price": 2.99,
+      "Description": "Refreshing lemon juice and sugar",
+      "Promotion": null,
+      "Ingredients": []
+    }
+  ],
+  "SetOfMenuItems": [
+    {
+      "$id": "38",
+      "StartTime": "00:00:00",
+      "EndTime": "23:59:59",
+      "Days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "Foods": [
+        {
+          "$ref": "25"
+        },
+        {
+          "$ref": "27"
+        },
+        {
+          "$ref": "29"
+        }
+      ],
+      "Beverages": [
+        {
+          "$ref": "34"
+        }
+      ],
+      "IsAvailable": true,
+      "Name": "Business Special",
+      "Price": 19.99,
+      "Description": "A combination of three foods and a drink",
+      "Promotion": null,
+      "Ingredients": []
+    },
+    {
+      "$id": "39",
+      "StartTime": "00:00:00",
+      "EndTime": "23:59:59",
+      "Days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "Foods": [
+        {
+          "$ref": "31"
+        },
+        {
+          "$ref": "32"
+        }
+      ],
+      "Beverages": [
+        {
+          "$ref": "34"
+        },
+        {
+          "$ref": "35"
+        }
+      ],
+      "IsAvailable": true,
+      "Name": "WeekEnd Promo Special",
+      "Price": 19.99,
+      "Description": "A combination of two food beyound your imagination and a drink",
+      "Promotion": null,
+      "Ingredients": []
+    },
+    {
+      "$id": "40",
+      "StartTime": "00:00:00",
+      "EndTime": "23:59:59",
+      "Days": [
+        1,
+        5
+      ],
+      "Foods": [
+        {
+          "$ref": "25"
+        },
+        {
+          "$ref": "32"
+        }
+      ],
+      "Beverages": [],
+      "IsAvailable": true,
+      "Name": "New special prom",
+      "Price": 19.99,
+      "Description": "WIthour beverages and in monday and friday",
+      "Promotion": null,
+      "Ingredients": []
+    },
+    {
+      "$id": "41",
+      "StartTime": "10:00:00",
+      "EndTime": "15:00:00",
+      "Days": [
+        1,
+        5
+      ],
+      "Foods": [
+        {
+          "$ref": "32"
+        }
+      ],
+      "Beverages": [],
+      "IsAvailable": true,
+      "Name": "New special prom",
+      "Price": 19.99,
+      "Description": "WIthour beverages and in monday and friday",
+      "Promotion": null,
+      "Ingredients": []
+    }
+  ],
+  "Restaurants": [
+    {
+      "$id": "42",
+      "Id": 1,
+      "OpenHours": [
+        {
+          "$id": "43",
+          "Day": "Monday",
+          "OpenTime": "09:00:00",
+          "CloseTime": "17:00:00",
+          "IsOpen": true
+        },
+        {
+          "$id": "44",
+          "Day": "Tuesday",
+          "OpenTime": "09:00:00",
+          "CloseTime": "17:00:00",
+          "IsOpen": true
+        },
+        {
+          "$id": "45",
+          "Day": "Wednesday",
+          "OpenTime": "09:00:00",
+          "CloseTime": "17:00:00",
+          "IsOpen": true
+        },
+        {
+          "$id": "46",
+          "Day": "Thursday",
+          "OpenTime": "09:00:00",
+          "CloseTime": "17:00:00",
+          "IsOpen": true
+        },
+        {
+          "$id": "47",
+          "Day": "Friday",
+          "OpenTime": "09:00:00",
+          "CloseTime": "17:00:00",
+          "IsOpen": true
+        },
+        {
+          "$id": "48",
+          "Day": "Saturday",
+          "OpenTime": "10:00:00",
+          "CloseTime": "15:00:00",
+          "IsOpen": true
+        },
+        {
+          "$id": "49",
+          "Day": "Sunday",
+          "OpenTime": null,
+          "CloseTime": null,
+          "IsOpen": false
+        }
+      ],
+      "Name": "Miscusi",
+      "Location": {
+        "$id": "50",
+        "Street": "Zlota 43",
+        "City": "Warszawa",
+        "StreetNumber": "22"
+      }
+    }
+  ],
+  "Tables": [
+    {
+      "$id": "51",
+      "Id": 1,
+      "IsLocked": false,
+      "Capacity": 2,
+      "Alias": null
+    },
+    {
+      "$id": "52",
+      "Id": 2,
+      "IsLocked": false,
+      "Capacity": 6,
+      "Alias": "window"
+    },
+    {
+      "$id": "53",
+      "Id": 3,
+      "IsLocked": false,
+      "Capacity": 4,
+      "Alias": "near wc"
+    },
+    {
+      "$id": "54",
+      "Id": 4,
+      "IsLocked": false,
+      "Capacity": 8,
+      "Alias": "alies"
+    }
+  ],
+  "RegisteredClients": [
+    {
+      "$id": "55",
+      "Id": 1,
+      "Bonus": 0,
+      "Password": "32jpjoi3j04#A",
+      "Surname": null,
+      "Email": "s23454@pjatk.com",
+      "PhoneNumber": "546 545 544",
+      "Name": "Max"
+    },
+    {
+      "$id": "56",
+      "Id": 2,
+      "Bonus": 0,
+      "Password": "32jpjD$i3j04#A",
+      "Surname": "Arstv",
+      "Email": null,
+      "PhoneNumber": "344 434 344",
+      "Name": "Alexa"
+    },
+    {
+      "$id": "57",
+      "Id": 3,
+      "Bonus": 0,
+      "Password": "32Apjoi3jf4#A",
+      "Surname": "Skr",
+      "Email": "s488@gjsp.com",
+      "PhoneNumber": null,
+      "Name": "Max"
+    }
+  ],
+  "TableOrders": [
+    {
+      "$id": "58",
+      "QRCodeScanTime": "739229.06:00:00.5146336",
+      "StartTime": "739229.06:00:00.5208385",
+      "Id": 1,
+      "OrderPrice": 0.0,
+      "TotalPrice": 0.0,
+      "NumberOfPeople": 2
+    },
+    {
+      "$id": "59",
+      "QRCodeScanTime": "739229.06:00:00.5212113",
+      "StartTime": "739229.06:00:00.5212157",
+      "Id": 2,
+      "OrderPrice": 0.0,
+      "TotalPrice": 0.0,
+      "NumberOfPeople": 6
+    }
+  ],
+  "OnlineOrders": [
+    {
+      "$id": "60",
+      "HaveGuestsArrived": false,
+      "Description": "heljfoadsf",
+      "DateAndTime": "2025-11-08T06:00:00.5215607+01:00",
+      "StartTime": null,
+      "Id": 3,
+      "OrderPrice": 0.0,
+      "TotalPrice": 0.0,
+      "NumberOfPeople": 4
+    },
+    {
+      "$id": "61",
+      "HaveGuestsArrived": false,
+      "Description": null,
+      "DateAndTime": "2025-12-10T06:00:00.5224394+01:00",
+      "StartTime": null,
+      "Id": 4,
+      "OrderPrice": 0.0,
+      "TotalPrice": 0.0,
+      "NumberOfPeople": 4
+    }
+  ]
+}

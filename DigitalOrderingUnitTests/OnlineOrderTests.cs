@@ -104,36 +104,36 @@ public class OnlineOrderTests
         Assert.Contains(order2, orders);
     }
 
-    [Fact]
-    public void SaveOnlineOrderJSON_SavesOrdersToFile()
-    {
-        var onlineOrder = new OnlineOrder(3, DateTime.Now.AddHours(5), "Team Meeting");
-        OnlineOrder.AddOnlineOrder(onlineOrder);
-        const string path = "test_online_orders.json";
-
-        OnlineOrder.SaveOnlineOrderJSON(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadOnlineOrderJSON_LoadsOrdersFromFile()
-    {
-        const string path = "test_online_orders.json";
-        var onlineOrder = new OnlineOrder(2, DateTime.Now.AddHours(5), "Family Dinner");
-        OnlineOrder.AddOnlineOrder(onlineOrder);
-        OnlineOrder.SaveOnlineOrderJSON(path);
-        OnlineOrder.GetOnlineOrders().Clear();
-
-        OnlineOrder.LoadOnlineOrderJSON(path);
-        var orders = OnlineOrder.GetOnlineOrders();
-
-        Assert.Single(orders);
-        Assert.Equal(onlineOrder.Description, orders[0].Description);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void SaveOnlineOrderJSON_SavesOrdersToFile()
+    // {
+    //     var onlineOrder = new OnlineOrder(3, DateTime.Now.AddHours(5), "Team Meeting");
+    //     OnlineOrder.AddOnlineOrder(onlineOrder);
+    //     const string path = "test_online_orders.json";
+    //
+    //     OnlineOrder.SaveOnlineOrderJSON(path);
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
+    //
+    // [Fact]
+    // public void LoadOnlineOrderJSON_LoadsOrdersFromFile()
+    // {
+    //     const string path = "test_online_orders.json";
+    //     var onlineOrder = new OnlineOrder(2, DateTime.Now.AddHours(5), "Family Dinner");
+    //     OnlineOrder.AddOnlineOrder(onlineOrder);
+    //     OnlineOrder.SaveOnlineOrderJSON(path);
+    //     OnlineOrder.GetOnlineOrders().Clear();
+    //
+    //     OnlineOrder.LoadOnlineOrderJSON(path);
+    //     var orders = OnlineOrder.GetOnlineOrders();
+    //
+    //     Assert.Single(orders);
+    //     Assert.Equal(onlineOrder.Description, orders[0].Description);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForEmptyDescription()

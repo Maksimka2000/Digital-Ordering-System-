@@ -93,36 +93,36 @@ public class RestaurantTests
         Assert.Contains(restaurant2, restaurants);
     }
 
-    [Fact]
-    public void SaveRestaurantJSON_SavesRestaurantsToFile()
-    {
-        var restaurant = new Restaurant("Cafe Sunrise", new Address("Lake St 7", "Hilltown", "22"), CreateOpenHours());
-        Restaurant.AddRestaurant(restaurant);
-        const string path = "test_restaurants.json";
+    // [Fact]
+    // public void SaveRestaurantJSON_SavesRestaurantsToFile()
+    // {
+    //     var restaurant = new Restaurant("Cafe Sunrise", new Address("Lake St 7", "Hilltown", "22"), CreateOpenHours());
+    //     Restaurant.AddRestaurant(restaurant);
+    //     const string path = "test_restaurants.json";
+    //
+    //     Restaurant.SaveRestaurantJSON(path);
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
 
-        Restaurant.SaveRestaurantJSON(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadRestaurantJSON_LoadsRestaurantsFromFile()
-    {
-        const string path = "test_restaurants.json";
-        var restaurant = new Restaurant("Moonlight Cafe", new Address("Night St 12", "Moon City", "22"), CreateOpenHours());
-        Restaurant.AddRestaurant(restaurant);
-        Restaurant.SaveRestaurantJSON(path);
-        Restaurant.GetRestaurants().Clear();
-
-        Restaurant.LoadRestaurantJSON(path);
-        var restaurants = Restaurant.GetRestaurants();
-
-        Assert.Single(restaurants);
-        Assert.Equal(restaurant.Name, restaurants[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void LoadRestaurantJSON_LoadsRestaurantsFromFile()
+    // {
+    //     const string path = "test_restaurants.json";
+    //     var restaurant = new Restaurant("Moonlight Cafe", new Address("Night St 12", "Moon City", "22"), CreateOpenHours());
+    //     Restaurant.AddRestaurant(restaurant);
+    //     Restaurant.SaveRestaurantJSON(path);
+    //     Restaurant.GetRestaurants().Clear();
+    //
+    //     Restaurant.LoadRestaurantJSON(path);
+    //     var restaurants = Restaurant.GetRestaurants();
+    //
+    //     Assert.Single(restaurants);
+    //     Assert.Equal(restaurant.Name, restaurants[0].Name);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidNameOrLocation()

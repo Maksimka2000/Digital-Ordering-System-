@@ -95,39 +95,39 @@ public class BeverageTests
         Assert.DoesNotContain(beverage, beverages);
     }
 
-    [Fact]
-    public void SaveBeverageJSON_SavesBeveragesToFile()
-    {
-        var beverage = new Beverage("Coca Cola", 1.0, "Classic cola drink",
-            Beverage.BeverageType.Drinks, false, null, null);
-        Beverage.AddBeverage(beverage);
-        const string path = "test_beverages.json";
+    // [Fact]
+    // public void SaveBeverageJSON_SavesBeveragesToFile()
+    // {
+    //     var beverage = new Beverage("Coca Cola", 1.0, "Classic cola drink",
+    //         Beverage.BeverageType.Drinks, false, null, null);
+    //     Beverage.AddBeverage(beverage);
+    //     const string path = "test_beverages.json";
+    //
+    //     Beverage.SaveBeverageJSON(path);
+    //
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
 
-        Beverage.SaveBeverageJSON(path);
-
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadBeverageJSON_LoadsBeveragesFromFile()
-    {
-        const string path = "test_beverages.json";
-        var beverage = new Beverage("Pepsi", 1.0, "Classic cola drink",
-            Beverage.BeverageType.Drinks, false, null, null);
-        Beverage.AddBeverage(beverage);
-        Beverage.SaveBeverageJSON(path);
-        Beverage.DeleteBeverage(beverage);
-
-        Beverage.LoadBeverageJSON(path);
-        var beverages = Beverage.GetBeverages();
-
-        Assert.Single(beverages);
-        Assert.Equal(beverage.Name, beverages[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void LoadBeverageJSON_LoadsBeveragesFromFile()
+    // {
+    //     const string path = "test_beverages.json";
+    //     var beverage = new Beverage("Pepsi", 1.0, "Classic cola drink",
+    //         Beverage.BeverageType.Drinks, false, null, null);
+    //     Beverage.AddBeverage(beverage);
+    //     Beverage.SaveBeverageJSON(path);
+    //     Beverage.DeleteBeverage(beverage);
+    //
+    //     Beverage.LoadBeverageJSON(path);
+    //     var beverages = Beverage.GetBeverages();
+    //
+    //     Assert.Single(beverages);
+    //     Assert.Equal(beverage.Name, beverages[0].Name);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidArguments()

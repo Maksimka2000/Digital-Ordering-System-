@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using DidgitalOrdering;
 using Newtonsoft.Json;
 
 namespace DigitalOrdering;
@@ -50,6 +51,33 @@ public abstract class Order
         NumberOfPeople = numberOfPeople;
         // CalculateTotalPrice();
     }
+    
+    // //
+    // private List<OrderList> _menuItems = [];
+    // public List<OrderList> MenuItems => [.._menuItems];
+    //
+    // public void AddMenuItem(MenuItem menuItem)
+    // {
+    //     if(menuItem == null) throw new ArgumentNullException($" {this}: MenuItem in AddMenuItem can't be null");
+    //     
+    //     var orderList = _menuItems.FirstOrDefault(orderList => orderList.Order == this && orderList.MenuItem == menuItem);
+    //     if (orderList != null)
+    //     {
+    //         orderList.AddQuantity();
+    //     }
+    //     else
+    //     {
+    //         new OrderList(menuItem, this);
+    //     }
+    // }
+    // public void AddOrderList(OrderList orderList)
+    // {
+    //     if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
+    //     if (!_menuItems.Contains(orderList))
+    //     {
+    //         _menuItems.Add(orderList);
+    //     }
+    // }
 
     // validation 
     private static void ValidateService(double value)
@@ -73,3 +101,5 @@ public abstract class Order
         TotalPrice = OrderPrice * (1 - _service);
     }
 }
+
+

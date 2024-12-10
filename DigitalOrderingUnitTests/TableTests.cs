@@ -81,36 +81,36 @@ public class TableTests
         Assert.Contains(table2, tables);
     }
 
-    [Fact]
-    public void SaveTableJSON_SavesTablesToFile()
-    {
-        var table = new Table(4, "Patio Table");
-        Table.AddTable(table);
-        const string path = "test_tables.json";
-
-        Table.SaveTableJSON(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadTableJSON_LoadsTablesFromFile()
-    {
-        const string path = "test_tables.json";
-        var table = new Table(6, "VIP Table");
-        Table.AddTable(table);
-        Table.SaveTableJSON(path);
-        Table.GetTables().Clear(); 
-        
-        Table.LoadTableJSON(path);
-        var tables = Table.GetTables();
-
-        Assert.Single(tables);
-        Assert.Equal(table.Alias, tables[0].Alias);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void SaveTableJSON_SavesTablesToFile()
+    // {
+    //     var table = new Table(4, "Patio Table");
+    //     Table.AddTable(table);
+    //     const string path = "test_tables.json";
+    //
+    //     Table.SaveTableJSON(path);
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
+    //
+    // [Fact]
+    // public void LoadTableJSON_LoadsTablesFromFile()
+    // {
+    //     const string path = "test_tables.json";
+    //     var table = new Table(6, "VIP Table");
+    //     Table.AddTable(table);
+    //     Table.SaveTableJSON(path);
+    //     Table.GetTables().Clear(); 
+    //     
+    //     Table.LoadTableJSON(path);
+    //     var tables = Table.GetTables();
+    //
+    //     Assert.Single(tables);
+    //     Assert.Equal(table.Alias, tables[0].Alias);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void UpdateAlias_ThrowsExceptionForEmptyAlias()

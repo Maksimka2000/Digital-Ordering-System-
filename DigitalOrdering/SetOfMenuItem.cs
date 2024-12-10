@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using DigitalOrdering;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using Newtonsoft.Json;
 
 namespace DigitalOrdering;
 
@@ -21,8 +18,8 @@ public class SetOfMenuItem : MenuItem
 
     // constructor
     [JsonConstructor]
-    public SetOfMenuItem(string name, double price, string description, List<Food>? foods = null, List<Beverage>? beverages = null, List<DayOfWeek>? days = null, TimeSpan? startTime = null, TimeSpan? endTime = null) :
-        base(name, price, description)
+    public SetOfMenuItem(string name, double price, string description, List<Food>? foods = null, List<Beverage>? beverages = null, List<DayOfWeek>? days = null, TimeSpan? startTime = null, TimeSpan? endTime = null, bool isAvailable = true) :
+        base(name, price, description, isAvailable)
     {
         UpdateDays(days);
         UpdateTime(startTime, endTime);
@@ -194,36 +191,46 @@ public class SetOfMenuItem : MenuItem
     
     
 
-    // ================================================================ serialized and deserialized
-    public static void SaveSetOfMenuItemsJson(string path)
-    {
-        try
-        {
-            var json = JsonConvert.SerializeObject(_setOfMenuItems, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File SetOfMenuItem saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving SetOfMenuItem file: {e.Message}");
-        }
-    }
-
-    public static void LoadSetOfMenuItemsJson(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                var json = File.ReadAllText(path);
-                _setOfMenuItems = JsonConvert.DeserializeObject<List<SetOfMenuItem>>(json);
-                Console.WriteLine($"File BusinessLunch loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading SetOfMenuItem file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading SetOfMenuItem file: {e.Message}");
-        }
-    }
+    // // ================================================================ serialized and deserialized
+    // public static void SaveSetOfMenuItemsJson(string path)
+    // {
+    //     try
+    //     {
+    //         var settings = new JsonSerializerSettings
+    //         {
+    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    //             Formatting = Formatting.Indented
+    //         };
+    //         string json = JsonConvert.SerializeObject(_setOfMenuItems, settings);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File SetOfMenuItem saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving SetOfMenuItem file: {e.Message}");
+    //     }
+    // }
+    //
+    // public static void LoadSetOfMenuItemsJson(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             var settings = new JsonSerializerSettings
+    //             {
+    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    //                 TypeNameHandling = TypeNameHandling.Auto
+    //             };
+    //             string json = File.ReadAllText(path);
+    //             _setOfMenuItems = JsonConvert.DeserializeObject<List<SetOfMenuItem>>(json, settings) ?? new List<SetOfMenuItem>();
+    //             Console.WriteLine($"File BusinessLunch loaded successfully at {path}");
+    //         }
+    //         else throw new ArgumentException($"Error loading SetOfMenuItem file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading SetOfMenuItem file: {e.Message}");
+    //     }
+    // }
 }

@@ -6,7 +6,7 @@ namespace DigitalOrdering;
 public class TableOrder : Order
 {
     // class extent 
-    private static List<TableOrder> _tableOrders = new List<TableOrder>();
+    private static List<TableOrder> _tableOrders = [];
 
     //fileds 
     public TimeSpan? QRCodeScanTime { get; } // accessed the webpage from the same device and made an order.
@@ -40,36 +40,36 @@ public class TableOrder : Order
         return new List<TableOrder>(_tableOrders);
     }
 
-    //  serialized and deserialized 
-    public static void SaveTableOrderJSON(string path)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(_tableOrders, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File TableOrder saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving TableOrder file: {e.Message}");
-        }
-    }
-
-    public static void LoadTableOrderJSON(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _tableOrders = JsonConvert.DeserializeObject<List<TableOrder>>(json);
-                Console.WriteLine($"File TableOrder loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading TableOrder file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading TableOrder file: {e.Message}");
-        }
-    }
+    // //  serialized and deserialized 
+    // public static void SaveTableOrderJSON(string path)
+    // {
+    //     try
+    //     {
+    //         string json = JsonConvert.SerializeObject(_tableOrders, Formatting.Indented);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File TableOrder saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving TableOrder file: {e.Message}");
+    //     }
+    // }
+    //
+    // public static void LoadTableOrderJSON(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             string json = File.ReadAllText(path);
+    //             _tableOrders = JsonConvert.DeserializeObject<List<TableOrder>>(json);
+    //             Console.WriteLine($"File TableOrder loaded successfully at {path}");
+    //         }
+    //         else throw new ArgumentException($"Error loading TableOrder file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading TableOrder file: {e.Message}");
+    //     }
+    // }
 }

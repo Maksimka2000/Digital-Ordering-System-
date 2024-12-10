@@ -96,36 +96,36 @@ public class Table
         IsLocked = false;
     }
 
-    // ================================================================ serialized and deserialized 
-    public static void SaveTableJSON(string path)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(_tables, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File Table saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving Table file: {e.Message}");
-        }
-    }
-
-    public static void LoadTableJSON(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _tables = JsonConvert.DeserializeObject<List<Table>>(json);
-                Console.WriteLine($"File Table loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading Table file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading Table file: {e.Message}");
-        }
-    }
+    // // ================================================================ serialized and deserialized 
+    // public static void SaveTableJSON(string path)
+    // {
+    //     try
+    //     {
+    //         string json = JsonConvert.SerializeObject(_tables, Formatting.Indented);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File Table saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving Table file: {e.Message}");
+    //     }
+    // }
+    //
+    // public static void LoadTableJSON(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             string json = File.ReadAllText(path);
+    //             _tables = JsonConvert.DeserializeObject<List<Table>>(json);
+    //             Console.WriteLine($"File Table loaded successfully at {path}");
+    //         }
+    //         else throw new ArgumentException($"Error loading Table file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading Table file: {e.Message}");
+    //     }
+    // }
 }

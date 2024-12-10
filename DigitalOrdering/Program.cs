@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
+using DidgitalOrdering;
 using DigitalOrdering;
 using Newtonsoft.Json;
 
-CreateObjects();
+// CreateObjects();
 LoadClassExtent();
 OutputAllObjectsCreated();
 // SaveClassExtent();
@@ -22,40 +23,41 @@ return;
 
 void LoadClassExtent()
 {
-    Ingredient.LoadIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Ingredients.json"));
-    Food.LoadFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
-    Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    SetOfMenuItem.LoadSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "SetOfMenuItem.json"));
-    Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Restaurant.json"));
-    Table.LoadTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Table.json"));
-    RegisteredClient.LoadRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "RegisteredClient.json"));
-    TableOrder.LoadTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-    OnlineOrder.LoadOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "OnlineOrder.json"));
+    SerializationDeserialization.LoadJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Data.json"));
+    // Ingredient.LoadIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Ingredients.json"));
+    // Food.LoadFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
+    // Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
+    // SetOfMenuItem.LoadSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "SetOfMenuItem.json"));
+    // Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Restaurant.json"));
+    // Table.LoadTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Table.json"));
+    // RegisteredClient.LoadRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "RegisteredClient.json"));
+    // TableOrder.LoadTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
+    // OnlineOrder.LoadOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "OnlineOrder.json"));
 }
-
 void SaveClassExtent()
 {
-    Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Ingredients.json"));
-    Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
-    Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "SetOfMenuItem.json"));
-    Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Restaurant.json"));
-    Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Table.json"));
-    RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "RegisteredClient.json"));
-    TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "OnlineOrder.json"));
+    SerializationDeserialization.SaveJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Data.json"));
+    // Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Ingredients.json"));
+    // Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
+    // Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
+    // SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "SetOfMenuItem.json"));
+    // Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Restaurant.json"));
+    // Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Table.json"));
+    // RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "RegisteredClient.json"));
+    // TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
+    // OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "OnlineOrder.json"));
 }
 
 void OutputAllObjectsCreated()
@@ -233,6 +235,20 @@ void OutputAllObjectsCreated()
         Console.WriteLine(
             $"Online Order: Number of People: {order.NumberOfPeople}, Date and Time: {order.DateAndTime}, Description: {order.Description}, Guests Arrived: {order.HaveGuestsArrived}");
     }
+
+    // ============ association 
+    Console.WriteLine("=================================== Ingredients in MenuItems  ============================");
+    foreach (var ingredient in Ingredient.GetIngredients())
+    {
+        Console.WriteLine();
+        Console.Write($"Ingredient id: {ingredient.Id}, Ingredient name {ingredient.Name}, Ingredient counter in other menu items: {ingredient.IngredientInMenuItems.Count} [");
+        foreach (var menuItem in ingredient.IngredientInMenuItems)
+        {
+             Console.Write($"[Menu item id: {menuItem.Id} name:{menuItem.Name}], ");
+        }
+        Console.Write($"] ");
+    }
+    
 }
 
 void CreateObjects()
@@ -307,8 +323,8 @@ void CreateObjects()
     var campariIngredient = new Ingredient("Campari");
     Ingredient.AddIngredient(campariIngredient);
 
-    Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "Ingredients.json"));
+    // Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "Ingredients.json"));
 
     // ======================================================== Create FOod
 
@@ -336,7 +352,7 @@ void CreateObjects()
         Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient });
     Food.AddFood(food5);
 
-    Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
+    // Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
 
 // ======================================================== Create Beverages
     var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee",
@@ -359,7 +375,7 @@ void CreateObjects()
         Beverage.BeverageType.Drinks, false, null, null);
     Beverage.AddBeverage(beverage5);
 
-    Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
+    // Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
 
 // ======================================================== Create Business Lunch
     var businessLunch1 = new SetOfMenuItem("Business Special", 19.99,
@@ -380,8 +396,8 @@ void CreateObjects()
         "WIthour beverages and in monday and friday", new List<Food> {food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday}, new TimeSpan(10,0,0), new TimeSpan(15,0,0));
     SetOfMenuItem.AddSetOfMenuItems(businessLunch4);
 
-    SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "SetOfMenuItem.json"));
+    // SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+    //     "SetOfMenuItem.json"));
     
 // ========================================================= Create Restaurant
 
@@ -399,7 +415,7 @@ void CreateObjects()
     Restaurant restaurant = new Restaurant("Miscusi", address, workHours);
     Restaurant.AddRestaurant(restaurant);
     
-    Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Restaurant.json"));
+    // Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Restaurant.json"));
 
     // -================================================= Create Table
     Table table1 = new Table(2);
@@ -410,7 +426,7 @@ void CreateObjects()
     Table.AddTable(table3);
     Table table4 = new Table(8, "alies");
     Table.AddTable(table4);
-    Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Table.json"));
+    // Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Table.json"));
 
     // ==================================================== Registered client
     RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", "s23454@pjatk.com", "546 545 544");
@@ -419,21 +435,65 @@ void CreateObjects()
     RegisteredClient.AddRegisteredClient(client1);
     RegisteredClient.AddRegisteredClient(client2);
     RegisteredClient.AddRegisteredClient(client3);
-    RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "RegisteredClient.json"));
+    // RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        // "RegisteredClient.json"));
 
     // ================================================ TableOrder
     TableOrder tableOrder1 = new TableOrder(2);
     TableOrder tableOrder2 = new TableOrder(6);
     TableOrder.AddTableOrder(tableOrder1);
     TableOrder.AddTableOrder(tableOrder2);
-    TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
+    // TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
 
     // =============================================== ONline order
     OnlineOrder onlineOrder1 = new OnlineOrder(4, DateTime.Now.AddDays(333), "heljfoadsf");
     OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now.AddYears(1));
     OnlineOrder.AddOnlineOrder(onlineOrder1);
     OnlineOrder.AddOnlineOrder(onlineOrder2);
-    OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        "OnlineOrder.json"));
+    // OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
+        // "OnlineOrder.json"));
+    
+    
+    //
+    // Console.WriteLine("test===============================================================================================================================================");
+    
+    
+    // tableOrder1.AddMenuItem(food2);
+    // tableOrder1.AddMenuItem(food2);
+    // food2.AddToOrder(tableOrder1);
+    // food2.AddToOrder(tableOrder1);
+    //
+    // food1.AddToOrder(tableOrder1);
+    // food1.AddToOrder(tableOrder1);
+    // tableOrder1.AddMenuItem(food1);
+    // tableOrder1.AddMenuItem(food1);
+    //
+    // onlineOrder1.AddMenuItem(food3);
+    // onlineOrder1.AddMenuItem(food3);
+    // onlineOrder1.AddMenuItem(food2);
+    // onlineOrder1.AddMenuItem(food1);
+    
+
+    // Console.WriteLine($"order {tableOrder1.Id}");                 
+    // foreach (var menuItem in tableOrder1.MenuItems)
+    // {
+           // Console.WriteLine($"{menuItem.MenuItem.Name}, {menuItem.Order.Id}, {menuItem.Quantity}");
+    // }
+    // Console.WriteLine($"order {onlineOrder1.Id}");                                                    
+    // foreach (var menuItem in onlineOrder1.MenuItems)                                                  
+    // {                                                                                                
+        // Console.WriteLine($"{menuItem.MenuItem.Name}, {menuItem.Order.Id}, {menuItem.Quantity}"); 
+    // }                  
+    
+    // Console.WriteLine($"MenuItems {food1.Name}, {food1.Id}");
+    // foreach (var order in food1.Orders)                                                        
+    // {                                                                                                      
+        // Console.WriteLine($"{order.MenuItem.Name}, {order.Order.Id}, {order.Quantity}");       
+    // }                 
+    // Console.WriteLine($"MenuItems {food2.Name}, {food2.Id}");
+    // foreach (var order in food2.Orders)                                                    
+    // {                                                                                      
+        // Console.WriteLine($"{order.MenuItem.Name}, {order.Order.Id}, {order.Quantity}");   
+    // }                                                                                      
+    
 }

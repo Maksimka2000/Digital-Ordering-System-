@@ -104,38 +104,38 @@ public class SetOfMenuItemTests
         Assert.Contains(lunch2, lunches);
     }
 
-    [Fact]
-    public void SaveBusinessLunchJson_SavesToFile()
-    {
-        var businessLunch =
-            new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
-        SetOfMenuItem.AddSetOfMenuItems(businessLunch);
-        const string path = "test_business_lunches.json";
+    // [Fact]
+    // public void SaveBusinessLunchJson_SavesToFile()
+    // {
+    //     var businessLunch =
+    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
+    //     SetOfMenuItem.AddSetOfMenuItems(businessLunch);
+    //     const string path = "test_business_lunches.json";
+    //
+    //     SetOfMenuItem.SaveSetOfMenuItemsJson(path);
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
 
-        SetOfMenuItem.SaveSetOfMenuItemsJson(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadBusinessLunchJson_LoadsFromFile()
-    {
-        const string path = "test_business_lunches.json";
-        var businessLunch =
-            new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
-        SetOfMenuItem.AddSetOfMenuItems(businessLunch);
-        SetOfMenuItem.SaveSetOfMenuItemsJson(path);
-        SetOfMenuItem.GetSetOfMenuItems().Clear();
-
-        SetOfMenuItem.LoadSetOfMenuItemsJson(path);
-        var lunches = SetOfMenuItem.GetSetOfMenuItems();
-
-        Assert.Single(lunches);
-        Assert.Equal(businessLunch.Name, lunches[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void LoadBusinessLunchJson_LoadsFromFile()
+    // {
+    //     const string path = "test_business_lunches.json";
+    //     var businessLunch =
+    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
+    //     SetOfMenuItem.AddSetOfMenuItems(businessLunch);
+    //     SetOfMenuItem.SaveSetOfMenuItemsJson(path);
+    //     SetOfMenuItem.GetSetOfMenuItems().Clear();
+    //
+    //     SetOfMenuItem.LoadSetOfMenuItemsJson(path);
+    //     var lunches = SetOfMenuItem.GetSetOfMenuItems();
+    //
+    //     Assert.Single(lunches);
+    //     Assert.Equal(businessLunch.Name, lunches[0].Name);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidFoodCount()

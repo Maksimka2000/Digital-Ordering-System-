@@ -117,39 +117,39 @@ public class Restaurant
     }
 
 
-    //  serialized and deserialized 
-    public static void SaveRestaurantJSON(string path)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(_restaurants, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File Restaurant saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving Restaurant file: {e.Message}");
-        }
-    }
-
-    public static void LoadRestaurantJSON(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _restaurants = JsonConvert.DeserializeObject<List<Restaurant>>(json);
-                // foreach (var restaurant in restaurants) {new Restaurant(restaurant.Name, restaurant.Location, restaurant.OpeningHours);}
-                Console.WriteLine($"File Restaurant loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading Restaurant file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading Restaurant file: {e.Message}");
-        }
-    }
+    // //  serialized and deserialized 
+    // public static void SaveRestaurantJSON(string path)
+    // {
+    //     try
+    //     {
+    //         string json = JsonConvert.SerializeObject(_restaurants, Formatting.Indented);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File Restaurant saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving Restaurant file: {e.Message}");
+    //     }
+    // }
+    //
+    // public static void LoadRestaurantJSON(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             string json = File.ReadAllText(path);
+    //             _restaurants = JsonConvert.DeserializeObject<List<Restaurant>>(json);
+    //             // foreach (var restaurant in restaurants) {new Restaurant(restaurant.Name, restaurant.Location, restaurant.OpeningHours);}
+    //             Console.WriteLine($"File Restaurant loaded successfully at {path}");
+    //         }
+    //         else throw new ArgumentException($"Error loading Restaurant file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading Restaurant file: {e.Message}");
+    //     }
+    // }
 }
 
 // are custom objects, Complex attributes

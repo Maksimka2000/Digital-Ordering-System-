@@ -91,37 +91,37 @@ public class FoodTests
         Assert.DoesNotContain(food, foods);
     }
 
-    [Fact]
-    public void SaveFoodJSON_SavesFoodsToFile()
-    {
-        var food = new Food("Burger", 7.5, "Beef burger", Food.FoodType.Snack, null, null);
-        Food.AddFood(food);
-        const string path = "test_food.json";
-
-        Food.SaveFoodJSON(path);
-
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadFoodJSON_LoadsFoodsFromFile()
-    {
-        const string path = "test_food.json";
-        var food = new Food("Sandwich", 6.0, "Ham sandwich", Food.FoodType.Snack, null, null);
-        Food.AddFood(food);
-        Food.SaveFoodJSON(path);
-        Food.DeleteFood(food);
-
-        Food.LoadFoodJSON(path);
-        var foods = Food.GetFoods();
-
-        Assert.Single(foods);
-        Assert.Equal(food.Name, foods[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void SaveFoodJSON_SavesFoodsToFile()
+    // {
+    //     var food = new Food("Burger", 7.5, "Beef burger", Food.FoodType.Snack, null, null);
+    //     Food.AddFood(food);
+    //     const string path = "test_food.json";
+    //
+    //     Food.SaveFoodJSON(path);
+    //
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
+    //
+    // [Fact]
+    // public void LoadFoodJSON_LoadsFoodsFromFile()
+    // {
+    //     const string path = "test_food.json";
+    //     var food = new Food("Sandwich", 6.0, "Ham sandwich", Food.FoodType.Snack, null, null);
+    //     Food.AddFood(food);
+    //     Food.SaveFoodJSON(path);
+    //     Food.DeleteFood(food);
+    //
+    //     Food.LoadFoodJSON(path);
+    //     var foods = Food.GetFoods();
+    //
+    //     Assert.Single(foods);
+    //     Assert.Equal(food.Name, foods[0].Name);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForInvalidArguments()

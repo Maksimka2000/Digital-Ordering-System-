@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+
 
 namespace DigitalOrdering;
 
@@ -7,7 +7,7 @@ namespace DigitalOrdering;
 public class Beverage : MenuItem
 {
     //enums
-    [JsonConverter(typeof(StringEnumConverter))]
+    // [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
     public enum BeverageType
     {
         Cafeteria = 0,
@@ -37,8 +37,8 @@ public class Beverage : MenuItem
     [JsonConstructor]
     public Beverage(string name, double price, string description,
         BeverageType beverageT, bool isAlcohol,
-        List<Ingredient>? ingredients = null, Promotion? promotion = null) : base(name, price,
-        description, ingredients, promotion)
+        List<Ingredient>? ingredients = null, Promotion? promotion = null, bool isAvailable = true) : base(name, price,
+        description, isAvailable, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
@@ -109,36 +109,45 @@ public class Beverage : MenuItem
         _beverages.Remove(beverage);
     }
 
-    //  serialized and deserialized
-    public static void SaveBeverageJSON(string path)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(_beverages, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File Beverage saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving Beverage file: {e.Message}");
-        }
-    }
-
-    public static void LoadBeverageJSON(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _beverages = JsonConvert.DeserializeObject<List<Beverage>>(json);
-                Console.WriteLine($"File Beverage loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading Beverage file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading Beverage file: {e.Message}");
-        }
-    }
+    // //  serialized and deserialized
+    // public static void SaveBeverageJSON(string path)
+    // {
+    //     try
+    //     {
+    //         var settings = new JsonSerializerSettings
+    //         {
+    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    //             Formatting = Formatting.Indented
+    //         };
+    //         string json = JsonConvert.SerializeObject(_beverages, settings);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File Beverage saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving Beverage file: {e.Message}");
+    //     }
+    // }
+    //
+    // public static void LoadBeverageJSON(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             var settings = new JsonSerializerSettings
+    //             {
+    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    //                 TypeNameHandling = TypeNameHandling.Auto
+    //             };
+    //             string json = File.ReadAllText(path);
+    //             _beverages = JsonConvert.DeserializeObject<List<Beverage>>(json, settings) ?? new List<Beverage>();
+    //         }
+    //         else throw new ArgumentException($"Error loading Beverage file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading Beverage file: {e.Message}");
+    //     }
+    // }
 }

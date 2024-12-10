@@ -97,35 +97,35 @@ public class OnlineOrder : Order
         StartTime = new TimeSpan(DateTime.Now.Ticks);
     }
     
-    //  serialized and deserialized 
-    public static void SaveOnlineOrderJSON(string path)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(_onlineOrders, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File OnlineOrder saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving OnlineOrder file: {e.Message}");
-        }
-    }
-    public static void LoadOnlineOrderJSON(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _onlineOrders = JsonConvert.DeserializeObject<List<OnlineOrder>>(json);
-                Console.WriteLine($"File OnlineOrder loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading OnlineOrder file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading OnlineOrder file: {e.Message}");
-        }
-    }
+    // //  serialized and deserialized 
+    // public static void SaveOnlineOrderJSON(string path)
+    // {
+    //     try
+    //     {
+    //         string json = JsonConvert.SerializeObject(_onlineOrders, Formatting.Indented);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File OnlineOrder saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving OnlineOrder file: {e.Message}");
+    //     }
+    // }
+    // public static void LoadOnlineOrderJSON(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             string json = File.ReadAllText(path);
+    //             _onlineOrders = JsonConvert.DeserializeObject<List<OnlineOrder>>(json);
+    //             Console.WriteLine($"File OnlineOrder loaded successfully at {path}");
+    //         }
+    //         else throw new ArgumentException($"Error loading OnlineOrder file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading OnlineOrder file: {e.Message}");
+    //     }
+    // }
 }

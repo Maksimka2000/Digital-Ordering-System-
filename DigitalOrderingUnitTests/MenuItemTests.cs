@@ -10,9 +10,10 @@ public class TestMenuItem(
     string name,
     double price,
     string description,
+    bool isAvailable = true,
     List<Ingredient>? ingredients = null,
     Promotion? promotion = null)
-    : MenuItem(name, price, description, ingredients, promotion)
+    : MenuItem(name, price, description, isAvailable, ingredients, promotion)
 {
     private static List<TestMenuItem> _menuItems = [];
 
@@ -60,8 +61,9 @@ public class MenuItemTests
         const string description = "A classic grilled cheese sandwich";
         var ingredients = new List<Ingredient> { new("Cheese"), new("Bread") };
         var promotion = new Promotion(15, "Sale", "Product sale");
-
-        var menuItem = new TestMenuItem(name, price, description, ingredients, promotion);
+        bool isAvailable = true;
+        
+        var menuItem = new TestMenuItem(name, price, description, isAvailable, ingredients, promotion);
 
         Assert.Equal(name, menuItem.Name);
         Assert.Equal(price, menuItem.Price);

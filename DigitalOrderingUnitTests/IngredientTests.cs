@@ -87,37 +87,37 @@ public class IngredientTests
     //     Assert.Equal("Fresh Basil", ingredient.Name);
     // }
 
-    [Fact]
-    public void SaveIngredientJSON_SavesIngredientsToFile()
-    {
-        var ingredient = new Ingredient("Butter");
-        Ingredient.AddIngredient(ingredient);
-        const string path = "test_ingredients.json";
-
-        Ingredient.SaveIngredientJSON(path);
-
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadIngredientJSON_LoadsIngredientsFromFile()
-    {
-        const string path = "test_ingredients.json";
-        var ingredient = new Ingredient("Salt");
-        Ingredient.AddIngredient(ingredient);
-        Ingredient.SaveIngredientJSON(path);
-        Ingredient.DeleteIngredient(ingredient);
-
-        Ingredient.LoadIngredientJSON(path);
-        var ingredients = Ingredient.GetIngredients();
-
-        Assert.Single(ingredients);
-        Assert.Equal(ingredient.Name, ingredients[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void SaveIngredientJSON_SavesIngredientsToFile()
+    // {
+    //     var ingredient = new Ingredient("Butter");
+    //     Ingredient.AddIngredient(ingredient);
+    //     const string path = "test_ingredients.json";
+    //
+    //     Ingredient.SaveIngredientJSON(path);
+    //
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
+    //
+    // [Fact]
+    // public void LoadIngredientJSON_LoadsIngredientsFromFile()
+    // {
+    //     const string path = "test_ingredients.json";
+    //     var ingredient = new Ingredient("Salt");
+    //     Ingredient.AddIngredient(ingredient);
+    //     Ingredient.SaveIngredientJSON(path);
+    //     Ingredient.DeleteIngredient(ingredient);
+    //
+    //     Ingredient.LoadIngredientJSON(path);
+    //     var ingredients = Ingredient.GetIngredients();
+    //
+    //     Assert.Single(ingredients);
+    //     Assert.Equal(ingredient.Name, ingredients[0].Name);
+    //
+    //     File.Delete(path);
+    // }
     
     [Fact]
     public void ExceptionTests()

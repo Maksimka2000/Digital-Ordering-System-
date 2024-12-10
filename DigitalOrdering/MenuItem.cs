@@ -1,5 +1,5 @@
-﻿using System.Collections.Immutable;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using DidgitalOrdering;
 
 namespace DigitalOrdering;
 
@@ -10,6 +10,7 @@ public abstract class MenuItem
     private static int IdCounter = 0;
 
     // fields
+    [JsonIgnore]
     public int Id { get; }
     private string _name;
     private double _price;
@@ -47,26 +48,25 @@ public abstract class MenuItem
     }
     public Promotion? Promotion
     {
-        get => _promotion?.Clone();
+        get => _promotion;
         private set => _promotion = value;
-        
     }
 
     // constructor
     [JsonConstructor]
-    protected MenuItem(string name, double price, string description, List<Ingredient>? ingredients = null, Promotion? promotion = null)
+    protected MenuItem(string name, double price, string description, bool isAvailable = true, List<Ingredient>? ingredients = null, Promotion? promotion = null)
     {
         Id = ++IdCounter;
         Name = name;
         Price = price;
         Description = description;
-        if (ingredients != null) UpdateIngredients(ingredients);
+        if (ingredients != null && ingredients.Count > 0) UpdateIngredients(ingredients);
         Promotion = promotion;
-        IsAvailable = true;
+        IsAvailable = isAvailable;
     }
     
     // association
-    protected List<Ingredient> _ingredients = new();
+    protected List<Ingredient> _ingredients = [];
     // association getter 
     public List<Ingredient> Ingredients => [.._ingredients];
     // association methods
@@ -100,6 +100,35 @@ public abstract class MenuItem
             foreach (Ingredient ingredient in ingredients) AddIngredient(ingredient);
         }
     }
+    
+    // // association with attribute
+    // private List<OrderList> _orders = [];
+    // // getters
+    // [JsonIgnore]
+    // public List<OrderList> Orders => [.._orders];
+    // // methods
+    // public void AddToOrder(Order order)
+    // {
+    //     if(order == null) throw new ArgumentNullException($" {this.Name}: Order in AddToOrder can't be null");
+    //     
+    //     var orderList = _orders.FirstOrDefault(orderList => orderList.Order == order && orderList.MenuItem == this);
+    //     if (orderList != null)
+    //     {
+    //         orderList.AddQuantity();
+    //     }
+    //     else
+    //     {
+    //         new OrderList(this, order);
+    //     }
+    // }
+    // public void AddOrderList(OrderList orderList)
+    // {
+    //     if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
+    //     if (!_orders.Contains(orderList))
+    //     {
+    //         _orders.Add(orderList);
+    //     }
+    // }
     
     // validation
     private static void ValidateStringMandatory(string name, string text)

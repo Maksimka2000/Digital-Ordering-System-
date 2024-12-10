@@ -88,36 +88,36 @@ public class RegisteredClientTests
         Assert.Contains(client2, clients);
     }
 
-    [Fact]
-    public void SaveRegisteredClientJSON_SavesClientsToFile()
-    {
-        var client = new RegisteredClient("Kevin", "P@ssw0rd", "kevin@example.com");
-        RegisteredClient.AddRegisteredClient(client);
-        const string path = "test_registered_clients.json";
+    // [Fact]
+    // public void SaveRegisteredClientJSON_SavesClientsToFile()
+    // {
+    //     var client = new RegisteredClient("Kevin", "P@ssw0rd", "kevin@example.com");
+    //     RegisteredClient.AddRegisteredClient(client);
+    //     const string path = "test_registered_clients.json";
+    //
+    //     RegisteredClient.SaveRegisteredClientJSON(path);
+    //     Assert.True(File.Exists(path));
+    //
+    //     File.Delete(path);
+    // }
 
-        RegisteredClient.SaveRegisteredClientJSON(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
-    }
-
-    [Fact]
-    public void LoadRegisteredClientJSON_LoadsClientsFromFile()
-    {
-        const string path = "test_registered_clients.json";
-        var client = new RegisteredClient("Lily", "P@ssw0rd", "lily@example.com");
-        RegisteredClient.AddRegisteredClient(client);
-        RegisteredClient.SaveRegisteredClientJSON(path);
-        RegisteredClient.GetRegisteredClients().Clear();
-
-        RegisteredClient.LoadRegisteredClientJSON(path);
-        var clients = RegisteredClient.GetRegisteredClients();
-
-        Assert.Single(clients);
-        Assert.Equal(client.Name, clients[0].Name);
-
-        File.Delete(path);
-    }
+    // [Fact]
+    // public void LoadRegisteredClientJSON_LoadsClientsFromFile()
+    // {
+    //     const string path = "test_registered_clients.json";
+    //     var client = new RegisteredClient("Lily", "P@ssw0rd", "lily@example.com");
+    //     RegisteredClient.AddRegisteredClient(client);
+    //     RegisteredClient.SaveRegisteredClientJSON(path);
+    //     RegisteredClient.GetRegisteredClients().Clear();
+    //
+    //     RegisteredClient.LoadRegisteredClientJSON(path);
+    //     var clients = RegisteredClient.GetRegisteredClients();
+    //
+    //     Assert.Single(clients);
+    //     Assert.Equal(client.Name, clients[0].Name);
+    //
+    //     File.Delete(path);
+    // }
 
     [Fact]
     public void Constructor_ThrowsExceptionForMissingEmailAndPhoneNumber()

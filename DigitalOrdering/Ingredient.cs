@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 
+
 namespace DigitalOrdering;
 
 [Serializable]
@@ -12,6 +13,7 @@ public class Ingredient
     private static int IdCounter = 0;
 
     // fields
+    [JsonIgnore]
     public int Id { get; }
     private string _name;
 
@@ -21,6 +23,7 @@ public class Ingredient
         get => _name;
         private set
         {
+            // if (_ingredients.FirstOrDefault(i => i.Name == value) != null) return;
             ValidateStringMandatory(value, "Name in Ingredient");
             _name = value;
         }
@@ -34,11 +37,11 @@ public class Ingredient
         Name = name;
     }
     
-    //association reverse 
-    private List<MenuItem> _ingredientInMenuItems = new();
-    //associateion reverse getter
+    //association reverse
+    private List<MenuItem> _ingredientInMenuItems = [];
+    //association reverse getter
     [JsonIgnore]
-    public List<MenuItem> IngredientInMenuItems => [.._ingredientInMenuItems];
+    public List<MenuItem> IngredientInMenuItems => _ingredientInMenuItems;
     //association reverse methods
     public void AddMenuItemToIngredient(MenuItem menuItem)
     {
@@ -64,7 +67,6 @@ public class Ingredient
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
     }
-
     private static void ValidateNameDuplication(Ingredient ingredient)
     {
         if (_ingredients.FirstOrDefault(i => i.Name == ingredient.Name) == null) ;
@@ -95,37 +97,46 @@ public class Ingredient
     }
 
 
-    //  serialized and deserialized 
-    public static void SaveIngredientJSON(string path)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(_ingredients, Formatting.Indented);
-            File.WriteAllText(path, json);
-            Console.WriteLine($"File Ingredient saved successfully at {path}");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error saving Ingredient file: {e.Message}");
-        }
-    }
-
-    public static void LoadIngredientJSON(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                _ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
-                // foreach (var ingredient in ingredients) { new Ingredient(ingredient.Name); }
-                Console.WriteLine($"File Ingredient loaded successfully at {path}");
-            }
-            else throw new ArgumentException($"Error loading Ingredient file: path: {path} doesn't exist ");
-        }
-        catch (Exception e)
-        {
-            throw new ArgumentException($"Error loading Ingredient file: {e.Message}");
-        }
-    }
+    // //  serialized and deserialized 
+    // public static void SaveIngredientJSON(string path)
+    // {
+    //     try
+    //     {
+    //         var settings = new JsonSerializerSettings
+    //         {
+    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    //             Formatting = Formatting.Indented
+    //         };
+    //         string json = JsonConvert.SerializeObject(_ingredients, settings);
+    //         File.WriteAllText(path, json);
+    //         Console.WriteLine($"File Ingredient saved successfully at {path}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error saving Ingredient file: {e.Message}");
+    //     }
+    // }
+    //
+    // public static void LoadIngredientJSON(string path)
+    // {
+    //     try
+    //     {
+    //         if (File.Exists(path))
+    //         {
+    //             var settings = new JsonSerializerSettings
+    //             {
+    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    //                 TypeNameHandling = TypeNameHandling.Auto
+    //             };
+    //             string json = File.ReadAllText(path);
+    //             _ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json, settings) ?? new List<Ingredient>();
+    //             Console.WriteLine($"File Ingredient loaded successfully at {path}");
+    //         }
+    //         else throw new ArgumentException($"Error loading Ingredient file: path: {path} doesn't exist ");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new ArgumentException($"Error loading Ingredient file: {e.Message}");
+    //     }
+    // }
 }
