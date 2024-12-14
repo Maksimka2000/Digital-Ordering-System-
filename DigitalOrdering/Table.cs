@@ -9,7 +9,9 @@ public class Table
     private static List<Table> _tables = [];
 
     private static int IdCounter = 0;
+    [JsonIgnore]
     public int Id { get; }
+    private string? _description;
     private string? _alias;
     private int _capacity;
     public bool IsLocked { get; private set; }
@@ -24,26 +26,49 @@ public class Table
             _capacity = value;
         }
     }
-
+    public string? Description
+    {
+        get => _description;
+        private set  {
+            ValidateOptionalString(value, "Description");
+            _description = value;
+        }
+    }
     public string? Alias
     {
         get => _alias;
         private set
         {
-            ValidateAlias(value);
+            ValidateOptionalString(value, "Alias");
             _alias = value;
         }
     }
 
     // constructor
     [JsonConstructor]
-    public Table(int capacity, string? alias = null)
+    public Table(Restaurant restaurant, int capacity, string? alias = null, string? description = null)
     {
         Id = ++IdCounter;
-        Alias = alias;
         Capacity = capacity;
+        Description = description;
+        Alias = alias;
         IsLocked = false;
+        UpdateRelationToRestaurant(restaurant);
+        AddTable(this);
     }
+    
+    // association reverse with restaurant 
+    private Restaurant _restaurant;
+    //associaiton reverse getter and setter
+    public Restaurant Restaurant => _restaurant;
+    // association reverse methods.
+    private void UpdateRelationToRestaurant(Restaurant restaurant)
+    {
+        if(restaurant is null) throw new ArgumentNullException($"Restaurant can't be null in UpdateRelationTo");
+        _restaurant = restaurant;
+        restaurant.AddTable(this);
+    }
+    
 
     // validation
     private static void ValidateCapacity(int value)
@@ -51,9 +76,9 @@ public class Table
         if (value <= 0) throw new ArgumentException("Capacity must be greater than zero.");
     }
 
-    private static void ValidateAlias(string value)
+    private static void ValidateOptionalString(string value, string text)
     {
-        if (value == string.Empty) throw new ArgumentException("Alias cant be empty");
+        if (value == string.Empty) throw new ArgumentException($"{text} while creating Table cant be empty");
     }
 
 
@@ -95,37 +120,5 @@ public class Table
     {
         IsLocked = false;
     }
-
-    // // ================================================================ serialized and deserialized 
-    // public static void SaveTableJSON(string path)
-    // {
-    //     try
-    //     {
-    //         string json = JsonConvert.SerializeObject(_tables, Formatting.Indented);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File Table saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving Table file: {e.Message}");
-    //     }
-    // }
-    //
-    // public static void LoadTableJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             string json = File.ReadAllText(path);
-    //             _tables = JsonConvert.DeserializeObject<List<Table>>(json);
-    //             Console.WriteLine($"File Table loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading Table file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading Table file: {e.Message}");
-    //     }
-    // }
+    
 }

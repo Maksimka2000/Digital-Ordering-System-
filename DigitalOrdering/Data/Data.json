@@ -98,7 +98,7 @@
     {
       "$id": "25",
       "DietaryPreferences": [],
-      "FoodT": 0,
+      "FoodT": "Pasta",
       "IsAvailable": true,
       "Name": "Spaghetti Carbonara",
       "Price": 12.99,
@@ -125,9 +125,9 @@
     {
       "$id": "27",
       "DietaryPreferences": [
-        0
+        "GlutenFree"
       ],
-      "FoodT": 0,
+      "FoodT": "Pasta",
       "IsAvailable": true,
       "Name": "Penne Alfredo",
       "Price": 14.99,
@@ -154,9 +154,9 @@
     {
       "$id": "29",
       "DietaryPreferences": [
-        1
+        "Vegan"
       ],
-      "FoodT": 0,
+      "FoodT": "Pasta",
       "IsAvailable": true,
       "Name": "Fettuccine Primavera",
       "Price": 13.99,
@@ -186,10 +186,10 @@
     {
       "$id": "31",
       "DietaryPreferences": [
-        3,
-        0
+        "LactoseFree",
+        "GlutenFree"
       ],
-      "FoodT": 0,
+      "FoodT": "Pasta",
       "IsAvailable": true,
       "Name": "Spaghetti Aglio e Olio",
       "Price": 10.99,
@@ -212,7 +212,7 @@
     {
       "$id": "32",
       "DietaryPreferences": [],
-      "FoodT": 0,
+      "FoodT": "Pasta",
       "IsAvailable": true,
       "Name": "Linguine Shrimp Scampi",
       "Price": 16.99,
@@ -489,36 +489,58 @@
   "Tables": [
     {
       "$id": "51",
-      "Id": 1,
       "IsLocked": false,
       "Capacity": 2,
-      "Alias": null
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "42"
+      }
     },
     {
       "$id": "52",
-      "Id": 2,
       "IsLocked": false,
-      "Capacity": 6,
-      "Alias": "window"
+      "Capacity": 4,
+      "Description": null,
+      "Alias": "window",
+      "Restaurant": {
+        "$ref": "42"
+      }
     },
     {
       "$id": "53",
-      "Id": 3,
       "IsLocked": false,
       "Capacity": 4,
-      "Alias": "near wc"
+      "Description": "do not sit here a guts how are allergic to oil",
+      "Alias": "near wc",
+      "Restaurant": {
+        "$ref": "42"
+      }
     },
     {
       "$id": "54",
-      "Id": 4,
       "IsLocked": false,
       "Capacity": 8,
-      "Alias": "alies"
+      "Description": null,
+      "Alias": "alies",
+      "Restaurant": {
+        "$ref": "42"
+      }
+    },
+    {
+      "$id": "55",
+      "IsLocked": false,
+      "Capacity": 2,
+      "Description": null,
+      "Alias": "hello",
+      "Restaurant": {
+        "$ref": "42"
+      }
     }
   ],
   "RegisteredClients": [
     {
-      "$id": "55",
+      "$id": "56",
       "Id": 1,
       "Bonus": 0,
       "Password": "32jpjoi3j04#A",
@@ -528,7 +550,7 @@
       "Name": "Max"
     },
     {
-      "$id": "56",
+      "$id": "57",
       "Id": 2,
       "Bonus": 0,
       "Password": "32jpjD$i3j04#A",
@@ -538,7 +560,7 @@
       "Name": "Alexa"
     },
     {
-      "$id": "57",
+      "$id": "58",
       "Id": 3,
       "Bonus": 0,
       "Password": "32Apjoi3jf4#A",
@@ -550,45 +572,33 @@
   ],
   "TableOrders": [
     {
-      "$id": "58",
-      "QRCodeScanTime": "739229.06:00:00.5146336",
-      "StartTime": "739229.06:00:00.5208385",
-      "Id": 1,
-      "OrderPrice": 0.0,
-      "TotalPrice": 0.0,
+      "$id": "59",
+      "QRCodeScanTime": "739233.12:46:52.3335603",
+      "StartTime": "739233.12:46:52.3386333",
       "NumberOfPeople": 2
     },
     {
-      "$id": "59",
-      "QRCodeScanTime": "739229.06:00:00.5212113",
-      "StartTime": "739229.06:00:00.5212157",
-      "Id": 2,
-      "OrderPrice": 0.0,
-      "TotalPrice": 0.0,
+      "$id": "60",
+      "QRCodeScanTime": "739233.12:46:52.3403956",
+      "StartTime": "739233.12:46:52.3404003",
       "NumberOfPeople": 6
     }
   ],
   "OnlineOrders": [
     {
-      "$id": "60",
+      "$id": "61",
       "HaveGuestsArrived": false,
       "Description": "heljfoadsf",
-      "DateAndTime": "2025-11-08T06:00:00.5215607+01:00",
+      "DateAndTime": "2025-11-12T12:46:52.3404009+01:00",
       "StartTime": null,
-      "Id": 3,
-      "OrderPrice": 0.0,
-      "TotalPrice": 0.0,
       "NumberOfPeople": 4
     },
     {
-      "$id": "61",
+      "$id": "62",
       "HaveGuestsArrived": false,
       "Description": null,
-      "DateAndTime": "2025-12-10T06:00:00.5224394+01:00",
+      "DateAndTime": "2025-12-14T12:46:52.3415441+01:00",
       "StartTime": null,
-      "Id": 4,
-      "OrderPrice": 0.0,
-      "TotalPrice": 0.0,
       "NumberOfPeople": 4
     }
   ]

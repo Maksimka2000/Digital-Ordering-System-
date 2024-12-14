@@ -95,48 +95,4 @@ public class Ingredient
     {
         Name = newName;
     }
-
-
-    // //  serialized and deserialized 
-    // public static void SaveIngredientJSON(string path)
-    // {
-    //     try
-    //     {
-    //         var settings = new JsonSerializerSettings
-    //         {
-    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //             Formatting = Formatting.Indented
-    //         };
-    //         string json = JsonConvert.SerializeObject(_ingredients, settings);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File Ingredient saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving Ingredient file: {e.Message}");
-    //     }
-    // }
-    //
-    // public static void LoadIngredientJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             var settings = new JsonSerializerSettings
-    //             {
-    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //                 TypeNameHandling = TypeNameHandling.Auto
-    //             };
-    //             string json = File.ReadAllText(path);
-    //             _ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json, settings) ?? new List<Ingredient>();
-    //             Console.WriteLine($"File Ingredient loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading Ingredient file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading Ingredient file: {e.Message}");
-    //     }
-    // }
 }

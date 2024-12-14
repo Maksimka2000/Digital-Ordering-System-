@@ -45,7 +45,7 @@ public class Beverage : MenuItem
     }
     
     //association reverse
-    private List<SetOfMenuItem> _beverageInSetOfMenuItems = new();
+    private List<SetOfMenuItem> _beverageInSetOfMenuItems = [];
     //association reverse getter
     [JsonIgnore]
     public List<SetOfMenuItem> BeverageInSetOfMenuItems => [.._beverageInSetOfMenuItems];

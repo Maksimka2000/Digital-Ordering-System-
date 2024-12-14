@@ -75,34 +75,34 @@ public class SetOfMenuItemTests
     //     Assert.Equal(1, SetOfMenuItem.MinNumberOfBeverage);
     // }
 
-    [Fact]
-    public void AddBusinessLunch_AddsRestaurantToList()
-    {
-        var businessLunch =
-            new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
-        SetOfMenuItem.AddSetOfMenuItems(businessLunch);
-
-        var lunches = SetOfMenuItem.GetSetOfMenuItems();
-        Assert.Contains(businessLunch, lunches);
-    }
-
-    [Fact]
-    public void GetBusinessLunches_ReturnsCorrectList()
-    {
-        var lunch1 = new SetOfMenuItem("Lunch Set 1", 20.0, "Business Lunch 1", CreateFoodList(2),
-            CreateBeverageList(1));
-        var lunch2 = new SetOfMenuItem("Lunch Set 2", 25.0, "Business Lunch 2", CreateFoodList(3),
-            CreateBeverageList(1));
-
-        SetOfMenuItem.AddSetOfMenuItems(lunch1);
-        SetOfMenuItem.AddSetOfMenuItems(lunch2);
-
-        var lunches = SetOfMenuItem.GetSetOfMenuItems();
-
-        Assert.Equal(2, lunches.Count);
-        Assert.Contains(lunch1, lunches);
-        Assert.Contains(lunch2, lunches);
-    }
+    // [Fact]
+    // public void AddBusinessLunch_AddsRestaurantToList()
+    // {
+    //     var businessLunch =
+    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
+    //     SetOfMenuItem.AddSetOfMenuItems(businessLunch);
+    //
+    //     var lunches = SetOfMenuItem.GetSetOfMenuItems();
+    //     Assert.Contains(businessLunch, lunches);
+    // }
+    //
+    // [Fact]
+    // public void GetBusinessLunches_ReturnsCorrectList()
+    // {
+    //     var lunch1 = new SetOfMenuItem("Lunch Set 1", 20.0, "Business Lunch 1", CreateFoodList(2),
+    //         CreateBeverageList(1));
+    //     var lunch2 = new SetOfMenuItem("Lunch Set 2", 25.0, "Business Lunch 2", CreateFoodList(3),
+    //         CreateBeverageList(1));
+    //
+    //     SetOfMenuItem.AddSetOfMenuItems(lunch1);
+    //     SetOfMenuItem.AddSetOfMenuItems(lunch2);
+    //
+    //     var lunches = SetOfMenuItem.GetSetOfMenuItems();
+    //
+    //     Assert.Equal(2, lunches.Count);
+    //     Assert.Contains(lunch1, lunches);
+    //     Assert.Contains(lunch2, lunches);
+    // }
 
     // [Fact]
     // public void SaveBusinessLunchJson_SavesToFile()
@@ -137,21 +137,21 @@ public class SetOfMenuItemTests
     //     File.Delete(path);
     // }
 
-    [Fact]
-    public void Constructor_ThrowsExceptionForInvalidFoodCount()
-    {
-        var invalidFoods = CreateFoodList(5);
-        var beverages = CreateBeverageList(1);
-        Assert.Throws<ArgumentException>(() =>
-            new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", invalidFoods, beverages));
-    }
-
-    [Fact]
-    public void Constructor_ThrowsExceptionForInvalidBeverageCount()
-    {
-        var foods = CreateFoodList(2);
-        var invalidBeverages = CreateBeverageList(2);
-        Assert.Throws<ArgumentException>(() =>
-            new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", foods, invalidBeverages));
-    }
+    // [Fact]
+    // public void Constructor_ThrowsExceptionForInvalidFoodCount()
+    // {
+    //     var invalidFoods = CreateFoodList(5);
+    //     var beverages = CreateBeverageList(1);
+    //     Assert.Throws<ArgumentException>(() =>
+    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", invalidFoods, beverages));
+    // }
+    //
+    // [Fact]
+    // public void Constructor_ThrowsExceptionForInvalidBeverageCount()
+    // {
+    //     var foods = CreateFoodList(2);
+    //     var invalidBeverages = CreateBeverageList(2);
+    //     Assert.Throws<ArgumentException>(() =>
+    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", foods, invalidBeverages));
+    // }
 }

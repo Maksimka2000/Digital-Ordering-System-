@@ -65,7 +65,7 @@ public abstract class MenuItem
         IsAvailable = isAvailable;
     }
     
-    // association
+    // association with ingredient
     protected List<Ingredient> _ingredients = [];
     // association getter 
     public List<Ingredient> Ingredients => [.._ingredients];
@@ -101,34 +101,26 @@ public abstract class MenuItem
         }
     }
     
-    // // association with attribute
-    // private List<OrderList> _orders = [];
-    // // getters
-    // [JsonIgnore]
-    // public List<OrderList> Orders => [.._orders];
-    // // methods
-    // public void AddToOrder(Order order)
-    // {
-    //     if(order == null) throw new ArgumentNullException($" {this.Name}: Order in AddToOrder can't be null");
-    //     
-    //     var orderList = _orders.FirstOrDefault(orderList => orderList.Order == order && orderList.MenuItem == this);
-    //     if (orderList != null)
-    //     {
-    //         orderList.AddQuantity();
-    //     }
-    //     else
-    //     {
-    //         new OrderList(this, order);
-    //     }
-    // }
-    // public void AddOrderList(OrderList orderList)
-    // {
-    //     if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
-    //     if (!_orders.Contains(orderList))
-    //     {
-    //         _orders.Add(orderList);
-    //     }
-    // }
+    // association with attribute MenuItem => OrderList => Order
+    [JsonIgnore]
+    private List<OrderList> _orders = [];
+    // association getters
+    [JsonIgnore]
+    public List<OrderList> Orders => [.._orders];
+    // association methods
+    public void AddToOrder(Order order, int quantity = 1)
+    {
+        if(order == null) throw new ArgumentNullException($" {this.Name}: Order in AddToOrder can't be null"); 
+        new OrderList(this, order, quantity);
+    }
+    public void AddOrderList(OrderList orderList)
+    {
+        if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
+        if (!_orders.Contains(orderList))
+        {
+            _orders.Add(orderList);
+        }
+    }
     
     // validation
     private static void ValidateStringMandatory(string name, string text)

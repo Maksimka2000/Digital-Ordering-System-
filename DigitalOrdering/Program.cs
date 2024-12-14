@@ -4,9 +4,12 @@ using DigitalOrdering;
 using Newtonsoft.Json;
 
 // CreateObjects();
+// SaveClassExtent();
 LoadClassExtent();
 OutputAllObjectsCreated();
-// SaveClassExtent();
+
+
+
 
 
 
@@ -19,61 +22,26 @@ OutputAllObjectsCreated();
 
 
 return;
-
-
 void LoadClassExtent()
 {
     SerializationDeserialization.LoadJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Data.json"));
-    // Ingredient.LoadIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Ingredients.json"));
-    // Food.LoadFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
-    // Beverage.LoadBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    // SetOfMenuItem.LoadSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "SetOfMenuItem.json"));
-    // Restaurant.LoadRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Restaurant.json"));
-    // Table.LoadTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Table.json"));
-    // RegisteredClient.LoadRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "RegisteredClient.json"));
-    // TableOrder.LoadTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-    // OnlineOrder.LoadOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "OnlineOrder.json"));
 }
 void SaveClassExtent()
 {
     SerializationDeserialization.SaveJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Data.json"));
-    // Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Ingredients.json"));
-    // Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
-    // Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-    // SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "SetOfMenuItem.json"));
-    // Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Restaurant.json"));
-    // Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Table.json"));
-    // RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "RegisteredClient.json"));
-    // TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-    // OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "OnlineOrder.json"));
 }
-
 void OutputAllObjectsCreated()
 {
     //---------------------------------------------------- Load Ingredietns
-    Console.WriteLine("================================  Ingredients ==================");
+    Console.WriteLine("================================  Ingredients ================================================================    \n");
     foreach (Ingredient ingredient in Ingredient.GetIngredients())
     {
         Console.WriteLine($"Ingredietn id: {ingredient.Id}, Name: {ingredient.Name}");
     }
-    
     // ------------------------------------------------------ Load Food
-    Console.WriteLine("================================  Food ==================");
+    Console.WriteLine("\n================================  Food ================================================================    \n");
     foreach (Food food in Food.GetFoods())
     {
-        Console.WriteLine();
         Console.Write(
             $"food id: {food.Id}, Name: {food.Name}, Price: {food.Price}, Description: {food.Description}, foodType: {food.FoodT}, DietaryPreference: ");
         if (food.DietaryPreferences.Count > 0)
@@ -81,7 +49,7 @@ void OutputAllObjectsCreated()
             Console.Write("[");
             foreach (var dietaryPreference in food.DietaryPreferences)
                 Console.Write($"{dietaryPreference}, ");
-            Console.WriteLine("]");
+            Console.Write("]");
         }
         else
         {
@@ -91,19 +59,17 @@ void OutputAllObjectsCreated()
         
         Console.WriteLine(food.Promotion == null
             ? "                    No promotion"
-            : $"                    Promotion [ name: {food.Promotion.Name}. And {food.Promotion}]");
+            : $"                    Promotion: [ name: {food.Promotion.Name}. And {food.Promotion}]");
         Console.Write(food.Ingredients.Count == 0
             ? "                    No ingredients"
             : "                    There are ingredients: [");
         if (food.Ingredients.Count > 0)
             foreach (var ingredient in food.Ingredients)
                 Console.Write($"{ingredient.Name}, ");
-            Console.Write("] ");
-        Console.WriteLine("");
+            Console.Write("] \n");
     }
-
     // ------------------------------------------------------ Load beverage
-    Console.WriteLine("================================ Beverages ==================");
+    Console.WriteLine("\n================================ Beverages ================================================================    \n");
     foreach (Beverage beverage in Beverage.GetBeverages())
     {
         Console.WriteLine(
@@ -124,9 +90,8 @@ void OutputAllObjectsCreated()
         }
         Console.WriteLine();
     }
-
     // ------------------------------------------------------ SetOfMenuItems
-    Console.WriteLine("================================  SetOfMenuItems ==================");
+    Console.WriteLine("\n================================  SetOfMenuItems ================================================================    \n");
     foreach (SetOfMenuItem setOfMenuItems in SetOfMenuItem.GetSetOfMenuItems())
     {
         Console.WriteLine(
@@ -154,7 +119,6 @@ void OutputAllObjectsCreated()
                 Console.WriteLine("]");
             }
         }
-        
         Console.WriteLine($"                    There are {setOfMenuItems.Beverages.Count} beverages: ");
         if (setOfMenuItems.Beverages.Count > 0)
         {
@@ -177,230 +141,217 @@ void OutputAllObjectsCreated()
                 Console.WriteLine("]");
             }
         }
-        
-        Console.Write($"                    Is available on: [");
+        Console.Write($"                    Is available on:\n");
+        Console.Write("                           [");
         foreach (var day in setOfMenuItems.Days) Console.Write($"{day}, ");
         Console.Write($"] from {setOfMenuItems.StartTime} to {setOfMenuItems.EndTime}");
         Console.WriteLine();
     }
-
     // ========================================== Load Restaurant
-    Console.WriteLine("=========================================== Restaurant ===========================");
+    Console.WriteLine("\n=========================================== Restaurant ================================================================    \n");
     foreach (var restaurant in Restaurant.GetRestaurants())
     {
         Console.WriteLine($"Restaurant name is: {restaurant.Name}, location is: {restaurant.Location.ToString()},  ");
         
-        Console.WriteLine("Open hours are: ");
+        Console.WriteLine("                    Open hours are:");
         foreach (var openHour in restaurant.OpenHours)
         {
             // Console.WriteLine($" {openHour.Day}: {(openHour.IsOpen ? ($"{openHour.OpenTime} to {openHour.CloseTime}") : "closed")}");
-            Console.WriteLine($" {openHour.ToString()}");
+            Console.WriteLine($"                        [{openHour.ToString()}]");
         }
-
-        Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
-        restaurant.UpdateOpenHour(DayOfWeek.Monday, new TimeSpan(7, 0, 0), new TimeSpan(18, 0, 0));
-        Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
-        restaurant.UpdateOpenHour(DayOfWeek.Monday, null, null);
-        Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
+        
+        
+        
+        Console.WriteLine("\n================================ Tables ================================================================    \n");
+        foreach (var table in Table.GetTables())
+        {
+            Console.WriteLine(
+                $"Table ID: {table.Id}, Alias: {table.Alias}, Capacity: {table.Capacity}, IsLocked: {table.IsLocked}");
+        }
+        
+        // Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
+        // restaurant.UpdateOpenHour(DayOfWeek.Monday, new TimeSpan(7, 0, 0), new TimeSpan(18, 0, 0));
+        // Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
+        // restaurant.UpdateOpenHour(DayOfWeek.Monday, null, null);
+        // Console.WriteLine($"is restaurant opened in {new TimeSpan(8, 0, 0)} on {DayOfWeek.Monday}?: {restaurant.IsRestaurantOpen(DayOfWeek.Monday, new TimeSpan(8, 0, 0))}");
     }
-
-    // ========================================== Load Tables
-    Console.WriteLine("================================ Tables ===========================");
-    foreach (var table in Table.GetTables())
-    {
-        Console.WriteLine(
-            $"Table ID: {table.Id}, Alias: {table.Alias}, Capacity: {table.Capacity}, IsLocked: {table.IsLocked}");
-    }
-
+    
     // ========================================== Load Registered Clients
-    Console.WriteLine("================================ Registered Clients ===========================");
+    Console.WriteLine("\n================================ Registered Clients ================================================================    \n");
     foreach (var client in RegisteredClient.GetRegisteredClients())
     {
         Console.WriteLine(
             $"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}");
     }
-
     // ========================================== Load Table Orders
-    Console.WriteLine("================================ Table Orders ===========================");
+    Console.WriteLine("\n================================ Table Orders ================================================================    \n");
     foreach (var order in TableOrder.GetTableOrders())
     {
         Console.WriteLine(
             $"Table Order: Number of People: {order.NumberOfPeople}, Start Time: {order.StartTime}, QR Code Scan Time: {order.QRCodeScanTime}");
     }
-
     // ========================================== Load Online Orders
-    Console.WriteLine("================================ Online Orders ===========================");
+    Console.WriteLine("\n================================ Online Orders ================================================================    \n");
     foreach (var order in OnlineOrder.GetOnlineOrders())
     {
         Console.WriteLine(
             $"Online Order: Number of People: {order.NumberOfPeople}, Date and Time: {order.DateAndTime}, Description: {order.Description}, Guests Arrived: {order.HaveGuestsArrived}");
     }
-
-    // ============ association 
-    Console.WriteLine("=================================== Ingredients in MenuItems  ============================");
+    // ================================================ association Ingredients in MenuItems 
+    Console.WriteLine("\n=================================== Ingredients in MenuItems  ================================================================    \n");
     foreach (var ingredient in Ingredient.GetIngredients())
     {
-        Console.WriteLine();
-        Console.Write($"Ingredient id: {ingredient.Id}, Ingredient name {ingredient.Name}, Ingredient counter in other menu items: {ingredient.IngredientInMenuItems.Count} [");
+        Console.Write($"Ingredient id: {ingredient.Id}, Ingredient name {ingredient.Name}, how many times ingredient is in other menu items: {ingredient.IngredientInMenuItems.Count} [");
         foreach (var menuItem in ingredient.IngredientInMenuItems)
         {
              Console.Write($"[Menu item id: {menuItem.Id} name:{menuItem.Name}], ");
         }
-        Console.Write($"] ");
+        Console.Write($"] \n");
+    }
+    // ================================================ association MenuItem in SetOfMenuItems
+    Console.WriteLine("\n=================================== MenuItem in SetOfMenuItems  ================================================================    \n");
+    foreach (var food in Food.GetFoods())
+    {
+        Console.Write($"Food id: {food.Id}, name: {food.Name} is in {food.FoodInSetOfMenuItems.Count} SetOfMenuItems: [");
+        foreach (var setOfMenuItem in food.FoodInSetOfMenuItems)
+        {
+            Console.Write($"[SetOfMenuItems id: {setOfMenuItem.Id}, name: {setOfMenuItem.Name}], ");
+        }
+        Console.Write($"] \n");
+    }
+    // ============================================= association Order and MenuItem
+    Console.WriteLine("\n=================================== Order contains MenuItems  ================================================================    \n");
+    foreach (var tableOrder in TableOrder.GetTableOrders())
+    {
+        Console.WriteLine($"Table order id: {tableOrder.Id} has the following orders: {tableOrder.MenuItems.Count}: ");
+        foreach (var orderList in tableOrder.MenuItems)
+        {
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
+        }
+    }
+    foreach (var onlineOrder in OnlineOrder.GetOnlineOrders())
+    {
+        Console.WriteLine($"Online order id: {onlineOrder.Id} has the following orders: {onlineOrder.MenuItems.Count}: ");
+        foreach (var orderList in onlineOrder.MenuItems)
+        {
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
+        }
+    }
+    foreach (var food in Food.GetFoods())
+    {
+        Console.WriteLine($"Food id: {food.Id}, name: {food.Name} is added tohe following orders {food.Orders.Count}");
+    }
+    foreach (var beverage in Beverage.GetBeverages())
+    {
+        Console.WriteLine($"Beverage id: {beverage.Id}, name: {beverage.Name} is added to the following orders {beverage.Orders.Count}");
+    }
+    foreach (var setOfMenuItem in SetOfMenuItem.GetSetOfMenuItems())
+    {
+        Console.WriteLine($"SetOfMenuItem id: {setOfMenuItem.Id}, name: {setOfMenuItem.Name} is added to the following orders {setOfMenuItem.Orders.Count}");
     }
     
 }
-
 void CreateObjects()
 {
-//===================================================================== Create Ingredietn 
+    //===================================================================== Create Ingredietn 
     var tomatoIngredient = new Ingredient("Tomato");
     Ingredient.AddIngredient(tomatoIngredient);
-
     var mozzarellaIngredient = new Ingredient("Mozzarella");
     Ingredient.AddIngredient(mozzarellaIngredient);
-
     var basilIngredient = new Ingredient("Basil");
     Ingredient.AddIngredient(basilIngredient);
-
     var oliveOilIngredient = new Ingredient("Olive Oil");
     Ingredient.AddIngredient(oliveOilIngredient);
-
     var garlicIngredient = new Ingredient("Garlic");
     Ingredient.AddIngredient(garlicIngredient);
-
     var saltIngredient = new Ingredient("Salt");
     Ingredient.AddIngredient(saltIngredient);
-
     var pepperIngredient = new Ingredient("Pepper");
     Ingredient.AddIngredient(pepperIngredient);
-
     var chickenIngredient = new Ingredient("Chicken");
     Ingredient.AddIngredient(chickenIngredient);
-
     var mushroomIngredient = new Ingredient("Mushrooms");
     Ingredient.AddIngredient(mushroomIngredient);
-
     var parmesanIngredient = new Ingredient("Parmesan");
     Ingredient.AddIngredient(parmesanIngredient);
-
     var pastaIngredient = new Ingredient("Pasta");
     Ingredient.AddIngredient(pastaIngredient);
-
     var creamIngredient = new Ingredient("Cream");
     Ingredient.AddIngredient(creamIngredient);
-
     var spinachIngredient = new Ingredient("Spinach");
     Ingredient.AddIngredient(spinachIngredient);
-
     var broccoliIngredient = new Ingredient("Broccoli");
     Ingredient.AddIngredient(broccoliIngredient);
-
     var zucchiniIngredient = new Ingredient("Zucchini");
     Ingredient.AddIngredient(zucchiniIngredient);
-
     var shrimpIngredient = new Ingredient("Shrimp");
     Ingredient.AddIngredient(shrimpIngredient);
-
     var baconIngredient = new Ingredient("Bacon");
     Ingredient.AddIngredient(baconIngredient);
-
     var eggIngredient = new Ingredient("Egg");
     Ingredient.AddIngredient(eggIngredient);
-
     var redPepperFlakesIngredient = new Ingredient("Red Pepper Flakes");
     Ingredient.AddIngredient(redPepperFlakesIngredient);
-
     var onionsIngredient = new Ingredient("Onions");
     Ingredient.AddIngredient(onionsIngredient);
-
     var ginIngredient = new Ingredient("Gin");
     Ingredient.AddIngredient(ginIngredient);
-
     var vermouthIngredient = new Ingredient("Vermouth");
     Ingredient.AddIngredient(vermouthIngredient);
-
     var campariIngredient = new Ingredient("Campari");
     Ingredient.AddIngredient(campariIngredient);
-
-    // Ingredient.SaveIngredientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "Ingredients.json"));
-
-    // ======================================================== Create FOod
-
+    //========================================================= promotion
     var promo1 = new Promotion(10.0, "new year", "it is purpose delete this in february");
     var promo2 = new Promotion(10.0, "He[ppy", "nothi", Promotion.PromotionType.Regular);
     var promo3 = new Promotion(70.0, "buy season");
-    
+    // ======================================================== Create FOod
     var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", Food.FoodType.Pasta,
         new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, null, promo1);
     Food.AddFood(food1);
-
     var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", Food.FoodType.Pasta,
         new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.GlutenFree}, promo2);
     Food.AddFood(food2);
-
     var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil",
         Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.Vegan}, promo3);
     Food.AddFood(food3);
-
     var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes",
         Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.LactoseFree, Food.DietaryPreferencesType.GlutenFree}, promo2);
     Food.AddFood(food4);
-
     var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter",
         Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient });
     Food.AddFood(food5);
-
-    // Food.SaveFoodJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Foods.json"));
-
-// ======================================================== Create Beverages
+    // ======================================================== Create Beverages
     var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee",
         Beverage.BeverageType.Cafeteria, false, null, null);
     Beverage.AddBeverage(beverage1);
-
     var beverage2 = new Beverage("Mojito", 7.99, "Refreshing cocktail with mint and lime",
         Beverage.BeverageType.Cocktails, true, null, null);
     Beverage.AddBeverage(beverage2);
-
     var beverage3 = new Beverage("Iced Tea", 2.99, "Cold brewed tea with lemon",
         Beverage.BeverageType.Cafeteria, false, null, null);
     Beverage.AddBeverage(beverage3);
-
     var beverage4 = new Beverage("Negroni", 8.99, "Classic Italian cocktail",
         Beverage.BeverageType.Cocktails, true, new List<Ingredient> { ginIngredient, vermouthIngredient, campariIngredient }, promo3);
     Beverage.AddBeverage(beverage4);
-
     var beverage5 = new Beverage("Lemonade", 2.99, "Refreshing lemon juice and sugar",
         Beverage.BeverageType.Drinks, false, null, null);
     Beverage.AddBeverage(beverage5);
-
-    // Beverage.SaveBeverageJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Beverages.json"));
-
-// ======================================================== Create Business Lunch
+    // ======================================================== Create SetOfMenuItems
     var businessLunch1 = new SetOfMenuItem("Business Special", 19.99,
         "A combination of three foods and a drink", new List<Food> { food1, food2, food3 },
         new List<Beverage> { beverage2 });
     SetOfMenuItem.AddSetOfMenuItems(businessLunch1);
-    
     var businessLunch2 = new SetOfMenuItem("WeekEnd Promo Special", 19.99,
         "A combination of two food beyound your imagination and a drink", new List<Food> { food4, food5 },
         new List<Beverage> { beverage2, beverage3 });
     SetOfMenuItem.AddSetOfMenuItems(businessLunch2);
-    
     var businessLunch3 = new SetOfMenuItem("New special prom", 19.99,
         "WIthour beverages and in monday and friday", new List<Food> { food1, food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday});
     SetOfMenuItem.AddSetOfMenuItems(businessLunch3);
-    
     var businessLunch4 = new SetOfMenuItem("New special prom", 19.99,
         "WIthour beverages and in monday and friday", new List<Food> {food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday}, new TimeSpan(10,0,0), new TimeSpan(15,0,0));
     SetOfMenuItem.AddSetOfMenuItems(businessLunch4);
-
-    // SetOfMenuItem.SaveSetOfMenuItemsJson(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-    //     "SetOfMenuItem.json"));
-    
-// ========================================================= Create Restaurant
-
+    // ========================================================= Create Restaurant
     Address address = new Address("Zlota 43", "Warszawa", "22");
     List<OpenHour> workHours = new List<OpenHour>
     {
@@ -413,21 +364,17 @@ void CreateObjects()
         new OpenHour(DayOfWeek.Sunday)
     };
     Restaurant restaurant = new Restaurant("Miscusi", address, workHours);
-    Restaurant.AddRestaurant(restaurant);
-    
-    // Restaurant.SaveRestaurantJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Restaurant.json"));
-
-    // -================================================= Create Table
-    Table table1 = new Table(2);
-    Table.AddTable(table1);
-    Table table2 = new Table(6, "window");
-    Table.AddTable(table2);
-    Table table3 = new Table(4, "near wc");
-    Table.AddTable(table3);
-    Table table4 = new Table(8, "alies");
-    Table.AddTable(table4);
-    // Table.SaveTableJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "Table.json"));
-
+    // Restaurant.AddRestaurant(restaurant);
+    // -========================================================= Create Table
+    Table table1 = new Table(restaurant, 2);
+    // Table.AddTable(table1);
+    Table table2 = new Table(restaurant, 4, "window");
+    // Table.AddTable(table2);
+    Table table3 = new Table(restaurant, 4, "near wc", "do not sit here a guts how are allergic to oil");
+    // Table.AddTable(table3);
+    Table table4 = new Table(restaurant, 8, "alies");
+    // Table.AddTable(table4);
+    restaurant.AddTable(2, "hello");
     // ==================================================== Registered client
     RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", "s23454@pjatk.com", "546 545 544");
     RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", null, "344 434 344", "Arstv");
@@ -435,65 +382,28 @@ void CreateObjects()
     RegisteredClient.AddRegisteredClient(client1);
     RegisteredClient.AddRegisteredClient(client2);
     RegisteredClient.AddRegisteredClient(client3);
-    // RegisteredClient.SaveRegisteredClientJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        // "RegisteredClient.json"));
-
     // ================================================ TableOrder
     TableOrder tableOrder1 = new TableOrder(2);
-    TableOrder tableOrder2 = new TableOrder(6);
+    tableOrder1.AddMenuItem(food2);
+    tableOrder1.AddMenuItem(food2);
+    food2.AddToOrder(tableOrder1);
+    food2.AddToOrder(tableOrder1);
+    food1.AddToOrder(tableOrder1);
+    food1.AddToOrder(tableOrder1);
+    tableOrder1.AddMenuItem(food1);
+    tableOrder1.AddMenuItem(food1);
+    tableOrder1.AddMenuItem(food4, 10);
     TableOrder.AddTableOrder(tableOrder1);
+    TableOrder tableOrder2 = new TableOrder(6);
     TableOrder.AddTableOrder(tableOrder2);
-    // TableOrder.SaveTableOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data", "TableOrder.json"));
-
     // =============================================== ONline order
     OnlineOrder onlineOrder1 = new OnlineOrder(4, DateTime.Now.AddDays(333), "heljfoadsf");
-    OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now.AddYears(1));
+    onlineOrder1.AddMenuItem(food3);
+    onlineOrder1.AddMenuItem(food3);
+    onlineOrder1.AddMenuItem(food2);
+    onlineOrder1.AddMenuItem(food1);
+    onlineOrder1.AddMenuItem(businessLunch1);
     OnlineOrder.AddOnlineOrder(onlineOrder1);
+    OnlineOrder onlineOrder2 = new OnlineOrder(4, DateTime.Now.AddYears(1));
     OnlineOrder.AddOnlineOrder(onlineOrder2);
-    // OnlineOrder.SaveOnlineOrderJSON(Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Data",
-        // "OnlineOrder.json"));
-    
-    
-    //
-    // Console.WriteLine("test===============================================================================================================================================");
-    
-    
-    // tableOrder1.AddMenuItem(food2);
-    // tableOrder1.AddMenuItem(food2);
-    // food2.AddToOrder(tableOrder1);
-    // food2.AddToOrder(tableOrder1);
-    //
-    // food1.AddToOrder(tableOrder1);
-    // food1.AddToOrder(tableOrder1);
-    // tableOrder1.AddMenuItem(food1);
-    // tableOrder1.AddMenuItem(food1);
-    //
-    // onlineOrder1.AddMenuItem(food3);
-    // onlineOrder1.AddMenuItem(food3);
-    // onlineOrder1.AddMenuItem(food2);
-    // onlineOrder1.AddMenuItem(food1);
-    
-
-    // Console.WriteLine($"order {tableOrder1.Id}");                 
-    // foreach (var menuItem in tableOrder1.MenuItems)
-    // {
-           // Console.WriteLine($"{menuItem.MenuItem.Name}, {menuItem.Order.Id}, {menuItem.Quantity}");
-    // }
-    // Console.WriteLine($"order {onlineOrder1.Id}");                                                    
-    // foreach (var menuItem in onlineOrder1.MenuItems)                                                  
-    // {                                                                                                
-        // Console.WriteLine($"{menuItem.MenuItem.Name}, {menuItem.Order.Id}, {menuItem.Quantity}"); 
-    // }                  
-    
-    // Console.WriteLine($"MenuItems {food1.Name}, {food1.Id}");
-    // foreach (var order in food1.Orders)                                                        
-    // {                                                                                                      
-        // Console.WriteLine($"{order.MenuItem.Name}, {order.Order.Id}, {order.Quantity}");       
-    // }                 
-    // Console.WriteLine($"MenuItems {food2.Name}, {food2.Id}");
-    // foreach (var order in food2.Orders)                                                    
-    // {                                                                                      
-        // Console.WriteLine($"{order.MenuItem.Name}, {order.Order.Id}, {order.Quantity}");   
-    // }                                                                                      
-    
 }

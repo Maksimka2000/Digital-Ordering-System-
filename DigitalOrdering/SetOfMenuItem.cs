@@ -23,9 +23,8 @@ public class SetOfMenuItem : MenuItem
     {
         UpdateDays(days);
         UpdateTime(startTime, endTime);
-        ValidateFoodAndBeverage(foods, beverages);
-        UpdateFoods(foods);
-        UpdateBeverages(beverages);
+        if (foods != null) UpdateFoods(foods);
+        if (beverages != null) UpdateBeverages(beverages);
     }
 
     // methods for the multi-value attribute
@@ -85,9 +84,9 @@ public class SetOfMenuItem : MenuItem
             food.RemoveSetOfMenuItemsFromFood(this);
         }
     }
-    public void UpdateFoods(List<Food>? foods)
+    public void UpdateFoods(List<Food> foods)
     {
-        if (foods != null && foods.Count != 0)
+        if (foods.Count > 0)
         {
             if(_foods.Count > 0) foreach(Food food in _foods) RemoveFood(food);
             foreach(Food food in foods) AddFood(food);    
@@ -113,9 +112,9 @@ public class SetOfMenuItem : MenuItem
             beverage.RemoveSetOfMenuItemsFromBeverage(this);
         }
     }
-    public void UpdateBeverages(List<Beverage>? beverages)
+    public void UpdateBeverages(List<Beverage> beverages)
     {
-        if (beverages != null && beverages.Count != 0)
+        if (beverages.Count != 0)
         {
             if(_beverages.Count > 0) foreach(Beverage beverage in _beverages) RemoveBeverage(beverage);
             foreach(Beverage beverage in beverages) AddBeverage(beverage);    
@@ -128,11 +127,7 @@ public class SetOfMenuItem : MenuItem
         if((startTime.HasValue ^ endTime.HasValue)) throw new ArgumentException("Start time and end time must be specified or nothing");
         if(startTime.HasValue && endTime.HasValue && startTime >= endTime) throw new ArgumentException("Start time must be before end time");
     }
-    private void ValidateFoodAndBeverage(List<Food>? foods, List<Beverage>? beverages)
-    {
-        if((foods == null || foods.Count == 0) && (beverages == null || beverages.Count == 0)) throw new ArgumentException("at least one element from the Food or Beverage is required");
-    }
-
+    
     // Methods for the Object
     public static void AddSetOfMenuItems(SetOfMenuItem setOfMenuItem)
     {
@@ -163,7 +158,6 @@ public class SetOfMenuItem : MenuItem
                 }
             }
         }
-        
         _setOfMenuItems.Remove(setOfMenuItem);
     }
 
@@ -181,56 +175,9 @@ public class SetOfMenuItem : MenuItem
             StartTime = startTime;
             EndTime = endTime;
         }
-        
     }
     public void RemoveTime()
     {
         UpdateTime(null, null);
     }
-
-    
-    
-
-    // // ================================================================ serialized and deserialized
-    // public static void SaveSetOfMenuItemsJson(string path)
-    // {
-    //     try
-    //     {
-    //         var settings = new JsonSerializerSettings
-    //         {
-    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //             Formatting = Formatting.Indented
-    //         };
-    //         string json = JsonConvert.SerializeObject(_setOfMenuItems, settings);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File SetOfMenuItem saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving SetOfMenuItem file: {e.Message}");
-    //     }
-    // }
-    //
-    // public static void LoadSetOfMenuItemsJson(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             var settings = new JsonSerializerSettings
-    //             {
-    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //                 TypeNameHandling = TypeNameHandling.Auto
-    //             };
-    //             string json = File.ReadAllText(path);
-    //             _setOfMenuItems = JsonConvert.DeserializeObject<List<SetOfMenuItem>>(json, settings) ?? new List<SetOfMenuItem>();
-    //             Console.WriteLine($"File BusinessLunch loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading SetOfMenuItem file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading SetOfMenuItem file: {e.Message}");
-    //     }
-    // }
 }

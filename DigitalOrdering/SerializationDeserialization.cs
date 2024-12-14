@@ -92,10 +92,10 @@ public class SerializationDeserialization
                 
                 foreach (var registeredClient in projectState.RegisteredClients)
                     RegisteredClient.AddRegisteredClient(registeredClient);
-                
+
                 foreach (var tableOrder in projectState.TableOrders)
                     TableOrder.AddTableOrder(tableOrder);
-                
+
                 foreach (var onlineOrder in projectState.OnlineOrders)
                     OnlineOrder.AddOnlineOrder(onlineOrder);
                 

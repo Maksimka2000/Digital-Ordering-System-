@@ -48,7 +48,29 @@ public class Restaurant
         Name = name;
         Location = location;
         UpdateOpenHours(openHours);
+        AddRestaurant(this);
     }
+    
+    // association 
+    private List<Table> _tables = [];
+    // association getter
+    [JsonIgnore]
+    public List<Table> Tables => [.._tables];
+    // associaiton methods
+    public void AddTable(Table table)
+    {
+        if(table == null) throw new ArgumentNullException($"Table is null in the AddTable method");
+        foreach (var restaurant in _restaurants)
+        {
+            if(restaurant.Tables.Contains(table)) throw new ArgumentException($"This table already belong to this restaurant {restaurant.Name}");
+        }
+        _tables.Add(table);     
+    }
+    public void AddTable(int capacity, string? description, string? alias = null)
+    {
+        new Table(this, capacity, description, alias);
+    }
+    
     
     // multi-value attribute methods
     public void UpdateOpenHours(List<OpenHour> newOpenHours)
@@ -115,41 +137,6 @@ public class Restaurant
         if ( openHour == null ) throw new KeyNotFoundException($"No open hours found for day {dayOfWeek}");
         return openHour;
     }
-
-
-    // //  serialized and deserialized 
-    // public static void SaveRestaurantJSON(string path)
-    // {
-    //     try
-    //     {
-    //         string json = JsonConvert.SerializeObject(_restaurants, Formatting.Indented);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File Restaurant saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving Restaurant file: {e.Message}");
-    //     }
-    // }
-    //
-    // public static void LoadRestaurantJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             string json = File.ReadAllText(path);
-    //             _restaurants = JsonConvert.DeserializeObject<List<Restaurant>>(json);
-    //             // foreach (var restaurant in restaurants) {new Restaurant(restaurant.Name, restaurant.Location, restaurant.OpeningHours);}
-    //             Console.WriteLine($"File Restaurant loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading Restaurant file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading Restaurant file: {e.Message}");
-    //     }
-    // }
 }
 
 // are custom objects, Complex attributes

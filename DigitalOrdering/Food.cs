@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-
+using Newtonsoft.Json.Converters;
 
 
 namespace DigitalOrdering;
@@ -9,7 +9,7 @@ public class Food : MenuItem
 {
     
     // enums
-    // [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DietaryPreferencesType
     {
         GlutenFree = 0,
@@ -17,7 +17,7 @@ public class Food : MenuItem
         Vegetarian = 2,
         LactoseFree = 3,
     }
-    // [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum FoodType
     {
         Pasta = 0,
@@ -82,7 +82,7 @@ public class Food : MenuItem
     }
     
     // associations reverse 
-    private List<SetOfMenuItem> _foodInSetOfMenuItems = new();
+    private List<SetOfMenuItem> _foodInSetOfMenuItems = [];
     // associations reverse getter
     [JsonIgnore]
     public List<SetOfMenuItem> FoodInSetOfMenuItems => [.._foodInSetOfMenuItems];
