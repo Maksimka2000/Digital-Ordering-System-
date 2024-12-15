@@ -208,30 +208,21 @@ void OutputAllObjectsCreated()
     {
         Console.WriteLine($"Table id: {table.Id} belong to the restaurant: {table.Restaurant.Name}");
     }
-    
-    
-    
     // ========================================== Load Registered Clients
     Console.WriteLine("\n================================ Registered Clients ================================================================    \n");
     foreach (var client in RegisteredClient.GetRegisteredClients())
     {
-        Console.WriteLine(
-            $"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}");
+        Console.WriteLine($"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}. Current user has {client.OnlineOrders.Count} OnlineOrders which are active reservations");
+        foreach (var onlineOrder in client.OnlineOrders)
+        {
+            Console.WriteLine($"             [ Order ID (Key): {onlineOrder.Key}, Order Details (Value) which is onlineOrder Id: {onlineOrder.Value.Id} ]");
+        }
     }
-    // ========================================== Load Table Orders
-    Console.WriteLine("\n================================ Table Orders ================================================================    \n");
-    foreach (var order in TableOrder.GetTableOrders())
-    {
-        Console.WriteLine(
-            $"Table Order: Number of People: {order.NumberOfPeople}, Start Time: {order.StartTime}, QR Code Scan Time: {order.QRCodeScanTime}");
-    }
-    
-    
     // ========================================== Load Online Orders. Online order belong to restaurant, online order belong to table, online order has menuItems
     Console.WriteLine("\n================================ Online Orders ================================================================    \n");
     foreach (var onlineOrder in OnlineOrder.GetOnlineOrders())
     {
-        Console.WriteLine($"Online order id: {onlineOrder.Id}, belong to restaurant: {onlineOrder.Restaurant.Name}, belong to table: {onlineOrder.Table.Id} Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived} has the following orders: {onlineOrder.MenuItems.Count}.  Registered client: {onlineOrder.RegisteredClient?.Id}, {onlineOrder.RegisteredClient?.Name}, {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.PhoneNumber}, {onlineOrder.NonRegisteredClient?.Name}");
+        Console.WriteLine($"Online order id: {onlineOrder.Id}, belong to restaurant: {onlineOrder.Restaurant.Name}, belong to table: {onlineOrder.Table.Id} Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived} has the following orders: {onlineOrder.MenuItems.Count}.  Registered client: {onlineOrder.RegisteredClient?.Id}, {onlineOrder.RegisteredClient?.Name}, {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.ToString()}. Following order is:");
         foreach (var orderList in onlineOrder.MenuItems)
         {
             Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
@@ -241,7 +232,7 @@ void OutputAllObjectsCreated()
     Console.WriteLine("\n================================ Table Orders ================================================================    \n");
     foreach (var tableOrder in TableOrder.GetTableOrders())
     {
-        Console.WriteLine($"Online order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id} Number of People: {tableOrder.NumberOfPeople},  has the following orders: {tableOrder.MenuItems.Count}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}. ");
+        Console.WriteLine($"Online order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id} Number of People: {tableOrder.NumberOfPeople},  has the following orders: {tableOrder.MenuItems.Count}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}. Following order is: ");
         foreach (var orderList in tableOrder.MenuItems)
         {
             Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
@@ -315,7 +306,7 @@ void OutputAllObjectsCreated()
         Console.WriteLine($"Table is {table.Id}, table belong to restaurant: {table.Restaurant.Name},  has table orders: {table.TableOrder.Count}");
         foreach (var tableOrder in table.TableOrder)
         {
-            Console.WriteLine($"                     [table order  id: {tableOrder.Id}, {tableOrder.NumberOfPeople} ]");
+            Console.WriteLine($"                     [table order  id: {tableOrder.Id}, number of people: {tableOrder.NumberOfPeople} ]");
         }
     }
     

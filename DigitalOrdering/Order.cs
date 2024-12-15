@@ -55,15 +55,13 @@ public abstract class Order
         // CalculateTotalPrice();
     }
     
-    // association wiht registered client
+    // association with registered client
     private RegisteredClient _registeredClient;
     public RegisteredClient RegisteredClient => _registeredClient;
     public void AddRegisteredClient(RegisteredClient registeredClient) // public till the period when order is not finiliezed.
     {
         if(registeredClient == null) throw new NullReferenceException("RegisteredClient is null in the AddRegisteredClient method");
-        if(_registeredClient == registeredClient) return;
-        if (_registeredClient == null)
-        {
+        if(_registeredClient == null){
             _registeredClient = registeredClient;
             registeredClient.AddOrder(this);
         }

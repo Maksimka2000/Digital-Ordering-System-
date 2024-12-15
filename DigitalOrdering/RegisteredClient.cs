@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace DigitalOrdering;
 
 [Serializable]
-public class RegisteredClient : NonRegisteredClient
+public class RegisteredClient
 {
     
     //class extent
@@ -18,9 +18,11 @@ public class RegisteredClient : NonRegisteredClient
     
     //fields
     public int Id { get; }
+    private string _name;
     private string _password;
     private string? _surname;
     private string? _email;
+    private string? _phoneNumber;
     public int Bonus {get; private set;}
     
     //fields setters validation 
@@ -56,22 +58,32 @@ public class RegisteredClient : NonRegisteredClient
             _email = value;
         }
     }
-    public new string? PhoneNumber
+    public string? PhoneNumber
     {
-        get => base.PhoneNumber;
+        get => _phoneNumber;
         private set
         {
             ValidatePhoneNumber(value);
             ValidatePhoneNumberRegex(value);
-            base.PhoneNumber = value;
+            _phoneNumber = value;
+        }
+    }
+    public string Name
+    {
+        get => _name;
+        private set
+        {
+            ValidateName(value);
+            _name = value;
         }
     }
 
     // constructor 
     [JsonConstructor]
-    public RegisteredClient(string name, string password, string? email = null, string? phoneNumber = null, string? surname = null) : base(name, phoneNumber)
+    public RegisteredClient(string name, string password, string? email = null, string? phoneNumber = null, string? surname = null)
     {
         Id = ++IdCounter;
+        Name = name;
         Password = password;
         Surname = surname;
         ValidateEmailAndPhoneNumberInput(email, phoneNumber);
@@ -80,17 +92,32 @@ public class RegisteredClient : NonRegisteredClient
         Bonus = 0;
     }
     
-    //association with Order
+    //association with OnlineOrder
+    private Dictionary<int, OnlineOrder> _onlineOrders = [];
+    public Dictionary<int, OnlineOrder> OnlineOrders => _onlineOrders;
+    public void AddOnlineOrder(OnlineOrder onlineOrder)
+    {
+        if(onlineOrder == null) throw new ArgumentNullException($"Parameter {nameof(onlineOrder)} cannot be null in AddOnlineOrder() RegisteredClient");
+        if(onlineOrder.RegisteredClient == null) throw new ArgumentException($"you can't add the online order directly to the user, it is done automatically after creation of the online order");
+        if (onlineOrder.RegisteredClient != this) throw new AggregateException($"online order you are trying to add belong to different client");
+        if (!_onlineOrders.ContainsKey(onlineOrder.Id))
+        {
+            _onlineOrders[onlineOrder.Id] = onlineOrder;
+            onlineOrder.AddOnlineOrderToRegisteredClient(this);
+        }
+    }
+    
+    //association with Order reverse
     private List<Order> _orders = [];
-    public List<Order> Orders => [.._orders];
+    // public List<Order> Orders => [.._orders];
     public void AddOrder(Order order)
     {
         if (order == null) throw new ArgumentException($"Order can be null in the AddOrder() Registered client");
-        if(_orders.Contains(order)) return;
-        if (order.RegisteredClient == null || order.RegisteredClient == this)
+        if(order.RegisteredClient != null && order.RegisteredClient != this) throw new ArgumentException($"Order {order.Id} has already client asigned to it: {order.RegisteredClient.Id}");
+        if (!_orders.Contains(order))
         {
             _orders.Add(order);
-            order.AddRegisteredClient(this);    
+            order.AddRegisteredClient(this);
         }
     }
     
@@ -124,9 +151,21 @@ public class RegisteredClient : NonRegisteredClient
         if(value != null && !emailRegex.IsMatch(value)) throw new ArgumentException($"Email is not valid");
         if(value is { Length: < 8 }) throw new ArgumentException($"Email must be at least 8 characters");
     }
-    protected override void ValidatePhoneNumber(string? phoneNumber)
+    private void ValidatePhoneNumber(string? phoneNumber)
     {
         if (phoneNumber == string.Empty)  throw new ArgumentException($"PhoneNumber cannot be empty");
+    }
+    private static void ValidatePhoneNumberRegex(string? phoneNumber)
+    {
+        if (phoneNumber != null &&
+            !(new System.Text.RegularExpressions.Regex(@"^(\+48\s?)?(\d{3}[\s-]?\d{3}[\s-]?\d{3})$").IsMatch(
+                phoneNumber)))
+            throw new ArgumentException(
+                "Invalid phoneNumber. Try examples: 455540400, 345 654 456, +48545346345, +48 563 954 944");
+    }
+    private static void ValidateName(string name)
+    {
+        if (string.IsNullOrEmpty(name)) throw new ArgumentException($"Name cannot be null or empty");
     }
     
     // crud
@@ -172,5 +211,6 @@ public class RegisteredClient : NonRegisteredClient
             throw new NullReferenceException("Email cannot be null");
         }
     }
+    
     
 }

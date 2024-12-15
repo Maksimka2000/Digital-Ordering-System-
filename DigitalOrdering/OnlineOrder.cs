@@ -14,6 +14,7 @@ public class OnlineOrder : Order
     private string? _description;
     private TimeSpan _duration;
     public bool HaveGuestsArrived { get; private set; }
+    public NonRegisteredClient NonRegisteredClient { get; private set; }
     
     // fields setter validation
     public TimeSpan Duration
@@ -67,10 +68,21 @@ public class OnlineOrder : Order
         AddOnlineOrder(this);
         ValidateAuthorization(registeredClient, nonRegisteredClient);
         if(nonRegisteredClient != null) NonRegisteredClient = nonRegisteredClient;
+        if(registeredClient != null) AddOnlineOrderToRegisteredClient(registeredClient);
     }
     
-    //association with nonregistered
-    public NonRegisteredClient NonRegisteredClient { get; private set; }
+    //association with Registered client stores online orders.
+    private RegisteredClient _registeredClientMadeOnlineOrder;
+    public RegisteredClient RegisteredClientMadeOnlineOrder => _registeredClientMadeOnlineOrder;
+    public void AddOnlineOrderToRegisteredClient(RegisteredClient registeredClient)
+    {
+        if(registeredClient == null) throw new ArgumentException($" registered client: in the AddOnlineOrderToRegisteredClient method in OnlineOrder cant be null");
+        if (_registeredClientMadeOnlineOrder == null)
+        {
+            _registeredClientMadeOnlineOrder = registeredClient;
+            registeredClient.AddOnlineOrder(this);
+        }
+    }
     
     //association with table 
     private Table _table;

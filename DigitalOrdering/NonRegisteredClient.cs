@@ -4,11 +4,6 @@ namespace DidgitalOrdering;
 
 public class NonRegisteredClient
 {
-    // class extent
-    // there is no need for class extent as we don't need to store information of it; 
-    // client object will be stored inside the order, number and name will be stored in the order field like a complex attribute
-    // private static List<NonRegisteredClient> _clients = new List<NonRegisteredClient>();
-
     //fields
     private string _name;
     private string? _phoneNumber;
@@ -17,7 +12,7 @@ public class NonRegisteredClient
     public string? PhoneNumber
     {
         get => _phoneNumber;
-        protected set
+        private set
         {
             ValidatePhoneNumber(value);
             ValidatePhoneNumberRegex(value);
@@ -28,7 +23,7 @@ public class NonRegisteredClient
     public string Name
     {
         get => _name;
-        protected set
+        private set
         {
             ValidateName(value);
             _name = value;
@@ -36,11 +31,15 @@ public class NonRegisteredClient
     }
 
     // constructor
-    [JsonConstructor]
     public NonRegisteredClient(string name, string? phoneNumber)
     {
         Name = name;
         PhoneNumber = phoneNumber;
+    }
+
+    public override string ToString()
+    {
+        return $"Name: {Name}, PhoneNumber: {PhoneNumber}";
     }
 
     // validation methods
@@ -49,12 +48,12 @@ public class NonRegisteredClient
         if (string.IsNullOrEmpty(name)) throw new ArgumentException($"Name cannot be null or empty");
     }
 
-    protected virtual void ValidatePhoneNumber(string? phoneNumber)
+    private void ValidatePhoneNumber(string? phoneNumber)
     {
         if (string.IsNullOrEmpty(phoneNumber)) throw new ArgumentException($"PhoneNumber cannot be null or empty");
     }
 
-    protected static void ValidatePhoneNumberRegex(string? phoneNumber)
+    private static void ValidatePhoneNumberRegex(string? phoneNumber)
     {
         if (phoneNumber != null &&
             !(new System.Text.RegularExpressions.Regex(@"^(\+48\s?)?(\d{3}[\s-]?\d{3}[\s-]?\d{3})$").IsMatch(
