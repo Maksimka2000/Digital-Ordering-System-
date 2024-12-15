@@ -484,11 +484,45 @@
         "City": "Warszawa",
         "StreetNumber": "22"
       }
+    },
+    {
+      "$id": "51",
+      "Id": 2,
+      "OpenHours": [
+        {
+          "$ref": "43"
+        },
+        {
+          "$ref": "44"
+        },
+        {
+          "$ref": "45"
+        },
+        {
+          "$ref": "46"
+        },
+        {
+          "$ref": "47"
+        },
+        {
+          "$ref": "48"
+        },
+        {
+          "$ref": "49"
+        }
+      ],
+      "Name": "Miscusi on river",
+      "Location": {
+        "$id": "52",
+        "Street": "Zlote 44",
+        "City": "Krakow",
+        "StreetNumber": "44"
+      }
     }
   ],
   "Tables": [
     {
-      "$id": "51",
+      "$id": "53",
       "IsLocked": false,
       "Capacity": 2,
       "Description": null,
@@ -498,7 +532,7 @@
       }
     },
     {
-      "$id": "52",
+      "$id": "54",
       "IsLocked": false,
       "Capacity": 4,
       "Description": null,
@@ -508,7 +542,7 @@
       }
     },
     {
-      "$id": "53",
+      "$id": "55",
       "IsLocked": false,
       "Capacity": 4,
       "Description": "do not sit here a guts how are allergic to oil",
@@ -518,7 +552,7 @@
       }
     },
     {
-      "$id": "54",
+      "$id": "56",
       "IsLocked": false,
       "Capacity": 8,
       "Description": null,
@@ -528,19 +562,109 @@
       }
     },
     {
-      "$id": "55",
+      "$id": "57",
+      "IsLocked": false,
+      "Capacity": 4,
+      "Description": "near wc don't sit people with gucci shoes:)",
+      "Alias": "wc near",
+      "Restaurant": {
+        "$ref": "42"
+      }
+    },
+    {
+      "$id": "58",
+      "IsLocked": false,
+      "Capacity": 2,
+      "Description": "hello",
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "42"
+      }
+    },
+    {
+      "$id": "59",
       "IsLocked": false,
       "Capacity": 2,
       "Description": null,
-      "Alias": "hello",
+      "Alias": null,
       "Restaurant": {
-        "$ref": "42"
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "60",
+      "IsLocked": false,
+      "Capacity": 2,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "61",
+      "IsLocked": false,
+      "Capacity": 2,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "62",
+      "IsLocked": false,
+      "Capacity": 2,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "63",
+      "IsLocked": false,
+      "Capacity": 8,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "64",
+      "IsLocked": false,
+      "Capacity": 6,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "65",
+      "IsLocked": false,
+      "Capacity": 4,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "66",
+      "IsLocked": false,
+      "Capacity": 2,
+      "Description": null,
+      "Alias": null,
+      "Restaurant": {
+        "$ref": "51"
       }
     }
   ],
   "RegisteredClients": [
     {
-      "$id": "56",
+      "$id": "67",
       "Id": 1,
       "Bonus": 0,
       "Password": "32jpjoi3j04#A",
@@ -550,7 +674,7 @@
       "Name": "Max"
     },
     {
-      "$id": "57",
+      "$id": "68",
       "Id": 2,
       "Bonus": 0,
       "Password": "32jpjD$i3j04#A",
@@ -560,7 +684,7 @@
       "Name": "Alexa"
     },
     {
-      "$id": "58",
+      "$id": "69",
       "Id": 3,
       "Bonus": 0,
       "Password": "32Apjoi3jf4#A",
@@ -572,34 +696,178 @@
   ],
   "TableOrders": [
     {
-      "$id": "59",
-      "QRCodeScanTime": "739233.12:46:52.3335603",
-      "StartTime": "739233.12:46:52.3386333",
+      "$id": "70",
+      "QRCodeScanTime": "739233.18:16:54.8002390",
+      "StartTime": "739233.18:16:54.8063369",
       "NumberOfPeople": 2
     },
     {
-      "$id": "60",
-      "QRCodeScanTime": "739233.12:46:52.3403956",
-      "StartTime": "739233.12:46:52.3404003",
+      "$id": "71",
+      "QRCodeScanTime": "739233.18:16:54.8087639",
+      "StartTime": "739233.18:16:54.8087698",
       "NumberOfPeople": 6
     }
   ],
   "OnlineOrders": [
     {
-      "$id": "61",
+      "$id": "72",
       "HaveGuestsArrived": false,
+      "Duration": "00:00:00",
       "Description": "heljfoadsf",
-      "DateAndTime": "2025-11-12T12:46:52.3404009+01:00",
+      "DateAndTime": "2024-12-17T18:16:54.8087702+01:00",
       "StartTime": null,
       "NumberOfPeople": 4
     },
     {
-      "$id": "62",
+      "$id": "73",
       "HaveGuestsArrived": false,
+      "Duration": "02:00:00",
       "Description": null,
-      "DateAndTime": "2025-12-14T12:46:52.3415441+01:00",
+      "DateAndTime": "2028-12-14T18:16:54.8100666+01:00",
       "StartTime": null,
       "NumberOfPeople": 4
+    }
+  ],
+  "OrderLists": [
+    {
+      "$id": "74",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "27"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "75",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "27"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "76",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "27"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "77",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "27"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "78",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "25"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "79",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "25"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "80",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "25"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "81",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "25"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "82",
+      "Quantity": 10,
+      "MenuItem": {
+        "$ref": "31"
+      },
+      "Order": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "83",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "29"
+      },
+      "Order": {
+        "$ref": "72"
+      }
+    },
+    {
+      "$id": "84",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "29"
+      },
+      "Order": {
+        "$ref": "72"
+      }
+    },
+    {
+      "$id": "85",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "27"
+      },
+      "Order": {
+        "$ref": "72"
+      }
+    },
+    {
+      "$id": "86",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "25"
+      },
+      "Order": {
+        "$ref": "72"
+      }
+    },
+    {
+      "$id": "87",
+      "Quantity": 1,
+      "MenuItem": {
+        "$ref": "38"
+      },
+      "Order": {
+        "$ref": "72"
+      }
     }
   ]
 }

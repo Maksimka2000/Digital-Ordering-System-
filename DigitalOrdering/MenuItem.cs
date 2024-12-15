@@ -102,7 +102,6 @@ public abstract class MenuItem
     }
     
     // association with attribute MenuItem => OrderList => Order
-    [JsonIgnore]
     private List<OrderList> _orders = [];
     // association getters
     [JsonIgnore]
@@ -110,16 +109,15 @@ public abstract class MenuItem
     // association methods
     public void AddToOrder(Order order, int quantity = 1)
     {
+        if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
         if(order == null) throw new ArgumentNullException($" {this.Name}: Order in AddToOrder can't be null"); 
         new OrderList(this, order, quantity);
     }
     public void AddOrderList(OrderList orderList)
     {
         if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
-        if (!_orders.Contains(orderList))
-        {
-            _orders.Add(orderList);
-        }
+        if (orderList.MenuItem != this) throw new AggregateException($"you are trying to add the wrong orderList to the MenuItem in AddOrderList()");
+        if (!_orders.Contains(orderList)) _orders.Add(orderList);
     }
     
     // validation

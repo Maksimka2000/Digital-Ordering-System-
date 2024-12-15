@@ -80,6 +80,20 @@ public class RegisteredClient : NonRegisteredClient
         Bonus = 0;
     }
     
+    //association with Order
+    private List<Order> _orders = [];
+    public List<Order> Orders => [.._orders];
+    public void AddOrder(Order order)
+    {
+        if (order == null) throw new ArgumentException($"Order can be null in the AddOrder() Registered client");
+        if(_orders.Contains(order)) return;
+        if (order.RegisteredClient == null || order.RegisteredClient == this)
+        {
+            _orders.Add(order);
+            order.AddRegisteredClient(this);    
+        }
+    }
+    
     // validation methods
     private static void ValidateEmailAndPhoneNumberInput(string? email, string? phoneNumber)
     { 
@@ -159,36 +173,4 @@ public class RegisteredClient : NonRegisteredClient
         }
     }
     
-    // //  serialized and deserialized 
-    // public static void SaveRegisteredClientJSON(string path)
-    // {
-    //     try
-    //     {
-    //         var json = JsonConvert.SerializeObject(_registeredClients, Formatting.Indented);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File RegisteredClient saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving RegisteredClient file: {e.Message}");
-    //     }
-    // }
-    //
-    // public static void LoadRegisteredClientJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             var json = File.ReadAllText(path);
-    //             _registeredClients = JsonConvert.DeserializeObject<List<RegisteredClient>>(json);
-    //             Console.WriteLine($"File RegisteredClient loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading RegisteredClient file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading RegisteredClient file: {e.Message}");
-    //     }
-    // }
 }

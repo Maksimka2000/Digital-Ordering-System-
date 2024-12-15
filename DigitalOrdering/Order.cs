@@ -30,7 +30,7 @@ public abstract class Order
     public double OrderPrice { get; private set; }
     [JsonIgnore]
     public double TotalPrice { get; private set; } = 0;
-    private int _numberOfPeople;
+    protected int _numberOfPeople;
     public TimeSpan? StartTime { get; protected set; }
 
     // fields setter validation
@@ -46,16 +46,30 @@ public abstract class Order
 
     //constructor
     [JsonConstructor]
-    protected Order(int numberOfPeople)
+    protected Order(int numberOfPeople, RegisteredClient? registeredClient = null)
     {
         Id = ++IdCounter;
         OrderPrice = 0;
         NumberOfPeople = numberOfPeople;
+        if(registeredClient != null) AddRegisteredClient(registeredClient); 
         // CalculateTotalPrice();
     }
     
+    // association wiht registered client
+    private RegisteredClient _registeredClient;
+    public RegisteredClient RegisteredClient => _registeredClient;
+    public void AddRegisteredClient(RegisteredClient registeredClient) // public till the period when order is not finiliezed.
+    {
+        if(registeredClient == null) throw new NullReferenceException("RegisteredClient is null in the AddRegisteredClient method");
+        if(_registeredClient == registeredClient) return;
+        if (_registeredClient == null)
+        {
+            _registeredClient = registeredClient;
+            registeredClient.AddOrder(this);
+        }
+    }
+    
     // association with attribute MenuItem => OrderList => Order
-    [JsonIgnore]
     private List<OrderList> _menuItems = [];
     // association getters
     [JsonIgnore]
@@ -63,16 +77,15 @@ public abstract class Order
     // association methods
     public void AddMenuItem(MenuItem menuItem, int quantity = 1)
     {
+        if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
         if(menuItem == null) throw new ArgumentNullException($" {this}: MenuItem in AddMenuItem can't be null");
         new OrderList(menuItem, this, quantity);
     }
     public void AddOrderList(OrderList orderList)
     {
         if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
-        if (!_menuItems.Contains(orderList))
-        {
-            _menuItems.Add(orderList);
-        }
+        if (orderList.Order != this) throw new ArgumentException($"You trying to add the wrong orderList to the Order in AddOrderList()");
+        if (!_menuItems.Contains(orderList)) _menuItems.Add(orderList);
     }
 
     // validation 

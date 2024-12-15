@@ -17,6 +17,7 @@ public class SerializationDeserialization
         public List<RegisteredClient> RegisteredClients { get; set; } = [];
         public List<TableOrder> TableOrders { get; set; } = [];
         public List<OnlineOrder> OnlineOrders { get; set; } = [];
+        public List<OrderList> OrderLists { get; set; } = [];
     }
     
     public static void SaveJSON(string path)
@@ -33,9 +34,9 @@ public class SerializationDeserialization
                 Tables = Table.GetTables(),
                 RegisteredClients = RegisteredClient.GetRegisteredClients(),
                 TableOrders = TableOrder.GetTableOrders(),
-                OnlineOrders = OnlineOrder.GetOnlineOrders()
+                OnlineOrders = OnlineOrder.GetOnlineOrders(),
+                OrderLists = OrderList.GetOrderLists()
             };
-
             
             var settings = new JsonSerializerSettings
             {
@@ -85,19 +86,22 @@ public class SerializationDeserialization
                     SetOfMenuItem.AddSetOfMenuItems(setOfMenuItem);
                 
                 foreach (var restaurant in projectState.Restaurants)
-                    Restaurant.AddRestaurant(restaurant);
+                    // Restaurant.AddRestaurant(restaurant);
                 
                 foreach (var table in projectState.Tables)
-                    Table.AddTable(table);
+                    // Table.AddTable(table);
                 
                 foreach (var registeredClient in projectState.RegisteredClients)
                     RegisteredClient.AddRegisteredClient(registeredClient);
 
                 foreach (var tableOrder in projectState.TableOrders)
-                    TableOrder.AddTableOrder(tableOrder);
+                    // 
 
                 foreach (var onlineOrder in projectState.OnlineOrders)
-                    OnlineOrder.AddOnlineOrder(onlineOrder);
+                    //
+
+                foreach (var orderList in projectState.OrderLists)
+                    //
                 
                 Console.WriteLine($"File loaded successfully at {path}");
             }

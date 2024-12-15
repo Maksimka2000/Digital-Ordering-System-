@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DidgitalOrdering;
+using Newtonsoft.Json;
 
 namespace DigitalOrdering;
 
@@ -7,10 +8,15 @@ public class OnlineOrder : Order
 {
     //class extent
     private static List<OnlineOrder> _onlineOrders = [];
+
+    //fields
+    private DateTime _dateAndTime;
+    private string? _description;
+    private TimeSpan _duration;
+    public bool HaveGuestsArrived { get; private set; }
     
-    // static fields
-    private static TimeSpan _duration = new TimeSpan(2, 0, 0);
-    public static TimeSpan Duration
+    // fields setter validation
+    public TimeSpan Duration
     {
         get => _duration;
         private set
@@ -19,13 +25,6 @@ public class OnlineOrder : Order
             _duration = value;
         }
     }
-
-    //fields
-    private DateTime _dateAndTime;
-    private string? _description;
-    public bool HaveGuestsArrived { get; private set; }
-    
-    // fields setter validation
     public string? Description
     {
         get => _description;
@@ -55,16 +54,72 @@ public class OnlineOrder : Order
 
     // Constructor
     [JsonConstructor]
-    public OnlineOrder(int numberOfPeople, DateTime dateAndTime, string? description = null) : base(numberOfPeople)
+    public OnlineOrder(Restaurant restaurant, int numberOfPeople, DateTime dateAndTime, TimeSpan? duration = null, string? description = null, RegisteredClient? registeredClient = null, NonRegisteredClient? nonRegisteredClient = null) : base(numberOfPeople, registeredClient)
     {
         DateAndTime = dateAndTime;
         Description = description;
         HaveGuestsArrived = false;
+        if (duration == null) Duration = new TimeSpan(2, 0, 0);
+        else Duration = (TimeSpan)duration;
         StartTime = null;
+        AddTable(restaurant);
+        AddRestaurant(restaurant);
+        AddOnlineOrder(this);
+        ValidateAuthorization(registeredClient, nonRegisteredClient);
+        if(nonRegisteredClient != null) NonRegisteredClient = nonRegisteredClient;
     }
     
-
+    //association with nonregistered
+    public NonRegisteredClient NonRegisteredClient { get; private set; }
+    
+    //association with table 
+    private Table _table;
+    //association getter
+    public Table Table => _table;
+    //association methods
+    private void AddTable(Table table)
+    {
+        if(table == null) throw new ArgumentNullException($"Table can't be null in AddTable() while addin to the OnlineOrder");
+        _table = table;
+        table.AddOnlineOrder(this);
+    }
+    private static readonly Random _random = new Random();
+    private void AddTable(Restaurant restaurant)
+    {
+        //conversion 
+        var day = _dateAndTime.DayOfWeek;
+        var time = _dateAndTime.TimeOfDay;
+        // check restaurant open for that time.
+        if(!(restaurant.IsRestaurantOpen(day, time + _duration) && restaurant.IsRestaurantOpen(day, time))) throw new ArgumentException($"restaurant {restaurant.Name} is closed for for the time of reservation make sure order start and finish time is in scopes of the open time fo restaurant. Time restaurant opened that day: {restaurant.GetOpenHour(day)}  ");
+        // check tables with appropriate numb of seates
+        var tables = restaurant.Tables.Where(table => table.Capacity == _numberOfPeople || table.Capacity == _numberOfPeople+1).ToList();
+        if(tables.Count == 0) throw new KeyNotFoundException($"There are no available tables for such amount of people in restaurant: {_numberOfPeople}");
+        // chekc available table for specific time.
+        tables = tables.Where(table => table.IsAvailableForOnlineOrder(_dateAndTime, _duration)).ToList(); // list of tables available for the reservation
+        if(tables.Count == 0) throw new KeyNotFoundException($"No tables available for day {day} and time {time}, everything is booked, sorry, Choose different day and time.");
+        // select table randomly
+        var table = tables[_random.Next(tables.Count)];
+        //assign table for OnlineOrder and Table
+        AddTable(table);
+    }
+    
+    //association with restaurant
+    private Restaurant _restaurant;
+    //association getter
+    public Restaurant Restaurant => _restaurant;
+    //association methods
+    private void AddRestaurant(Restaurant restaurant)
+    {
+        if(restaurant is null) throw new ArgumentNullException($"Argument {nameof(restaurant)} cannot be null in  AddRestaurant()");
+        _restaurant = restaurant;
+        restaurant.AddOnlineOrder(this);
+    }
+    
     // validations
+    private void ValidateAuthorization(RegisteredClient? registeredClient, NonRegisteredClient? nonRegisteredClient)
+    {
+        if(!(registeredClient == null ^ nonRegisteredClient == null)) throw new ArgumentException("You cannot have both registered and non-registered clients or you can't have non of them");
+    }
     private static void ValidateStringOptional(string? value, string propertyName)
     {
         if (value == string.Empty)  throw new ArgumentException($"{propertyName} cannot be empty");
@@ -72,15 +127,17 @@ public class OnlineOrder : Order
     private static void ValidateDuration(TimeSpan value)
     {
         if(value < new TimeSpan (1, 0, 0)) throw new ArgumentException ("Duration must be greater than 1 hour");
+        if(value > new TimeSpan(6, 0, 0)) throw new ArgumentException ("Duration must be less than 6 hours");
     }
     private static void ValidateDateAndTime(DateTime value)
     {
         if( value < DateTime.Now.AddHours(3)) throw new ArgumentException("Date and time must be in the future and more than 3 hours ahead.");
+        if (value > DateTime.Now.AddDays(14)) throw new ArgumentException("Restaurant don't accept reservation for more that 2 week from today");
     }
     
     
     //CRUD
-    public static void AddOnlineOrder(OnlineOrder onlineOrder)
+    private static void AddOnlineOrder(OnlineOrder onlineOrder)
     {
         if(onlineOrder == null) throw new ArgumentException("Online order cannot be null");
         _onlineOrders.Add(onlineOrder);
@@ -96,36 +153,4 @@ public class OnlineOrder : Order
         HaveGuestsArrived = true;
         StartTime = new TimeSpan(DateTime.Now.Ticks);
     }
-    
-    // //  serialized and deserialized 
-    // public static void SaveOnlineOrderJSON(string path)
-    // {
-    //     try
-    //     {
-    //         string json = JsonConvert.SerializeObject(_onlineOrders, Formatting.Indented);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File OnlineOrder saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving OnlineOrder file: {e.Message}");
-    //     }
-    // }
-    // public static void LoadOnlineOrderJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             string json = File.ReadAllText(path);
-    //             _onlineOrders = JsonConvert.DeserializeObject<List<OnlineOrder>>(json);
-    //             Console.WriteLine($"File OnlineOrder loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading OnlineOrder file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading OnlineOrder file: {e.Message}");
-    //     }
-    // }
 }

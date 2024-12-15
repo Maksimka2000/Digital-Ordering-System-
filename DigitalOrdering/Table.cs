@@ -53,7 +53,7 @@ public class Table
         Description = description;
         Alias = alias;
         IsLocked = false;
-        UpdateRelationToRestaurant(restaurant);
+        AddToRestaurant(restaurant);
         AddTable(this);
     }
     
@@ -62,14 +62,37 @@ public class Table
     //associaiton reverse getter and setter
     public Restaurant Restaurant => _restaurant;
     // association reverse methods.
-    private void UpdateRelationToRestaurant(Restaurant restaurant)
+    private void AddToRestaurant(Restaurant restaurant)
     {
-        if(restaurant is null) throw new ArgumentNullException($"Restaurant can't be null in UpdateRelationTo");
+        if(restaurant is null) throw new ArgumentNullException($"Restaurant can't be null in AddRelationToRestaurant()");
         _restaurant = restaurant;
         restaurant.AddTable(this);
     }
     
-
+    //associatin with OnlineOrder
+    private List<OnlineOrder> _onlineOrders = [];
+    //association getter
+    public List<OnlineOrder> OnlineOrders => [.._onlineOrders];
+    //association methods
+    public void AddOnlineOrder(OnlineOrder onlineOrder)
+    {
+        if(onlineOrder is null) throw new ArgumentNullException($"Online order can't be null in AddOnlineOrder()");
+        if(onlineOrder.Table != this) throw new ArgumentException($"Online order belong to table id: {onlineOrder.Table.Id}. And this table id: {this.Id} AddOnlineOrder()");
+        if (!_onlineOrders.Contains(onlineOrder)) _onlineOrders.Add(onlineOrder);
+    }
+    
+    //association with TableOrder
+    private List<TableOrder> _tableOrders = [];
+    //association getter
+    public List<TableOrder> TableOrder => [.._tableOrders];
+    // association methods
+    public void AddTableOrder(TableOrder tableOrder)
+    {
+        if(tableOrder is null) throw new ArgumentNullException($"Table order can't be null in AddTableOrder()");
+        if(tableOrder.Table != this) throw new ArgumentException($"Table order belong to table id: {tableOrder.Table.Id}. And this table id: {this.Id} AddTableOrder()");
+        if(!_tableOrders.Contains(tableOrder)) _tableOrders.Add(tableOrder);
+    }
+    
     // validation
     private static void ValidateCapacity(int value)
     {
@@ -121,4 +144,10 @@ public class Table
         IsLocked = false;
     }
     
+    //methods for the Making OnlineOrder 
+    public bool IsAvailableForOnlineOrder(DateTime dateAndTime, TimeSpan? duration)
+    {
+        return _onlineOrders.All(onlineOrder => dateAndTime + duration <= onlineOrder.DateAndTime ||
+                                 dateAndTime >= onlineOrder.DateAndTime + onlineOrder.Duration);
+    }
 }

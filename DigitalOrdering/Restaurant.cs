@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DidgitalOrdering;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace DigitalOrdering;
@@ -57,20 +58,33 @@ public class Restaurant
     [JsonIgnore]
     public List<Table> Tables => [.._tables];
     // associaiton methods
+    public void AddTable(int capacity, string? alias = null, string? description = null)
+    {
+        var table = new Table(this, capacity, description, alias);
+    }
     public void AddTable(Table table)
     {
         if(table == null) throw new ArgumentNullException($"Table is null in the AddTable method");
-        foreach (var restaurant in _restaurants)
-        {
-            if(restaurant.Tables.Contains(table)) throw new ArgumentException($"This table already belong to this restaurant {restaurant.Name}");
-        }
-        _tables.Add(table);     
-    }
-    public void AddTable(int capacity, string? description, string? alias = null)
-    {
-        new Table(this, capacity, description, alias);
+        if(table.Restaurant != this) throw new ArgumentException($"Table can belong only to one Restaurant which is: {table.Restaurant.Name}");
+        if(!_tables.Contains(table)) _tables.Add(table);     
     }
     
+    
+    //association with OnlineOrder 
+    private List<OnlineOrder> _onlineOrders = [];
+    //association getter
+    public List<OnlineOrder> OnlineOrders => _onlineOrders;
+    //association methods
+    public void MakeOnlineOrder(int numberOfPeople, DateTime dateAndTime, TimeSpan? duration = null, string? description = null)
+    {
+        new OnlineOrder(this, numberOfPeople, dateAndTime, duration, description);
+    }
+    public void AddOnlineOrder(OnlineOrder onlineOrder)
+    {
+        if(onlineOrder == null) throw new ArgumentNullException($"onlineOrder is null in the AddOnlineOrder()");
+        if(onlineOrder.Restaurant != this) throw new ArgumentException($"online order can belong only to one Restaurant which is: {onlineOrder.Restaurant.Name}");
+        if (!_onlineOrders.Contains(onlineOrder)) _onlineOrders.Add(onlineOrder);    
+    }
     
     // multi-value attribute methods
     public void UpdateOpenHours(List<OpenHour> newOpenHours)
@@ -109,7 +123,7 @@ public class Restaurant
         return [.._restaurants];
     }
 
-    public static void AddRestaurant(Restaurant restaurant)
+    private static void AddRestaurant(Restaurant restaurant)
     {
         _restaurants.Add(restaurant);
     }
@@ -131,12 +145,13 @@ public class Restaurant
         day.UpdateTime(openTime, closeTime);
         Console.WriteLine($"time succesfully updated: {(day.IsOpen ? $"from {openTime} to {closeTime} on {dayOfWeek}" : $"closed on {dayOfWeek}")}");
     }
-    private OpenHour GetOpenHour(DayOfWeek dayOfWeek)
+    public OpenHour GetOpenHour(DayOfWeek dayOfWeek)
     {
         var openHour = OpenHours.FirstOrDefault(openHour => openHour.Day == dayOfWeek);
         if ( openHour == null ) throw new KeyNotFoundException($"No open hours found for day {dayOfWeek}");
         return openHour;
     }
+    
 }
 
 // are custom objects, Complex attributes

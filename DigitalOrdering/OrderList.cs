@@ -6,6 +6,9 @@ namespace DidgitalOrdering;
 
 public class OrderList
 {
+    // class extend 
+    private static List<OrderList> _orderLists = [];
+    
     public int Quantity { get; private set; }
     public MenuItem MenuItem { get; private set; }
     public Order Order { get; private set; }
@@ -24,8 +27,15 @@ public class OrderList
     }
     public OrderList(MenuItem menuItem, Order order, int quantity = 1)
     {
+            if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
           AddMenuItemToOrderList(menuItem);
           AddOrderToOrderList(order);
           Quantity = quantity;
+          _orderLists.Add(this);
+    }
+
+    public static List<OrderList> GetOrderLists()
+    {
+        return [.._orderLists];
     }
 }
