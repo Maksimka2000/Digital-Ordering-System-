@@ -27,10 +27,10 @@ public class OrderList
     }
     public OrderList(MenuItem menuItem, Order order, int quantity = 1)
     {
-            if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
+          if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
+          Quantity = quantity;
           AddMenuItemToOrderList(menuItem);
           AddOrderToOrderList(order);
-          Quantity = quantity;
           _orderLists.Add(this);
     }
 

@@ -31,7 +31,7 @@ public class TableOrder : Order
     // association with Table
     private Table _table;
     // association getter
-    public Table Table => _table;
+    public override Table Table => _table;
     // association methods
     private void AddTable(Table table)
     {

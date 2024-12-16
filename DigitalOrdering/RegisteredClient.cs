@@ -90,6 +90,7 @@ public class RegisteredClient
         Email = email;
         PhoneNumber = phoneNumber;
         Bonus = 0;
+        AddRegisteredClient(this);
     }
     
     //association with OnlineOrder
@@ -109,7 +110,7 @@ public class RegisteredClient
     
     //association with Order reverse
     private List<Order> _orders = [];
-    // public List<Order> Orders => [.._orders];
+    public List<Order> Orders => [.._orders];
     public void AddOrder(Order order)
     {
         if (order == null) throw new ArgumentException($"Order can be null in the AddOrder() Registered client");

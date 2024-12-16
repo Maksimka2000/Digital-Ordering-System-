@@ -52,7 +52,37 @@ public class Restaurant
         AddRestaurant(this);
     }
     
-    // association 
+    //association with MenuItem
+    private List<MenuItem> _menu = [];
+    public List<MenuItem> Menu => [.._menu];
+    public void AddMenuItemToMenu(string name, double price, string description,
+        Beverage.BeverageType beverageT, bool isAlcohol,
+        List<Ingredient>? ingredients = null, Promotion? promotion = null, bool isAvailable = true)
+    {
+        new Beverage(this, name, price, description, beverageT, isAlcohol);
+    }
+    public void AddMenuItemToMenu(string name, double price, string description,
+        Food.FoodType foodT,
+        List<Ingredient>? ingredients,
+        List<Food.DietaryPreferencesType>? dietaryPreference = null, Promotion? promotion = null, bool isAvailable = true)
+    {
+        new Food(this, name, price, description, foodT, ingredients, dietaryPreference, promotion, isAvailable);
+    }
+    public void AddMenuItemToMenu(string name, double price, string description, List<Food>? foods = null,
+        List<Beverage>? beverages = null, List<DayOfWeek>? days = null, TimeSpan? startTime = null,
+        TimeSpan? endTime = null, bool isAvailable = true)
+    {
+        new SetOfMenuItem(this, name, price, description, foods, beverages, days, startTime, endTime, isAvailable);
+    }
+    public void AddMenuItemToMenu(MenuItem menuItem)
+    {
+        if(menuItem == null) throw new ArgumentNullException($"Menu item is null in AddMenuItemToMenu() Restaurant");
+        if(menuItem.Restaurant != this) throw new AggregateException($"Menu item you are trying to add belong to other Restaurant: {menuItem.Restaurant.Name}");
+        if(!_menu.Contains(menuItem)) _menu.Add(menuItem);
+    }
+    
+    
+    // association with tables
     private List<Table> _tables = [];
     // association getter
     [JsonIgnore]

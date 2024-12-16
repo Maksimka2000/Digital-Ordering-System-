@@ -35,13 +35,14 @@ public class Beverage : MenuItem
 
     // constructor
     [JsonConstructor]
-    public Beverage(string name, double price, string description,
+    public Beverage(Restaurant restaurant, string name, double price, string description,
         BeverageType beverageT, bool isAlcohol,
-        List<Ingredient>? ingredients = null, Promotion? promotion = null, bool isAvailable = true) : base(name, price,
+        List<Ingredient>? ingredients = null, Promotion? promotion = null, bool isAvailable = true) : base(restaurant, name, price,
         description, isAvailable, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
+        AddBeverage(this);
     }
     
     //association reverse
@@ -77,7 +78,7 @@ public class Beverage : MenuItem
     }
 
     // methods on Object
-    public static void AddBeverage(Beverage beverage)
+    private static void AddBeverage(Beverage beverage)
     {
         if (beverage == null) throw new ArgumentException("Game cannot be null");
         _beverages.Add(beverage);
@@ -108,46 +109,5 @@ public class Beverage : MenuItem
         }
         _beverages.Remove(beverage);
     }
-
-    // //  serialized and deserialized
-    // public static void SaveBeverageJSON(string path)
-    // {
-    //     try
-    //     {
-    //         var settings = new JsonSerializerSettings
-    //         {
-    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //             Formatting = Formatting.Indented
-    //         };
-    //         string json = JsonConvert.SerializeObject(_beverages, settings);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File Beverage saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving Beverage file: {e.Message}");
-    //     }
-    // }
-    //
-    // public static void LoadBeverageJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             var settings = new JsonSerializerSettings
-    //             {
-    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //                 TypeNameHandling = TypeNameHandling.Auto
-    //             };
-    //             string json = File.ReadAllText(path);
-    //             _beverages = JsonConvert.DeserializeObject<List<Beverage>>(json, settings) ?? new List<Beverage>();
-    //         }
-    //         else throw new ArgumentException($"Error loading Beverage file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading Beverage file: {e.Message}");
-    //     }
-    // }
+    
 }

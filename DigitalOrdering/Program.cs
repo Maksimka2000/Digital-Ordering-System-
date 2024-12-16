@@ -103,7 +103,7 @@ void OutputAllObjectsCreated()
     }
     // ------------------------------------------------------ SetOfMenuItems has MenuItems
     Console.WriteLine("\n================================  SetOfMenuItems ================================================================    \n");
-    foreach (SetOfMenuItem setOfMenuItems in SetOfMenuItem.GetSetOfMenuItems())
+    foreach (var setOfMenuItems in SetOfMenuItem.GetSetOfMenuItems())
     {
         Console.WriteLine(
             $"SetOfMenuItems id: {setOfMenuItems.Id}, Name: {setOfMenuItems.Name}, Price: {setOfMenuItems.Price}, Description: {setOfMenuItems.Description}");
@@ -178,7 +178,7 @@ void OutputAllObjectsCreated()
         }
         Console.Write($"] \n");
     }
-    // ========================================== Load Restaurant. Restraung has tables
+    // ========================================== Load Restaurant. Restaurant has tables
     Console.WriteLine("\n=========================================== Restaurant ================================================================    \n");
     foreach (var restaurant in Restaurant.GetRestaurants())
     {
@@ -222,20 +222,20 @@ void OutputAllObjectsCreated()
     Console.WriteLine("\n================================ Online Orders ================================================================    \n");
     foreach (var onlineOrder in OnlineOrder.GetOnlineOrders())
     {
-        Console.WriteLine($"Online order id: {onlineOrder.Id}, belong to restaurant: {onlineOrder.Restaurant.Name}, belong to table: {onlineOrder.Table.Id} Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived} has the following orders: {onlineOrder.MenuItems.Count}.  Registered client: {onlineOrder.RegisteredClient?.Id}, {onlineOrder.RegisteredClient?.Name}, {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.ToString()}. Following order is:");
+        Console.WriteLine($"Online order id: {onlineOrder.Id}, belong to restaurant: {onlineOrder.Restaurant.Name}, belong to table: {onlineOrder.Table.Id}. Order price is: {onlineOrder.OrderPrice}. Service Price is: {onlineOrder.ServicePrice}. Total Price is: {onlineOrder.TotalPrice}. Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived} has the following orders: {onlineOrder.MenuItems.Count}.  Registered client: {onlineOrder.RegisteredClient?.Id}, {onlineOrder.RegisteredClient?.Name}, {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.ToString()}. Following order is:");
         foreach (var orderList in onlineOrder.MenuItems)
         {
-            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price} ]");
         }
     }
     // ========================================== Load Table Orders. table order belong to restaurant, table order belong to table, table order has menuItems
     Console.WriteLine("\n================================ Table Orders ================================================================    \n");
     foreach (var tableOrder in TableOrder.GetTableOrders())
     {
-        Console.WriteLine($"Online order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id} Number of People: {tableOrder.NumberOfPeople},  has the following orders: {tableOrder.MenuItems.Count}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}. Following order is: ");
+        Console.WriteLine($"Online order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id}. Order price is: {tableOrder.OrderPrice}. Service Price is: {tableOrder.ServicePrice}. Total Price is: {tableOrder.TotalPrice}. Number of People: {tableOrder.NumberOfPeople},  has the following orders: {tableOrder.MenuItems.Count}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}. Following order is: ");
         foreach (var orderList in tableOrder.MenuItems)
         {
-            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price} ]");
         }
     }
     // ============================================= association Order and MenuItem. Table order has menu items, Online order has  menu items, MenuItem is in Orders
@@ -245,7 +245,7 @@ void OutputAllObjectsCreated()
         Console.WriteLine($"Online order id: {onlineOrder.Id} has the following orders: {onlineOrder.MenuItems.Count}: ");
         foreach (var orderList in onlineOrder.MenuItems)
         {
-            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity} ]");
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price} ]");
         }
     }
     foreach (var tableOrder in TableOrder.GetTableOrders())
@@ -313,105 +313,43 @@ void OutputAllObjectsCreated()
 }
 void CreateObjects()
 {
+    //==================================================================================================================================================================
     //===================================================================== Create Ingredietn 
     var tomatoIngredient = new Ingredient("Tomato");
-    Ingredient.AddIngredient(tomatoIngredient);
     var mozzarellaIngredient = new Ingredient("Mozzarella");
-    Ingredient.AddIngredient(mozzarellaIngredient);
     var basilIngredient = new Ingredient("Basil");
-    Ingredient.AddIngredient(basilIngredient);
     var oliveOilIngredient = new Ingredient("Olive Oil");
-    Ingredient.AddIngredient(oliveOilIngredient);
     var garlicIngredient = new Ingredient("Garlic");
-    Ingredient.AddIngredient(garlicIngredient);
     var saltIngredient = new Ingredient("Salt");
-    Ingredient.AddIngredient(saltIngredient);
     var pepperIngredient = new Ingredient("Pepper");
-    Ingredient.AddIngredient(pepperIngredient);
     var chickenIngredient = new Ingredient("Chicken");
-    Ingredient.AddIngredient(chickenIngredient);
     var mushroomIngredient = new Ingredient("Mushrooms");
-    Ingredient.AddIngredient(mushroomIngredient);
     var parmesanIngredient = new Ingredient("Parmesan");
-    Ingredient.AddIngredient(parmesanIngredient);
     var pastaIngredient = new Ingredient("Pasta");
-    Ingredient.AddIngredient(pastaIngredient);
     var creamIngredient = new Ingredient("Cream");
-    Ingredient.AddIngredient(creamIngredient);
     var spinachIngredient = new Ingredient("Spinach");
-    Ingredient.AddIngredient(spinachIngredient);
     var broccoliIngredient = new Ingredient("Broccoli");
-    Ingredient.AddIngredient(broccoliIngredient);
     var zucchiniIngredient = new Ingredient("Zucchini");
-    Ingredient.AddIngredient(zucchiniIngredient);
     var shrimpIngredient = new Ingredient("Shrimp");
-    Ingredient.AddIngredient(shrimpIngredient);
     var baconIngredient = new Ingredient("Bacon");
-    Ingredient.AddIngredient(baconIngredient);
     var eggIngredient = new Ingredient("Egg");
-    Ingredient.AddIngredient(eggIngredient);
     var redPepperFlakesIngredient = new Ingredient("Red Pepper Flakes");
-    Ingredient.AddIngredient(redPepperFlakesIngredient);
     var onionsIngredient = new Ingredient("Onions");
-    Ingredient.AddIngredient(onionsIngredient);
     var ginIngredient = new Ingredient("Gin");
-    Ingredient.AddIngredient(ginIngredient);
     var vermouthIngredient = new Ingredient("Vermouth");
-    Ingredient.AddIngredient(vermouthIngredient);
     var campariIngredient = new Ingredient("Campari");
-    Ingredient.AddIngredient(campariIngredient);
     //========================================================= promotion
     var promo1 = new Promotion(10.0, "new year", "it is purpose delete this in february");
     var promo2 = new Promotion(10.0, "He[ppy", "nothi", Promotion.PromotionType.Regular);
     var promo3 = new Promotion(70.0, "buy season");
-    // ======================================================== Create FOod
-    var food1 = new Food("Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", Food.FoodType.Pasta,
-        new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, null, promo1);
-    Food.AddFood(food1);
-    var food2 = new Food("Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", Food.FoodType.Pasta,
-        new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.GlutenFree}, promo2);
-    Food.AddFood(food2);
-    var food3 = new Food("Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil",
-        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.Vegan}, promo3);
-    Food.AddFood(food3);
-    var food4 = new Food("Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes",
-        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.LactoseFree, Food.DietaryPreferencesType.GlutenFree}, promo2);
-    Food.AddFood(food4);
-    var food5 = new Food("Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter",
-        Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient });
-    Food.AddFood(food5);
-    // ======================================================== Create Beverages
-    var beverage1 = new Beverage("Cappuccino", 3.99, "Classic Italian coffee",
-        Beverage.BeverageType.Cafeteria, false, null, null);
-    Beverage.AddBeverage(beverage1);
-    var beverage2 = new Beverage("Mojito", 7.99, "Refreshing cocktail with mint and lime",
-        Beverage.BeverageType.Cocktails, true, null, null);
-    Beverage.AddBeverage(beverage2);
-    var beverage3 = new Beverage("Iced Tea", 2.99, "Cold brewed tea with lemon",
-        Beverage.BeverageType.Cafeteria, false, null, null);
-    Beverage.AddBeverage(beverage3);
-    var beverage4 = new Beverage("Negroni", 8.99, "Classic Italian cocktail",
-        Beverage.BeverageType.Cocktails, true, new List<Ingredient> { ginIngredient, vermouthIngredient, campariIngredient }, promo3);
-    Beverage.AddBeverage(beverage4);
-    var beverage5 = new Beverage("Lemonade", 2.99, "Refreshing lemon juice and sugar",
-        Beverage.BeverageType.Drinks, false, null, null);
-    Beverage.AddBeverage(beverage5);
-    // ======================================================== Create SetOfMenuItems
-    var businessLunch1 = new SetOfMenuItem("Business Special", 19.99,
-        "A combination of three foods and a drink", new List<Food> { food1, food2, food3 },
-        new List<Beverage> { beverage2 });
-    SetOfMenuItem.AddSetOfMenuItems(businessLunch1);
-    var businessLunch2 = new SetOfMenuItem("WeekEnd Promo Special", 19.99,
-        "A combination of two food beyound your imagination and a drink", new List<Food> { food4, food5 },
-        new List<Beverage> { beverage2, beverage3 });
-    SetOfMenuItem.AddSetOfMenuItems(businessLunch2);
-    var businessLunch3 = new SetOfMenuItem("New special prom", 19.99,
-        "WIthour beverages and in monday and friday", new List<Food> { food1, food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday});
-    SetOfMenuItem.AddSetOfMenuItems(businessLunch3);
-    var businessLunch4 = new SetOfMenuItem("New special prom", 19.99,
-        "WIthour beverages and in monday and friday", new List<Food> {food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday}, new TimeSpan(10,0,0), new TimeSpan(15,0,0));
-    SetOfMenuItem.AddSetOfMenuItems(businessLunch4);
-    // ========================================================= Create Restaurant
+    // ==================================================== Registered client
+    RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", "s23454@pjatk.com", "546 545 544");
+    RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", null, "344 434 344", "Arstv");
+    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr");
+    RegisteredClient.AddRegisteredClient(client1);
+    RegisteredClient.AddRegisteredClient(client2);
+    RegisteredClient.AddRegisteredClient(client3);
+    //======================================================= WorkHours
     List<OpenHour> workHours = new List<OpenHour>
     {
         new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
@@ -422,49 +360,87 @@ void CreateObjects()
         new OpenHour(DayOfWeek.Saturday, new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0)),
         new OpenHour(DayOfWeek.Sunday, new TimeSpan(9, 0,0), new TimeSpan(17, 0, 0))
     };
-    Restaurant restaurant1 = new Restaurant("Miscusi", new Address("Zlota 43", "Warszawa", "22"), workHours);
-    restaurant1.AddTable(2 );
-    restaurant1.AddTable(2, "hello worlds");
-    restaurant1.AddTable(4, "window");
-    restaurant1.AddTable(4, "near wc", "do not sit here a guts how are allergic to oil");
+    //==================================================================================================================================================================
     
-    Restaurant restaurant2 = new Restaurant("Miscusi on river", new Address("Zlote 44", "Krakow", "44"), workHours);
-    restaurant2.AddTable(2);
-    restaurant2.AddTable(4);
-    // ==================================================== Registered client
-    RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", "s23454@pjatk.com", "546 545 544");
-    RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", null, "344 434 344", "Arstv");
-    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr");
-    RegisteredClient.AddRegisteredClient(client1);
-    RegisteredClient.AddRegisteredClient(client2);
-    RegisteredClient.AddRegisteredClient(client3);
+    // ========================================================= Create Restaurant1 =========================================================================================
+    Restaurant restaurant1 = new Restaurant("Miscusi", new Address("Zlota 43", "Warszawa", "22"), workHours);
+    // restaurant1.AddTable(4, "near wc", "do not sit here a guts how are allergic to oil");
+    var restaurant1table1 = new Table(restaurant1, 2);
+    var restaurant1table2 = new Table(restaurant1, 2, "hello worlds");
+    var restaurant1table3 = new Table(restaurant1, 4, "window");
+    var restaurant1table4 = new Table(restaurant1, 4, "near wc", "do not sit here a guts how are allergic to oil");
+    // ======================================================== Create FOod for Restaurant1
+    var restaurant1food1 = new Food(restaurant1, "Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, null, promo1);
+    var restaurant1food2 = new Food(restaurant1, "Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.GlutenFree}, promo2);
+    var restaurant1food3 = new Food(restaurant1, "Fettuccine Primavera", 13.99, "Pasta with fresh vegetables and olive oil", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, broccoliIngredient, zucchiniIngredient, spinachIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.Vegan}, promo3);
+    var restaurant1food4 = new Food(restaurant1, "Spaghetti Aglio e Olio", 10.99, "Pasta with garlic, olive oil, red pepper flakes", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, garlicIngredient, redPepperFlakesIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.LactoseFree, Food.DietaryPreferencesType.GlutenFree}, promo2);
+    var restaurant1food5 = new Food(restaurant1, "Linguine Shrimp Scampi", 16.99, "Linguine with shrimp in garlic butter", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, shrimpIngredient, garlicIngredient, oliveOilIngredient });
+    // ======================================================== Create Beverages for Restaurant1
+    var restaurant1beverage1 = new Beverage(restaurant1, "Cappuccino", 3.99, "Classic Italian coffee", Beverage.BeverageType.Cafeteria, false, null, null);
+    var restaurant1beverage2 = new Beverage(restaurant1, "Mojito", 7.99, "Refreshing cocktail with mint and lime", Beverage.BeverageType.Cocktails, true, null, null);
+    var restaurant1beverage3 = new Beverage(restaurant1, "Iced Tea", 2.99, "Cold brewed tea with lemon", Beverage.BeverageType.Cafeteria, false, null, null);
+    var restaurant1beverage4 = new Beverage(restaurant1, "Negroni", 8.99, "Classic Italian cocktail", Beverage.BeverageType.Cocktails, true, new List<Ingredient> { ginIngredient, vermouthIngredient, campariIngredient }, promo3);
+    var restaurant1beverage5 = new Beverage(restaurant1, "Lemonade", 2.99, "Refreshing lemon juice and sugar", Beverage.BeverageType.Drinks, false, null, null);
+    // ======================================================== Create SetOfMenuItems for Restaurant1
+    var restaurant1businessLunch1 = new SetOfMenuItem(restaurant1, "Business Special", 19.99, "A combination of three foods and a drink", new List<Food> { restaurant1food1, restaurant1food2, restaurant1food3 }, new List<Beverage> { restaurant1beverage2 });
+    var restaurant1businessLunch2 = new SetOfMenuItem(restaurant1, "WeekEnd Promo Special", 19.99, "A combination of two food beyound your imagination and a drink", new List<Food> { restaurant1food4, restaurant1food5 }, new List<Beverage> { restaurant1beverage2, restaurant1beverage3 });
+    var restaurant1businessLunch3 = new SetOfMenuItem(restaurant1, "New special prom", 19.99, "WIthour beverages and in monday and friday", new List<Food> { restaurant1food1, restaurant1food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday});
+    var restaurant1businessLunch4 = new SetOfMenuItem(restaurant1, "New special prom", 19.99, "WIthour beverages and in monday and friday", new List<Food> {restaurant1food5 }, null, new List<DayOfWeek>{DayOfWeek.Monday, DayOfWeek.Friday}, new TimeSpan(10,0,0), new TimeSpan(15,0,0));
     // ================================================ TableOrder
-    var tableOrder1 = new TableOrder(Table.GetTables()[0], 8, client1);
-    tableOrder1.AddMenuItem(food2);
-    tableOrder1.AddMenuItem(food2);
-    food2.AddToOrder(tableOrder1);
-    food2.AddToOrder(tableOrder1);
-    food1.AddToOrder(tableOrder1);
-    food1.AddToOrder(tableOrder1);
-    tableOrder1.AddMenuItem(food1);
-    tableOrder1.AddMenuItem(food1);
-    tableOrder1.AddMenuItem(food4, 10);
-    var tableOrder2 = new TableOrder(Table.GetTables()[1], 4);
-    tableOrder2.AddMenuItem(beverage1);
-    var tableOrder3 = new TableOrder(Table.GetTables()[1], 4);
-    tableOrder3.AddMenuItem(food5);
+    var restaurant1tableOrder1 = new TableOrder(restaurant1table1, 8, client1);
+    restaurant1tableOrder1.AddMenuItem(restaurant1food2);
+    restaurant1tableOrder1.AddMenuItem(restaurant1food2);
+    restaurant1food2.AddToOrder(restaurant1tableOrder1);
+    restaurant1food2.AddToOrder(restaurant1tableOrder1);
+    restaurant1food1.AddToOrder(restaurant1tableOrder1);
+    restaurant1food1.AddToOrder(restaurant1tableOrder1);
+    restaurant1tableOrder1.AddMenuItem(restaurant1food1);
+    restaurant1tableOrder1.AddMenuItem(restaurant1food1);
+    restaurant1tableOrder1.AddMenuItem(restaurant1businessLunch1, 2);
+    var restaurant1tableOrder2 = new TableOrder(restaurant1table2, 4);
+    restaurant1tableOrder2.AddMenuItem(restaurant1beverage1);
+    var restaurant1tableOrder3 = new TableOrder(restaurant1table2, 4);
+    restaurant1tableOrder3.AddMenuItem(restaurant1food5);
     // =============================================== Online order
-    var onlineOrder1 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), "heljfoadsf", client2);
-    onlineOrder1.AddMenuItem(food3);
-    onlineOrder1.AddMenuItem(food3);
-    onlineOrder1.AddMenuItem(businessLunch1, 2);
-    var onlineOrder2 = new OnlineOrder(restaurant1, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Max", "434 345 345"));
-    onlineOrder2.AddMenuItem(food1);
-    onlineOrder2.AddMenuItem(businessLunch3);
-    var onlineOrder3 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, client1 );
-    onlineOrder3.AddMenuItem(food5,2);
-    var onlineOrder4 = new OnlineOrder(restaurant1, 1, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Alexa", "434 345 345"));
-    onlineOrder4.AddMenuItem(beverage1,5);
-    var onlineOrder5 = new OnlineOrder(restaurant2, 1, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, client2);
-    onlineOrder5.AddMenuItem(food1, 2);
+    var restaurant1onlineOrder1 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), "heljfoadsf", client2);
+    restaurant1onlineOrder1.AddMenuItem(restaurant1food3);
+    restaurant1onlineOrder1.AddMenuItem(restaurant1food3);
+    restaurant1onlineOrder1.AddMenuItem(restaurant1beverage3, 2);
+    var restaurant1onlineOrder2 = new OnlineOrder(restaurant1, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Max", "434 345 345"));
+    restaurant1onlineOrder2.AddMenuItem(restaurant1food1);
+    var restaurant1onlineOrder3 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, client1 );
+    restaurant1onlineOrder3.AddMenuItem(restaurant1food5,2);
+    var restaurant1onlineOrder4 = new OnlineOrder(restaurant1, 1, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Alexa", "434 345 345"));
+    restaurant1onlineOrder4.AddMenuItem(restaurant1beverage1,5);
+    // ==========================================================================================================================================================================================================
+    
+    // ========================================================= Create Restaurant2 =========================================================================================
+    Restaurant restaurant2 = new Restaurant("Miscusi on river", new Address("Zlote 44", "Krakow", "44"), workHours);
+    // restaurant2.AddTable(4);
+    var restaurant2table1 = new Table(restaurant2, 2);
+    var restaurant2table2 = new Table(restaurant2, 4, "ali");
+    var restaurant2table3 = new Table(restaurant2, 6, "window", "descrip");
+    // ======================================================== Create FOod for Restaurant1
+    var restaurant2food1 = new Food(restaurant2, "Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, null, promo1);
+    var restaurant2food2 = new Food(restaurant2, "Penne Alfredo", 14.99, "Creamy Alfredo pasta with Parmesan", Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, creamIngredient, parmesanIngredient }, new List<Food.DietaryPreferencesType>{Food.DietaryPreferencesType.GlutenFree}, promo2);
+    // ======================================================== Create Beverages for Restaurant1
+    var restaurant2beverage1 = new Beverage(restaurant2, "Cappuccino", 3.99, "Classic Italian coffee", Beverage.BeverageType.Cafeteria, false, null, null);
+    var restaurant2beverage2 = new Beverage(restaurant2, "Mojito", 7.99, "Refreshing cocktail with mint and lime", Beverage.BeverageType.Cocktails, true, null, null);
+    // ======================================================== Create SetOfMenuItems for Restaurant1
+    var restaurant2businessLunch1 = new SetOfMenuItem(restaurant2, "Business Special", 19.99, "A combination of three foods and a drink", new List<Food> { restaurant2food1, restaurant2food2}, new List<Beverage> { restaurant2beverage2 });
+    var restaurant2businessLunch2 = new SetOfMenuItem(restaurant2, "WeekEnd Promo Special", 19.99, "A combination of two food beyound your imagination and a drink", new List<Food> { restaurant2food1}, new List<Beverage> { restaurant2beverage1 });
+     // ================================================ TableOrder
+    var restaurant2tableOrder1 = new TableOrder(restaurant2table1, 8, client1);
+    restaurant2tableOrder1.AddMenuItem(restaurant2food1, 10);
+    var restaurant2tableOrder2 = new TableOrder(restaurant2table2, 4);
+    restaurant2tableOrder2.AddMenuItem(restaurant2businessLunch1, 2);
+    // =============================================== Online order
+    var restaurant2onlineOrder1 = new OnlineOrder(restaurant2, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), "heljfoadsf", client2);
+    restaurant2onlineOrder1.AddMenuItem(restaurant2beverage2, 2);
+    var restaurant2onlineOrder2 = new OnlineOrder(restaurant2, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0), new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Max", "434 345 345"));
+    restaurant2onlineOrder2.AddMenuItem(restaurant2food1, 1);
+    // ==========================================================================================================================================================================================================
+    
+    
+    
 }

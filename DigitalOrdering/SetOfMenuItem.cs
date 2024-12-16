@@ -18,13 +18,14 @@ public class SetOfMenuItem : MenuItem
 
     // constructor
     [JsonConstructor]
-    public SetOfMenuItem(string name, double price, string description, List<Food>? foods = null, List<Beverage>? beverages = null, List<DayOfWeek>? days = null, TimeSpan? startTime = null, TimeSpan? endTime = null, bool isAvailable = true) :
-        base(name, price, description, isAvailable)
+    public SetOfMenuItem(Restaurant restaurant, string name, double price, string description, List<Food>? foods = null, List<Beverage>? beverages = null, List<DayOfWeek>? days = null, TimeSpan? startTime = null, TimeSpan? endTime = null, bool isAvailable = true) :
+        base(restaurant, name, price, description, isAvailable)
     {
         UpdateDays(days);
         UpdateTime(startTime, endTime);
         if (foods != null) UpdateFoods(foods);
         if (beverages != null) UpdateBeverages(beverages);
+        AddSetOfMenuItems(this);
     }
 
     // methods for the multi-value attribute
@@ -69,6 +70,8 @@ public class SetOfMenuItem : MenuItem
     public void AddFood(Food food)
     {
         if(food is null)  throw new ArgumentNullException($"{this.Name}. Food cannot be null in AddFood method.");
+        // Validation: make sure menu item added to the setOfMenuItem belong to the same restaurant as SetOfMenuItem
+        if(food.Restaurant != Restaurant) throw new ArgumentException("Food you are trying to add belong to another restaurant.");
         if (!_foods.Contains(food))
         {
             _foods.Add(food);
@@ -96,6 +99,8 @@ public class SetOfMenuItem : MenuItem
     public void AddBeverage(Beverage beverage)
     {
         if(beverage is null) throw new ArgumentNullException($"{this.Name}. Beverages cannot be null in AddBeverage method.");
+        // Validation: make sure menu item added to the setOfMenuItem belong to the same restaurant as SetOfMenuItem
+        if(beverage.Restaurant != Restaurant) throw new ArgumentException("Beverage you are trying to add belong to another restaurant."); 
         if (!_beverages.Contains(beverage))
         {
             _beverages.Add(beverage);
@@ -110,6 +115,7 @@ public class SetOfMenuItem : MenuItem
             _beverages.Remove(beverage);
             Console.WriteLine($"{this.Name} was modified by RemoveBeverage. So mind of the {beverage.Name}  doens't exist in SetOfMenuItem anymore..");
             beverage.RemoveSetOfMenuItemsFromBeverage(this);
+            AddSetOfMenuItems(this);
         }
     }
     public void UpdateBeverages(List<Beverage> beverages)
@@ -129,7 +135,7 @@ public class SetOfMenuItem : MenuItem
     }
     
     // Methods for the Object
-    public static void AddSetOfMenuItems(SetOfMenuItem setOfMenuItem)
+    private static void AddSetOfMenuItems(SetOfMenuItem setOfMenuItem)
     {
         if (setOfMenuItem == null) throw new ArgumentException("businessLunch cannot be null");
         _setOfMenuItems.Add(setOfMenuItem);

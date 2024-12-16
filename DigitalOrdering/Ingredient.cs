@@ -35,6 +35,7 @@ public class Ingredient
     {
         Id = ++IdCounter;
         Name = name;
+        AddIngredient(this);
     }
     
     //association reverse
@@ -74,7 +75,7 @@ public class Ingredient
     }
 
     // get, delete, add, update CRUD 
-    public static void AddIngredient(Ingredient ingredient)
+    private static void AddIngredient(Ingredient ingredient)
     {
         if (ingredient == null) throw new ArgumentException("Ingredient cannot be null");
         _ingredients.Add(ingredient);

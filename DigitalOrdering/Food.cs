@@ -46,14 +46,15 @@ public class Food : MenuItem
 
     // constructor
     [JsonConstructor]
-    public Food(string name, double price, string description,
+    public Food(Restaurant restaurant, string name, double price, string description,
         FoodType foodT,
         List<Ingredient>? ingredients,
         List<DietaryPreferencesType>? dietaryPreference = null, Promotion? promotion = null, bool isAvailable = true)
-        : base(name, price, description, isAvailable, ingredients, promotion)
+        : base(restaurant, name, price, description, isAvailable, ingredients, promotion)
     {
         FoodT = foodT;
         if(dietaryPreference != null && dietaryPreference.Count > 0) UpdateDietaryPreferencesType(dietaryPreference);
+        AddFood(this);
     }
 
     // methods for the multi-value attribute
@@ -118,7 +119,7 @@ public class Food : MenuItem
     }
     
     // methods on Object (add,remove,delete,modify)
-    public static void AddFood(Food food)
+    private static void AddFood(Food food)
     {
         if(food == null) throw new ArgumentException("food cannot be null");
         _foods.Add(food);
@@ -152,54 +153,5 @@ public class Food : MenuItem
             _foods.Remove(food);
         }
     }
-
     
-    // // serialized and deserialized
-    // public static void SaveFoodJSON(string path)
-    // {
-    //     try
-    //     {
-    //         var settings = new JsonSerializerSettings
-    //         {
-    //             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //             Formatting = Formatting.Indented
-    //         };
-    //         string json = JsonConvert.SerializeObject(_foods, settings);
-    //         File.WriteAllText(path, json);
-    //         Console.WriteLine($"File Food saved successfully at {path}");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error saving Food file: {e.Message}");
-    //     }
-    // }
-    // public static void LoadFoodJSON(string path)
-    // {
-    //     try
-    //     {
-    //         if (File.Exists(path))
-    //         {
-    //             var settings = new JsonSerializerSettings
-    //             {
-    //                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    //                 TypeNameHandling = TypeNameHandling.Auto
-    //             };
-    //             string json = File.ReadAllText(path);
-    //             var foods = JsonConvert.DeserializeObject<List<Food>>(json, settings) ?? new List<Food>();
-    //             foreach (var food in foods)
-    //             {
-    //                 var listIngredients = new List<Ingredient>();
-    //                 foreach (var ingredient in food.Ingredients)
-    //                     listIngredients.Add(Ingredient.GetIngredients().FirstOrDefault(i => i.Name == ingredient.Name));
-    //                 _foods.Add(new Food(food.Name, food.Price, food.Description, food.FoodT, listIngredients, food.DietaryPreferences, food.Promotion));
-    //             }
-    //             Console.WriteLine($"File Food loaded successfully at {path}");
-    //         }
-    //         else throw new ArgumentException($"Error loading Food file: path: {path} doesn't exist ");
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new ArgumentException($"Error loading Food file: {e.Message}");
-    //     }
-    // }
 }

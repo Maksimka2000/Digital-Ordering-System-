@@ -15,7 +15,7 @@ public abstract class Order
     // class field setter validation
     public static double Service
     {
-        get => _service * 100;
+        get => _service;
         private set
         {
             ValidateService(value);
@@ -26,10 +26,14 @@ public abstract class Order
     // fields 
     [JsonIgnore]
     public int Id { get; }
+
     [JsonIgnore]
-    public double OrderPrice { get; private set; }
+    public double OrderPrice { get; private set; } = 0.0;
     [JsonIgnore]
-    public double TotalPrice { get; private set; } = 0;
+    public double TotalPrice { get; private set; }
+    [JsonIgnore]
+    public double ServicePrice { get; private set; }
+    
     protected int _numberOfPeople;
     public TimeSpan? StartTime { get; protected set; }
 
@@ -49,11 +53,12 @@ public abstract class Order
     protected Order(int numberOfPeople, RegisteredClient? registeredClient = null)
     {
         Id = ++IdCounter;
-        OrderPrice = 0;
         NumberOfPeople = numberOfPeople;
-        if(registeredClient != null) AddRegisteredClient(registeredClient); 
-        // CalculateTotalPrice();
+        if(registeredClient != null) AddRegisteredClient(registeredClient);
     }
+    
+    //virtual property
+    public virtual Table? Table => null;
     
     // association with registered client
     private RegisteredClient _registeredClient;
@@ -77,6 +82,14 @@ public abstract class Order
     {
         if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
         if(menuItem == null) throw new ArgumentNullException($" {this}: MenuItem in AddMenuItem can't be null");
+        // check if MenuItem belong to the specific restaurant the order is placed
+        if(menuItem.Restaurant != this.Table.Restaurant ) throw new ArgumentException($"MenuItem you are trying to add to the order doesn't belong to the restaurant in which you made the order"); 
+        // validate the day and time of the setOfMenuItem and validate if it is the OnlineOrder
+        if (menuItem is SetOfMenuItem setOfMenuItem)
+        {
+            if (this is OnlineOrder onlineOrder) throw new ArgumentException($"MenuItem you are trying to add to the order is SetOfMenuItems with name: {setOfMenuItem.Name} and The order you created is OnlineOrder with id: {onlineOrder.Id}. You can't add setOfMenuItems to the OnlineOrder is it polices of restaurant.");
+            // ValidateSetOfMenuItem(setOfMenuItem); // reveal soon if needed
+        }
         new OrderList(menuItem, this, quantity);
     }
     public void AddOrderList(OrderList orderList)
@@ -84,6 +97,7 @@ public abstract class Order
         if (orderList == null) throw new ArgumentNullException($" {this}: OrderList can't be null in AddOrderList()");
         if (orderList.Order != this) throw new ArgumentException($"You trying to add the wrong orderList to the Order in AddOrderList()");
         if (!_menuItems.Contains(orderList)) _menuItems.Add(orderList);
+        MakeCalculationOfPrice(orderList);
     }
 
     // validation 
@@ -103,10 +117,14 @@ public abstract class Order
     }
 
     //methods
-    public void CalculateTotalPrice()
+    private void MakeCalculationOfPrice(OrderList orderList)
     {
-        TotalPrice = OrderPrice * (1 - _service);
+        OrderPrice += orderList.MenuItem.Price * orderList.Quantity;
+        ServicePrice = OrderPrice * Service;
+        TotalPrice = ServicePrice + OrderPrice;
     }
+
+    
 }
 
 

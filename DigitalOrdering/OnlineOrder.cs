@@ -87,7 +87,7 @@ public class OnlineOrder : Order
     //association with table 
     private Table _table;
     //association getter
-    public Table Table => _table;
+    public override Table Table => _table;
     //association methods
     private void AddTable(Table table)
     {

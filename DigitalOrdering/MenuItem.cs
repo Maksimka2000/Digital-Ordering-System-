@@ -54,7 +54,7 @@ public abstract class MenuItem
 
     // constructor
     [JsonConstructor]
-    protected MenuItem(string name, double price, string description, bool isAvailable = true, List<Ingredient>? ingredients = null, Promotion? promotion = null)
+    protected MenuItem(Restaurant restaurant, string name, double price, string description, bool isAvailable = true, List<Ingredient>? ingredients = null, Promotion? promotion = null)
     {
         Id = ++IdCounter;
         Name = name;
@@ -63,7 +63,19 @@ public abstract class MenuItem
         if (ingredients != null && ingredients.Count > 0) UpdateIngredients(ingredients);
         Promotion = promotion;
         IsAvailable = isAvailable;
+        AddRestaurant(restaurant);
     }
+    
+    //association with Restaurant
+    private Restaurant _restaurant;
+    public Restaurant Restaurant => _restaurant;
+    private void AddRestaurant(Restaurant restaurant)
+    {
+        if(restaurant == null) throw new NullReferenceException("Restaurant cannot be null  in AddRestaurant() MenuItem");
+        _restaurant = restaurant;
+        restaurant.AddMenuItemToMenu(this);
+    }
+    
     
     // association with ingredient
     protected List<Ingredient> _ingredients = [];
@@ -111,6 +123,14 @@ public abstract class MenuItem
     {
         if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
         if(order == null) throw new ArgumentNullException($" {this.Name}: Order in AddToOrder can't be null"); 
+        // check if MenuItem belong to the specific restaurant the order is placed
+        if(order.Table.Restaurant != this.Restaurant) throw new AggregateException($"MenuItem {this.Name}: you are trying to asign to the order doesn't exist in the restaurant in which the order was opened. Name of restaurant: {order.Table.Restaurant.Name}");
+        // validate the day and time of the setOfMenuItem
+        if (this is SetOfMenuItem setOfMenuItem)
+        {
+            if(order is OnlineOrder onlineOrder)  throw new ArgumentException($"MenuItem you are trying to add to the order is SetOfMenuItems with name: {setOfMenuItem.Name} and The order you created is OnlineOrder with id: {onlineOrder.Id}. You can't add setOfMenuItems to the OnlineOrder is it polices of restaurant");
+            // ValidateSetOfMenuItem(setOfMenuItem); // reveal soon if needed
+        }
         new OrderList(this, order, quantity);
     }
     public void AddOrderList(OrderList orderList)

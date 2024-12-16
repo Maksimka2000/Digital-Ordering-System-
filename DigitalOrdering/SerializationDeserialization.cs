@@ -73,36 +73,6 @@ public class SerializationDeserialization
                 
                 var projectState = JsonConvert.DeserializeObject<ProjectState>(json, settings);
                 
-                foreach (var ingredient in projectState.Ingredients)
-                    Ingredient.AddIngredient(ingredient);
-                
-                foreach (var food in projectState.Foods)
-                    Food.AddFood(food);
-                
-                foreach (var beverage in projectState.Beverages)
-                    Beverage.AddBeverage(beverage);
-                
-                foreach (var setOfMenuItem in projectState.SetOfMenuItems)
-                    SetOfMenuItem.AddSetOfMenuItems(setOfMenuItem);
-                
-                foreach (var restaurant in projectState.Restaurants)
-                    // Restaurant.AddRestaurant(restaurant);
-                
-                foreach (var table in projectState.Tables)
-                    // Table.AddTable(table);
-                
-                foreach (var registeredClient in projectState.RegisteredClients)
-                    RegisteredClient.AddRegisteredClient(registeredClient);
-
-                foreach (var tableOrder in projectState.TableOrders)
-                    // 
-
-                foreach (var onlineOrder in projectState.OnlineOrders)
-                    //
-
-                foreach (var orderList in projectState.OrderLists)
-                    //
-                
                 Console.WriteLine($"File loaded successfully at {path}");
             }
             else throw new ArgumentException($"Error loading  file: path: {path} doesn't exist ");
