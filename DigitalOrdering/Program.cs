@@ -222,20 +222,20 @@ void OutputAllObjectsCreated()
     Console.WriteLine("\n================================ Online Orders ================================================================    \n");
     foreach (var onlineOrder in OnlineOrder.GetOnlineOrders())
     {
-        Console.WriteLine($"Online order id: {onlineOrder.Id}, belong to restaurant: {onlineOrder.Restaurant.Name}, belong to table: {onlineOrder.Table.Id}. Order price is: {onlineOrder.OrderPrice}. Service Price is: {onlineOrder.ServicePrice}. Total Price is: {onlineOrder.TotalPrice}. Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived} has the following orders: {onlineOrder.MenuItems.Count}.  Registered client: {onlineOrder.RegisteredClient?.Id}, {onlineOrder.RegisteredClient?.Name}, {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.ToString()}. Following order is:");
+        Console.WriteLine($"Online order id: {onlineOrder.Id}, belong to restaurant: {onlineOrder.Restaurant.Name}, belong to table: {onlineOrder.Table.Id}. Order price is: {onlineOrder.OrderPrice}. Service Price is: {onlineOrder.ServicePrice}. Discount: {onlineOrder.DiscountAmount}. Total Price is: {onlineOrder.TotalPrice}. Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived}. Registered client: {onlineOrder.RegisteredClient?.Id}, {onlineOrder.RegisteredClient?.Name}, {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.ToString()}. Has the following orders: {onlineOrder.MenuItems.Count}:");
         foreach (var orderList in onlineOrder.MenuItems)
         {
-            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price} ]");
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price}. Discount: {orderList.MenuItem.Promotion?.DiscountPercent} ]");
         }
     }
     // ========================================== Load Table Orders. table order belong to restaurant, table order belong to table, table order has menuItems
     Console.WriteLine("\n================================ Table Orders ================================================================    \n");
     foreach (var tableOrder in TableOrder.GetTableOrders())
     {
-        Console.WriteLine($"Online order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id}. Order price is: {tableOrder.OrderPrice}. Service Price is: {tableOrder.ServicePrice}. Total Price is: {tableOrder.TotalPrice}. Number of People: {tableOrder.NumberOfPeople},  has the following orders: {tableOrder.MenuItems.Count}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}. Following order is: ");
+        Console.WriteLine($"Online order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id}. Order price is: {tableOrder.OrderPrice}. Service Price is: {tableOrder.ServicePrice}. Discount: {tableOrder.DiscountAmount}. Total Price is: {tableOrder.TotalPrice}. Number of People: {tableOrder.NumberOfPeople}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}.  has the following orders: {tableOrder.MenuItems.Count}: ");
         foreach (var orderList in tableOrder.MenuItems)
         {
-            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price} ]");
+            Console.WriteLine($"            [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price}. Discount: {orderList.MenuItem.Promotion?.DiscountPercent} ]");
         }
     }
     // ============================================= association Order and MenuItem. Table order has menu items, Online order has  menu items, MenuItem is in Orders

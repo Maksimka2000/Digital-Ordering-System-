@@ -10,7 +10,7 @@ public abstract class Order
 
     // class fields
     private static int IdCounter = 0;
-    private static double _service = 0.1;
+    private static double _service = 10;
 
     // class field setter validation
     public static double Service
@@ -19,7 +19,7 @@ public abstract class Order
         private set
         {
             ValidateService(value);
-            _service = value / 100;
+            _service = value;
         }
     }
 
@@ -33,6 +33,8 @@ public abstract class Order
     public double TotalPrice { get; private set; }
     [JsonIgnore]
     public double ServicePrice { get; private set; }
+    [JsonIgnore]
+    public double DiscountAmount { get; private set; } = 0.0;
     
     protected int _numberOfPeople;
     public TimeSpan? StartTime { get; protected set; }
@@ -119,9 +121,17 @@ public abstract class Order
     //methods
     private void MakeCalculationOfPrice(OrderList orderList)
     {
-        OrderPrice += orderList.MenuItem.Price * orderList.Quantity;
-        ServicePrice = OrderPrice * Service;
-        TotalPrice = ServicePrice + OrderPrice;
+        for (var quantity = 1; quantity <= orderList.Quantity; quantity++)
+        {
+            var priceOfMenuItem = orderList.MenuItem.Price;
+            OrderPrice += priceOfMenuItem;
+            if (orderList.MenuItem.Promotion != null)
+            {
+                DiscountAmount += priceOfMenuItem * (orderList.MenuItem.Promotion.DiscountPercent/100);
+            }
+        }   
+        ServicePrice = (OrderPrice - DiscountAmount) * (Service/100);
+        TotalPrice =  (OrderPrice - DiscountAmount) + ServicePrice;
     }
 
     
