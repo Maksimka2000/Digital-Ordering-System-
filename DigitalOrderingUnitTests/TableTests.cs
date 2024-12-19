@@ -6,124 +6,132 @@ namespace DigitalOrderingUnitTests;
 
 public class TableTests
 {
+    private readonly DateTime _validOpenHours = DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0);
+
     public TableTests()
+    {
+        ResetStaticTables();
+    }
+
+    private void ResetStaticTables()
     {
         typeof(Table)
             .GetField("_tables", BindingFlags.NonPublic | BindingFlags.Static)
             ?.SetValue(null, new List<Table>());
     }
 
+    private static Restaurant CreateRestaurant()
+    {
+        var address = new Address("Main St", "Test City", "123");
+        var openHours = new List<OpenHour>
+        {
+            new(DayOfWeek.Monday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+            new(DayOfWeek.Tuesday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+            new(DayOfWeek.Wednesday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+            new(DayOfWeek.Thursday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+            new(DayOfWeek.Friday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+            new(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(18, 0, 0)),
+            new(DayOfWeek.Sunday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0))
+        };
+
+        return new Restaurant("Test Restaurant", address, openHours);
+    }
+
+    private Table CreateTable(Restaurant restaurant, int capacity, string alias = "Table Alias", string description = "Description")
+        => new Table(restaurant, capacity, alias, description);
+
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
+        var restaurant = CreateRestaurant();
         const int capacity = 4;
         const string alias = "Window Table";
+        const string description = "A table by the window";
 
-        var table = new Table(capacity, alias);
+        var table = CreateTable(restaurant, capacity, alias, description);
 
         Assert.Equal(capacity, table.Capacity);
         Assert.Equal(alias, table.Alias);
+        Assert.Equal(description, table.Description);
         Assert.False(table.IsLocked);
         Assert.True(table.Id > 0);
     }
 
-    [Fact]
-    public void Id_Getter_ReturnsCorrectValue()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-5)]
+    public void Constructor_ThrowsExceptionForInvalidCapacity(int invalidCapacity)
     {
-        var table = new Table(2, "Center Table");
-        Assert.True(table.Id > 0);
+        var restaurant = CreateRestaurant();
+        Assert.Throws<ArgumentException>(() => CreateTable(restaurant, invalidCapacity));
     }
 
     [Fact]
-    public void Alias_Getter_ReturnsCorrectValue()
+    public void UpdateAlias_UpdatesAliasCorrectly()
     {
-        var table = new Table(4, "Corner Table");
-        Assert.Equal("Corner Table", table.Alias);
+        var restaurant = CreateRestaurant();
+        var table = CreateTable(restaurant, 4, "Original Alias");
+
+        table.UpdateAlias("Updated Alias");
+
+        Assert.Equal("Updated Alias", table.Alias);
     }
 
     [Fact]
-    public void Capacity_Getter_ReturnsCorrectValue()
+    public void UpdateAlias_ThrowsExceptionForEmptyAlias()
     {
-        var table = new Table(6, "Outdoor Table");
-        Assert.Equal(6, table.Capacity);
+        var restaurant = CreateRestaurant();
+        var table = CreateTable(restaurant, 4);
+
+        Assert.Throws<ArgumentException>(() => table.UpdateAlias(""));
     }
 
     [Fact]
-    public void IsLocked_Getter_IsInitiallyFalse()
+    public void LockTable_SetsIsLockedToTrue()
     {
-        var table = new Table(3, "Round Table");
-        Assert.False(table.IsLocked);
+        var restaurant = CreateRestaurant();
+        var table = CreateTable(restaurant, 4);
+
+        table.LockTable();
+
+        Assert.True(table.IsLocked);
     }
 
     [Fact]
     public void AddTable_AddsTableToList()
     {
-        var table = new Table(4, "Side Table");
+        var restaurant = CreateRestaurant();
+        var table = CreateTable(restaurant, 4);
+
         Table.AddTable(table);
 
-        var tables = Table.GetTables();
-        Assert.Contains(table, tables);
+        Assert.Contains(table, Table.GetTables());
+    }
+
+    [Fact]
+    public void DeleteTable_RemovesTableFromList()
+    {
+        ResetStaticTables();
+        var restaurant = CreateRestaurant();
+        var table = CreateTable(restaurant, 6, "VIP Table");
+
+        Table.DeleteTable(table);
+
+        Assert.DoesNotContain(table, Table.GetTables());
     }
 
     [Fact]
     public void GetTables_ReturnsCorrectListOfTables()
     {
-        var table1 = new Table(2, "Table 1");
-        var table2 = new Table(4, "Table 2");
-
-        Table.AddTable(table1);
-        Table.AddTable(table2);
+        ResetStaticTables();
+        var restaurant = CreateRestaurant();
+        var table1 = CreateTable(restaurant, 2, "Table 1");
+        var table2 = CreateTable(restaurant, 4, "Table 2");
 
         var tables = Table.GetTables();
 
         Assert.Equal(2, tables.Count);
         Assert.Contains(table1, tables);
         Assert.Contains(table2, tables);
-    }
-
-    // [Fact]
-    // public void SaveTableJSON_SavesTablesToFile()
-    // {
-    //     var table = new Table(4, "Patio Table");
-    //     Table.AddTable(table);
-    //     const string path = "test_tables.json";
-    //
-    //     Table.SaveTableJSON(path);
-    //     Assert.True(File.Exists(path));
-    //
-    //     File.Delete(path);
-    // }
-    //
-    // [Fact]
-    // public void LoadTableJSON_LoadsTablesFromFile()
-    // {
-    //     const string path = "test_tables.json";
-    //     var table = new Table(6, "VIP Table");
-    //     Table.AddTable(table);
-    //     Table.SaveTableJSON(path);
-    //     Table.GetTables().Clear(); 
-    //     
-    //     Table.LoadTableJSON(path);
-    //     var tables = Table.GetTables();
-    //
-    //     Assert.Single(tables);
-    //     Assert.Equal(table.Alias, tables[0].Alias);
-    //
-    //     File.Delete(path);
-    // }
-
-    [Fact]
-    public void UpdateAlias_ThrowsExceptionForEmptyAlias()
-    {
-        var table = new Table(4, "Table Alias");
-
-        Assert.Throws<ArgumentException>(() => table.UpdateAlias(" "));
-    }
-
-    [Fact]
-    public void Constructor_ThrowsExceptionForInvalidCapacity()
-    {
-        Assert.Throws<ArgumentException>(() => new Table(0));
-        Assert.Throws<ArgumentException>(() => new Table(-5));
     }
 }

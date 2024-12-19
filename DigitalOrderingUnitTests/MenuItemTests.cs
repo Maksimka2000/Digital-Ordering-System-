@@ -1,122 +1,130 @@
 using System.Reflection;
 using DigitalOrdering;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace DigitalOrderingUnitTests;
 
-// We can't create a object of class MenuItem because it's abstract so we created this class for testing purposes
-public class TestMenuItem(
-    string name,
-    double price,
-    string description,
-    bool isAvailable = true,
-    List<Ingredient>? ingredients = null,
-    Promotion? promotion = null)
-    : MenuItem(name, price, description, isAvailable, ingredients, promotion)
+public class TestMenuItem : MenuItem
 {
-    private static List<TestMenuItem> _menuItems = [];
+    private static List<TestMenuItem> _menuItems = new();
 
-    public static void AddMenuItem(TestMenuItem item)
+    public TestMenuItem(
+        Restaurant restaurant,
+        string name,
+        double price,
+        string description,
+        bool isAvailable = true,
+        List<Ingredient>? ingredients = null,
+        Promotion? promotion = null
+    ) : base(restaurant, name, price, description, isAvailable, ingredients, promotion)
     {
-        _menuItems.Add(item);
     }
 
-    public static List<TestMenuItem> GetMenuItems()
-    {
-        return [.._menuItems];
-    }
+    public static void AddMenuItem(TestMenuItem item) => _menuItems.Add(item);
 
-    public static void ClearMenuItems()
-    {
-        _menuItems.Clear();
-    }
-
-    public static void SaveMenuItemsJson(string path)
-    {
-        var json = JsonConvert.SerializeObject(_menuItems, Formatting.Indented);
-        File.WriteAllText(path, json);
-    }
-
-    public static void LoadMenuItemsJson(string path)
-    {
-        if (!File.Exists(path)) return;
-        var json = File.ReadAllText(path);
-        _menuItems = JsonConvert.DeserializeObject<List<TestMenuItem>>(json) ?? new List<TestMenuItem>();
-    }
+    public static List<TestMenuItem> GetMenuItems() => new(_menuItems);
 }
 
 public class MenuItemTests
 {
+    private readonly Restaurant _restaurant;
+
     public MenuItemTests()
     {
-        TestMenuItem.ClearMenuItems();
+        ResetStaticFields();
+        _restaurant = CreateTestRestaurant();
+    }
+
+    private void ResetStaticFields()
+    {
+        typeof(TestMenuItem).GetField("_menuItems", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, new List<TestMenuItem>());
+        typeof(Ingredient).GetField("_ingredients", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, new List<Ingredient>());
+    }
+
+    private Restaurant CreateTestRestaurant()
+    {
+        var address = new Address("Main St", "Test City", "123");
+        var openHours = new List<OpenHour>
+        {
+            new(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(22, 0, 0)),
+            new(DayOfWeek.Sunday, new TimeSpan(10, 0, 0), new TimeSpan(20, 0, 0))
+        };
+        return new Restaurant("Testaurant", address, openHours);
+    }
+
+    private TestMenuItem CreateMenuItem(string name = "Sample Item", double price = 5.0, string description = "Sample Description", bool isAvailable = true)
+    {
+        return new TestMenuItem(_restaurant, name, price, description, isAvailable);
     }
 
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        const string name = "Grilled Cheese";
-        const double price = 4.5;
-        const string description = "A classic grilled cheese sandwich";
         var ingredients = new List<Ingredient> { new("Cheese"), new("Bread") };
-        var promotion = new Promotion(15, "Sale", "Product sale");
-        bool isAvailable = true;
-        
-        var menuItem = new TestMenuItem(name, price, description, isAvailable, ingredients, promotion);
+        var promotion = new Promotion(15, "Sale", "Discounted item");
 
-        Assert.Equal(name, menuItem.Name);
-        Assert.Equal(price, menuItem.Price);
-        Assert.Equal(description, menuItem.Description);
-        // Assert.Equal(ingredients, menuItem.Ingredients);
-        // Assert.Equal(promotion, menuItem.Promotion);
+        var menuItem = new TestMenuItem(_restaurant, "Grilled Cheese", 4.5, "A classic grilled cheese sandwich", true, ingredients, promotion);
+
+        Assert.Equal("Grilled Cheese", menuItem.Name);
+        Assert.Equal(4.5, menuItem.Price);
+        Assert.Equal("A classic grilled cheese sandwich", menuItem.Description);
         Assert.True(menuItem.Id > 0);
-    }
-
-
-    [Fact]
-    public void Id_Getter_ReturnsCorrectValue()
-    {
-        var menuItem = new TestMenuItem("Salad", 3.5, "Green Salad");
-        Assert.True(menuItem.Id > 0);
+        Assert.Equal(ingredients.Count, menuItem.Ingredients.Count);
+        Assert.Equal(promotion, menuItem.Promotion);
     }
 
     [Fact]
-    public void Name_Getter_ReturnsCorrectValue()
+    public void Constructor_ThrowsExceptionForInvalidArguments()
     {
-        var menuItem = new TestMenuItem("Soup", 5.0, "Tomato Soup");
-        Assert.Equal("Soup", menuItem.Name);
+        Assert.Throws<ArgumentException>(() => new TestMenuItem(_restaurant, null, 10.0, "Test Description"));
+        Assert.Throws<ArgumentException>(() => new TestMenuItem(_restaurant, "Test", -5.0, "Test Description"));
+        Assert.Throws<ArgumentException>(() => new TestMenuItem(_restaurant, "Test", 10.0, null));
     }
 
     [Fact]
-    public void Price_Getter_ReturnsCorrectValue()
+    public void AddIngredient_AddsIngredientToMenuItem()
     {
-        var menuItem = new TestMenuItem("Pasta", 8.0, "Pasta with Marinara Sauce");
-        Assert.Equal(8.0, menuItem.Price);
+        var menuItem = CreateMenuItem("Pizza", 12.0, "Cheese Pizza");
+        var ingredient = new Ingredient("Cheese");
+
+        menuItem.AddIngredient(ingredient);
+
+        Assert.Contains(ingredient, menuItem.Ingredients);
+        Assert.Contains(menuItem, ingredient.IngredientInMenuItems);
     }
 
     [Fact]
-    public void Description_Getter_ReturnsCorrectValue()
+    public void RemoveIngredient_RemovesIngredientFromMenuItem()
     {
-        var menuItem = new TestMenuItem("Pizza", 10.0, "Cheese Pizza");
-        Assert.Equal("Cheese Pizza", menuItem.Description);
+        var menuItem = CreateMenuItem("Pizza", 12.0, "Cheese Pizza");
+        var ingredient = new Ingredient("Cheese");
+
+        menuItem.AddIngredient(ingredient);
+        menuItem.RemoveIngredient(ingredient);
+
+        Assert.DoesNotContain(ingredient, menuItem.Ingredients);
+        Assert.DoesNotContain(menuItem, ingredient.IngredientInMenuItems);
     }
 
     [Fact]
     public void AddMenuItem_AddsItemToList()
     {
-        var menuItem = new TestMenuItem("Burger", 7.5, "Beef Burger");
+        var menuItem = CreateMenuItem("Burger", 7.5, "Beef Burger");
         TestMenuItem.AddMenuItem(menuItem);
 
-        var items = TestMenuItem.GetMenuItems();
-        Assert.Contains(menuItem, items);
+        Assert.Contains(menuItem, TestMenuItem.GetMenuItems());
     }
 
     [Fact]
     public void GetMenuItems_ReturnsCorrectListOfItems()
     {
-        var item1 = new TestMenuItem("Burger", 7.5, "Beef Burger");
-        var item2 = new TestMenuItem("Fries", 2.5, "Crispy French Fries");
+        var item1 = CreateMenuItem("Burger", 7.5, "Beef Burger");
+        var item2 = CreateMenuItem("Fries", 2.5, "Crispy French Fries");
         TestMenuItem.AddMenuItem(item1);
         TestMenuItem.AddMenuItem(item2);
 
@@ -128,48 +136,35 @@ public class MenuItemTests
     }
 
     [Fact]
-    public void SaveMenuItemsJSON_SavesItemsToFile()
+    public void UpdatePromotion_UpdatesPromotionCorrectly()
     {
-        var menuItem = new TestMenuItem("Burger", 7.5, "Beef Burger");
-        TestMenuItem.AddMenuItem(menuItem);
-        const string path = "test_menuitems.json";
+        var menuItem = CreateMenuItem("Salad", 5.0, "Fresh Salad");
+        var promotion = new Promotion(20, "Discount", "20% Off");
 
-        TestMenuItem.SaveMenuItemsJson(path);
-        Assert.True(File.Exists(path));
+        menuItem.AddPromotion(promotion);
+        Assert.Equal(promotion, menuItem.Promotion);
 
-        File.Delete(path);
+        menuItem.RemovePromotion();
+        Assert.Null(menuItem.Promotion);
     }
 
     [Fact]
-    public void LoadMenuItemsJSON_LoadsItemsFromFile()
+    public void MakeAvailable_MakesMenuItemAvailable()
     {
-        const string path = "test_menuitems.json";
-        var menuItem = new TestMenuItem("Pizza", 10.0, "Cheese Pizza");
-        TestMenuItem.AddMenuItem(menuItem);
-        TestMenuItem.SaveMenuItemsJson(path);
-        TestMenuItem.ClearMenuItems(); // Clear list to test reloading
+        var menuItem = CreateMenuItem("Soup", 4.0, "Tomato Soup", false);
 
-        TestMenuItem.LoadMenuItemsJson(path);
-        var items = TestMenuItem.GetMenuItems();
+        menuItem.MakeAvailable();
 
-        Assert.Single(items);
-        Assert.Equal(menuItem.Name, items[0].Name);
-
-        File.Delete(path);
+        Assert.True(menuItem.IsAvailable);
     }
 
     [Fact]
-    public void Constructor_ThrowsExceptionForInvalidArguments()
+    public void MakeUnavailable_MakesMenuItemUnavailable()
     {
-        Assert.Throws<ArgumentException>(() => new TestMenuItem(null, 10.0, "Test Description"));
-        Assert.Throws<ArgumentException>(() => new TestMenuItem("Test", -5.0, "Test Description"));
-        Assert.Throws<ArgumentException>(() => new TestMenuItem("Test", 10.0, null));
+        var menuItem = CreateMenuItem("Soup", 4.0, "Tomato Soup", true);
+
+        menuItem.MakeUnavailable();
+
+        Assert.False(menuItem.IsAvailable);
     }
-    //
-    // [Fact]
-    // public void UpdateIngredients_ThrowsExceptionForEmptyIngredientsList()
-    // {
-    //     var menuItem = new TestMenuItem("Salad", 3.0, "Green Salad");
-    //     Assert.Throws<ArgumentException>(() => menuItem.UpdateIngredients(new List<Ingredient>()));
-    // }
 }

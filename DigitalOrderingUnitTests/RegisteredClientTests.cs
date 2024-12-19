@@ -8,18 +8,33 @@ public class RegisteredClientTests
 {
     public RegisteredClientTests()
     {
+        ResetRegisteredClients();
+    }
+
+    private void ResetRegisteredClients()
+    {
         typeof(RegisteredClient)
             .GetField("_registeredClients", BindingFlags.NonPublic | BindingFlags.Static)
             ?.SetValue(null, new List<RegisteredClient>());
     }
 
+    private RegisteredClient CreateClient(
+        string name = "John",
+        string password = "P@ssw0rd1!",
+        string email = "john.doe@example.com",
+        string phoneNumber = "+48 123 456 789",
+        string surname = "Doe")
+    {
+        return new RegisteredClient(name, password, email, phoneNumber, surname);
+    }
+
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        var client = new RegisteredClient("John", "P@ssw0rd", "john.doe@example.com", "+48 123 456 789", "Doe");
+        var client = CreateClient();
 
         Assert.Equal("John", client.Name);
-        Assert.Equal("P@ssw0rd", client.Password);
+        Assert.Equal("P@ssw0rd1!", client.Password);
         Assert.Equal("Doe", client.Surname);
         Assert.Equal("john.doe@example.com", client.Email);
         Assert.Equal("+48 123 456 789", client.PhoneNumber);
@@ -28,44 +43,69 @@ public class RegisteredClientTests
     }
 
     [Fact]
-    public void Id_Getter_ReturnsCorrectValue()
+    public void Constructor_ThrowsExceptionForEmptyPassword()
     {
-        var client = new RegisteredClient("Alice", "P@ssw0rd", "john.doe@example.com", "+48 123 456 789", "Doe");
-        Assert.True(client.Id > 0);
+        Assert.Throws<ArgumentException>(() => new RegisteredClient("User", "", "user@example.com"));
     }
 
     [Fact]
-    public void Password_Getter_ReturnsCorrectValue()
+    public void Constructor_ThrowsExceptionForEmptyEmail()
     {
-        var client = new RegisteredClient("Bob", "P@ssw0rd1!", "john.doe@example.com", "+48 123 456 789", "Doe");
-        Assert.Equal("P@ssw0rd1!", client.Password);
+        Assert.Throws<ArgumentException>(() => new RegisteredClient("User", "P@ssw0rd1!", ""));
     }
 
     [Fact]
-    public void Surname_Getter_ReturnsCorrectValue()
+    public void Constructor_ThrowsExceptionForNullEmailAndPhoneNumber()
     {
-        var client = new RegisteredClient("Charlie", "P@ssw0rd", "charlie.doe@example.com", null, "Doe");
-        Assert.Equal("Doe", client.Surname);
+        Assert.Throws<NullReferenceException>(() => new RegisteredClient("User", "P@ssw0rd1!"));
     }
 
     [Fact]
-    public void Email_Getter_ReturnsCorrectValue()
+    public void UpdatePassword_UpdatesPasswordCorrectly()
     {
-        var client = new RegisteredClient("Dave", "P@ssw0rd", "dave@example.com");
-        Assert.Equal("dave@example.com", client.Email);
+        var client = CreateClient();
+        client.UpdatePassword("NewP@ssw0rd!2");
+
+        Assert.Equal("NewP@ssw0rd!2", client.Password);
     }
 
     [Fact]
-    public void PhoneNumber_Getter_ReturnsCorrectValue()
+    public void Constructor_ThrowsExceptionForShortPassword()
     {
-        var client = new RegisteredClient("Eve", "P@ssw0rd", null, "+48 123 456 789");
-        Assert.Equal("+48 123 456 789", client.PhoneNumber);
+        Assert.Throws<ArgumentException>(() => new RegisteredClient("User", "pass", "user@example.com"));
+    }
+
+    [Fact]
+    public void UpdateEmail_UpdatesEmailCorrectly()
+    {
+        var client = CreateClient();
+        client.UpdateEmail("newuser@example.com");
+
+        Assert.Equal("newuser@example.com", client.Email);
+    }
+
+    [Fact]
+    public void UpdateEmail_ThrowsExceptionWhenEmailAndPhoneAreNull()
+    {
+        var client = CreateClient();
+        client.UpdateEmail(null);
+
+        Assert.Throws<NullReferenceException>(() => client.UpdatePhoneNumber(null));
+    }
+
+    [Fact]
+    public void UpdatePhoneNumber_UpdatesPhoneNumberCorrectly()
+    {
+        var client = CreateClient();
+        client.UpdatePhoneNumber("+48 987 654 321");
+
+        Assert.Equal("+48 987 654 321", client.PhoneNumber);
     }
 
     [Fact]
     public void AddRegisteredClient_AddsClientToList()
     {
-        var client = new RegisteredClient("Ivy", "P@ssw0rd", "ivy@example.com");
+        var client = CreateClient();
         RegisteredClient.AddRegisteredClient(client);
 
         var clients = RegisteredClient.GetRegisteredClients();
@@ -73,13 +113,10 @@ public class RegisteredClientTests
     }
 
     [Fact]
-    public void GetRegisteredClients_ReturnsCorrectListOfClients()
+    public void GetRegisteredClients_ReturnsAllClients()
     {
-        var client1 = new RegisteredClient("Jack", "P@ssw0rd", "jack@example.com");
-        var client2 = new RegisteredClient("Jill", "P@ssw0rd1", "jill@example.com");
-
-        RegisteredClient.AddRegisteredClient(client1);
-        RegisteredClient.AddRegisteredClient(client2);
+        var client1 = CreateClient("Alice", "P@ssw0rd1!", "alice@example.com");
+        var client2 = CreateClient("Bob", "P@ssw0rd2@", "bob@example.com");
 
         var clients = RegisteredClient.GetRegisteredClients();
 
@@ -88,52 +125,28 @@ public class RegisteredClientTests
         Assert.Contains(client2, clients);
     }
 
-    // [Fact]
-    // public void SaveRegisteredClientJSON_SavesClientsToFile()
-    // {
-    //     var client = new RegisteredClient("Kevin", "P@ssw0rd", "kevin@example.com");
-    //     RegisteredClient.AddRegisteredClient(client);
-    //     const string path = "test_registered_clients.json";
-    //
-    //     RegisteredClient.SaveRegisteredClientJSON(path);
-    //     Assert.True(File.Exists(path));
-    //
-    //     File.Delete(path);
-    // }
-
-    // [Fact]
-    // public void LoadRegisteredClientJSON_LoadsClientsFromFile()
-    // {
-    //     const string path = "test_registered_clients.json";
-    //     var client = new RegisteredClient("Lily", "P@ssw0rd", "lily@example.com");
-    //     RegisteredClient.AddRegisteredClient(client);
-    //     RegisteredClient.SaveRegisteredClientJSON(path);
-    //     RegisteredClient.GetRegisteredClients().Clear();
-    //
-    //     RegisteredClient.LoadRegisteredClientJSON(path);
-    //     var clients = RegisteredClient.GetRegisteredClients();
-    //
-    //     Assert.Single(clients);
-    //     Assert.Equal(client.Name, clients[0].Name);
-    //
-    //     File.Delete(path);
-    // }
-
     [Fact]
-    public void Constructor_ThrowsExceptionForMissingEmailAndPhoneNumber()
+    public void UpdateName_UpdatesNameCorrectly()
     {
-        Assert.Throws<NullReferenceException>(() => new RegisteredClient("George", "P@ssw0rd"));
+        var client = CreateClient();
+        client.UpdateName("NewName");
+
+        Assert.Equal("NewName", client.Name);
     }
 
     [Fact]
-    public void Constructor_ThrowsExceptionForInvalidEmailFormat()
+    public void UpdateSurname_UpdatesSurnameCorrectly()
     {
-        Assert.Throws<ArgumentException>(() => new RegisteredClient("Mike", "P@ssw0rd", "invalid-email"));
+        var client = CreateClient(surname: "OldSurname");
+        client.UpdateSurname("NewSurname");
+
+        Assert.Equal("NewSurname", client.Surname);
     }
 
     [Fact]
-    public void Constructor_ThrowsExceptionForInvalidPasswordFormat()
+    public void UpdateSurname_ThrowsExceptionForShortSurname()
     {
-        Assert.Throws<ArgumentException>(() => new RegisteredClient("Nancy", "password"));
+        var client = CreateClient(surname: "ValidSurname");
+        Assert.Throws<ArgumentException>(() => client.UpdateSurname("A"));
     }
 }

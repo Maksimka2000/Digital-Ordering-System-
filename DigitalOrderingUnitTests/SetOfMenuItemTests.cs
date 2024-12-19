@@ -8,150 +8,142 @@ public class SetOfMenuItemTests
 {
     public SetOfMenuItemTests()
     {
+        ResetStaticSetOfMenuItems();
+    }
+
+    private void ResetStaticSetOfMenuItems()
+    {
         typeof(SetOfMenuItem)
-            .GetField("_businessLunches", BindingFlags.NonPublic | BindingFlags.Static)
+            .GetField("_setOfMenuItems", BindingFlags.NonPublic | BindingFlags.Static)
             ?.SetValue(null, new List<SetOfMenuItem>());
     }
 
-    private static List<Food> CreateFoodList(int count)
+    private static Restaurant CreateRestaurant()
     {
-        var foods = new List<Food>();
-        for (var i = 0; i < count; i++)
-        {
-            foods.Add(new Food("Food " + i, 10.0, "Test Food", Food.FoodType.Snack, null, null));
-        }
-
-        return foods;
+        return new Restaurant("Test Restaurant", new Address("Main St", "Test City", "123"),
+            new List<OpenHour>
+            {
+                new OpenHour(DayOfWeek.Monday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+                new OpenHour(DayOfWeek.Tuesday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+                new OpenHour(DayOfWeek.Wednesday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+                new OpenHour(DayOfWeek.Thursday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+                new OpenHour(DayOfWeek.Friday, new TimeSpan(8, 0, 0), new TimeSpan(20, 0, 0)),
+                new OpenHour(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(18, 0, 0)),
+                new OpenHour(DayOfWeek.Sunday, null, null)
+            });
     }
 
-    private static List<Beverage> CreateBeverageList(int count)
+    private static List<Food> CreateFoodList(int count, Restaurant restaurant)
+        => Enumerable.Range(1, count)
+            .Select(i => new Food(restaurant, $"Food {i}", 10.0, "Test Food", Food.FoodType.Snack, null))
+            .ToList();
+
+    private static List<Beverage> CreateBeverageList(int count, Restaurant restaurant)
+        => Enumerable.Range(1, count)
+            .Select(i => new Beverage(restaurant, $"Beverage {i}", 5.0, "Test Beverage", Beverage.BeverageType.Drinks, false))
+            .ToList();
+
+    [Fact]
+    public void Constructor_SetsPropertiesCorrectly()
     {
-        var beverages = new List<Beverage>();
-        for (var i = 0; i < count; i++)
-        {
-            beverages.Add(new Beverage("Beverage " + i, 5.0, "Test Beverage",
-                Beverage.BeverageType.Drinks, false, null, null));
-        }
+        var restaurant = CreateRestaurant();
+        var foods = CreateFoodList(2, restaurant);
+        var beverages = CreateBeverageList(1, restaurant);
 
-        return beverages;
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch set", foods, beverages);
+
+        Assert.Equal("Lunch Set", set.Name);
+        Assert.Equal(25.0, set.Price);
+        Assert.Equal("Business lunch set", set.Description);
+        Assert.Equal(foods.Count, set.Foods.Count);
+        Assert.Equal(beverages.Count, set.Beverages.Count);
+        Assert.NotNull(set.Days);
+        Assert.NotEmpty(set.Days);
     }
-    //
-    // [Fact]
-    // public void Constructor_SetsPropertiesCorrectly()
-    // {
-    //     // var foods = CreateFoodList(SetOfMenuItem.MinNumberOfFood);
-    //     // var beverages = CreateBeverageList(SetOfMenuItem.MinNumberOfBeverage);
-    //
-    //     // var businessLunch = new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", foods, beverages);
-    //
-    //     Assert.Equal("Lunch Set", businessLunch.Name);
-    //     Assert.Equal(20.0, businessLunch.Price);
-    //     Assert.Equal("Business Lunch", businessLunch.Description);
-    //     // Assert.Equal(foods, businessLunch.Foods);
-    //     // Assert.Equal(beverages, businessLunch.Beverages);
-    // }
 
-    // [Fact]
-    // public void MaxNumberOfFood_Getter_ReturnsCorrectValue()
-    // {
-    //     Assert.Equal(4, SetOfMenuItem.MaxNumberOfFood);
-    // }
-    //
-    // [Fact]
-    // public void MinNumberOfFood_Getter_ReturnsCorrectValue()
-    // {
-    //     Assert.Equal(2, SetOfMenuItem.MinNumberOfFood);
-    // }
-    //
-    // [Fact]
-    // public void MaxNumberOfBeverage_Getter_ReturnsCorrectValue()
-    // {
-    //     Assert.Equal(1, SetOfMenuItem.MaxNumberOfBeverage);
-    // }
-    //
-    // [Fact]
-    // public void MinNumberOfBeverage_Getter_ReturnsCorrectValue()
-    // {
-    //     Assert.Equal(1, SetOfMenuItem.MinNumberOfBeverage);
-    // }
+    [Fact]
+    public void AddFood_AddsFoodToSet()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+        var food = new Food(restaurant, "Soup", 5.0, "Tomato soup", Food.FoodType.Snack, null);
 
-    // [Fact]
-    // public void AddBusinessLunch_AddsRestaurantToList()
-    // {
-    //     var businessLunch =
-    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
-    //     SetOfMenuItem.AddSetOfMenuItems(businessLunch);
-    //
-    //     var lunches = SetOfMenuItem.GetSetOfMenuItems();
-    //     Assert.Contains(businessLunch, lunches);
-    // }
-    //
-    // [Fact]
-    // public void GetBusinessLunches_ReturnsCorrectList()
-    // {
-    //     var lunch1 = new SetOfMenuItem("Lunch Set 1", 20.0, "Business Lunch 1", CreateFoodList(2),
-    //         CreateBeverageList(1));
-    //     var lunch2 = new SetOfMenuItem("Lunch Set 2", 25.0, "Business Lunch 2", CreateFoodList(3),
-    //         CreateBeverageList(1));
-    //
-    //     SetOfMenuItem.AddSetOfMenuItems(lunch1);
-    //     SetOfMenuItem.AddSetOfMenuItems(lunch2);
-    //
-    //     var lunches = SetOfMenuItem.GetSetOfMenuItems();
-    //
-    //     Assert.Equal(2, lunches.Count);
-    //     Assert.Contains(lunch1, lunches);
-    //     Assert.Contains(lunch2, lunches);
-    // }
+        set.AddFood(food);
 
-    // [Fact]
-    // public void SaveBusinessLunchJson_SavesToFile()
-    // {
-    //     var businessLunch =
-    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
-    //     SetOfMenuItem.AddSetOfMenuItems(businessLunch);
-    //     const string path = "test_business_lunches.json";
-    //
-    //     SetOfMenuItem.SaveSetOfMenuItemsJson(path);
-    //     Assert.True(File.Exists(path));
-    //
-    //     File.Delete(path);
-    // }
+        Assert.Contains(food, set.Foods);
+    }
 
-    // [Fact]
-    // public void LoadBusinessLunchJson_LoadsFromFile()
-    // {
-    //     const string path = "test_business_lunches.json";
-    //     var businessLunch =
-    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", CreateFoodList(2), CreateBeverageList(1));
-    //     SetOfMenuItem.AddSetOfMenuItems(businessLunch);
-    //     SetOfMenuItem.SaveSetOfMenuItemsJson(path);
-    //     SetOfMenuItem.GetSetOfMenuItems().Clear();
-    //
-    //     SetOfMenuItem.LoadSetOfMenuItemsJson(path);
-    //     var lunches = SetOfMenuItem.GetSetOfMenuItems();
-    //
-    //     Assert.Single(lunches);
-    //     Assert.Equal(businessLunch.Name, lunches[0].Name);
-    //
-    //     File.Delete(path);
-    // }
+    [Fact]
+    public void RemoveFood_RemovesFoodFromSet()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+        var food = new Food(restaurant, "Soup", 5.0, "Tomato soup", Food.FoodType.Snack, null);
 
-    // [Fact]
-    // public void Constructor_ThrowsExceptionForInvalidFoodCount()
-    // {
-    //     var invalidFoods = CreateFoodList(5);
-    //     var beverages = CreateBeverageList(1);
-    //     Assert.Throws<ArgumentException>(() =>
-    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", invalidFoods, beverages));
-    // }
-    //
-    // [Fact]
-    // public void Constructor_ThrowsExceptionForInvalidBeverageCount()
-    // {
-    //     var foods = CreateFoodList(2);
-    //     var invalidBeverages = CreateBeverageList(2);
-    //     Assert.Throws<ArgumentException>(() =>
-    //         new SetOfMenuItem("Lunch Set", 20.0, "Business Lunch", foods, invalidBeverages));
-    // }
+        set.AddFood(food);
+        set.RemoveFood(food);
+
+        Assert.DoesNotContain(food, set.Foods);
+    }
+
+    [Fact]
+    public void AddBeverage_AddsBeverageToSet()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+        var beverage = new Beverage(restaurant, "Cola", 5.0, "Cold drink", Beverage.BeverageType.Drinks, false);
+
+        set.AddBeverage(beverage);
+
+        Assert.Contains(beverage, set.Beverages);
+    }
+
+    [Fact]
+    public void RemoveBeverage_RemovesBeverageFromSet()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+        var beverage = new Beverage(restaurant, "Cola", 5.0, "Cold drink", Beverage.BeverageType.Drinks, false);
+
+        set.AddBeverage(beverage);
+        set.RemoveBeverage(beverage);
+
+        Assert.DoesNotContain(beverage, set.Beverages);
+    }
+
+    [Fact]
+    public void UpdateDays_UpdatesAvailableDays()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+
+        var days = new List<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Tuesday };
+        set.UpdateDays(days);
+
+        Assert.Equal(days.Count, set.Days.Count);
+        Assert.All(days, day => Assert.Contains(day, set.Days));
+    }
+
+    [Fact]
+    public void UpdateTime_UpdatesStartAndEndTime()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+
+        var startTime = new TimeSpan(11, 0, 0);
+        var endTime = new TimeSpan(15, 0, 0);
+        set.UpdateTime(startTime, endTime);
+
+        Assert.Equal(startTime, set.StartTime);
+        Assert.Equal(endTime, set.EndTime);
+    }
+
+    [Fact]
+    public void UpdateTime_ThrowsExceptionForInvalidTimeRange()
+    {
+        var restaurant = CreateRestaurant();
+        var set = new SetOfMenuItem(restaurant, "Lunch Set", 25.0, "Business lunch");
+
+        Assert.Throws<ArgumentException>(() => set.UpdateTime(new TimeSpan(15, 0, 0), new TimeSpan(11, 0, 0)));
+    }
 }

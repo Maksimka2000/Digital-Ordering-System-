@@ -5,76 +5,92 @@ namespace DigitalOrderingUnitTests;
 
 public class BeverageTests
 {
+    private readonly Restaurant _restaurant;
+
     public BeverageTests()
     {
-        typeof(Beverage).GetField("_beverages",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+        ResetBeverages();
+        _restaurant = CreateRestaurant();
+    }
+
+    private static void ResetBeverages()
+    {
+        typeof(Beverage)
+            .GetField("_beverages", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
             ?.SetValue(null, new List<Beverage>());
+    }
+
+    private static Restaurant CreateRestaurant()
+    {
+        var address = new Address("Main St", "Test City", "123");
+        var openHours = new List<OpenHour>
+        {
+            new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(22, 0, 0)),
+            new OpenHour(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(23, 0, 0)),
+            new OpenHour(DayOfWeek.Sunday, new TimeSpan(10, 0, 0), new TimeSpan(20, 0, 0))
+        };
+        return new Restaurant("Testaurant", address, openHours);
     }
 
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        const string name = "Mojito";
-        const double price = 10.5;
-        const string description = "A refreshing cocktail with mint and lime";
-        var ingredients = new List<Ingredient>
-        {
-            new("Tomato"),
-            new("Cheese"),
-            new("Basil"),
-            new("Olive Oil")
-        };
-        var promotion = new Promotion(15, "Sale", "Product sale");
-        const bool isAlcohol = true;
-        var beverageType = Beverage.BeverageType.Cocktails;
+        var ingredients = CreateIngredients("Mint", "Lime", "Rum");
+        var beverage = CreateBeverage("Mojito", 10.5, "A refreshing cocktail with mint and lime", Beverage.BeverageType.Cocktails, true, ingredients);
 
-        var beverage = new Beverage(name, price, description, beverageType, isAlcohol, ingredients, promotion);
-
-        Assert.Equal(name, beverage.Name);
-        Assert.Equal(price, beverage.Price);
-        Assert.Equal(description, beverage.Description);
-        // Assert.Equal(ingredients, beverage.Ingredients);
-        // Assert.Equal(promotion, beverage.Promotion);
-        Assert.Equal(isAlcohol, beverage.IsAlcohol);
-        Assert.Equal(beverageType, beverage.BeverageT);
+        AssertBeverageProperties(beverage, "Mojito", 10.5, "A refreshing cocktail with mint and lime", Beverage.BeverageType.Cocktails, true);
     }
 
     [Fact]
-    public void BeverageType_Getter_ReturnsCorrectValue()
+    public void Constructor_ThrowsExceptionForInvalidBeverageType()
     {
-        var beverage = new Beverage("Espresso", 2.5, "Strong coffee",
-            Beverage.BeverageType.Cafeteria, false, null, null);
-        Assert.Equal(Beverage.BeverageType.Cafeteria, beverage.BeverageT);
+        Assert.Throws<ArgumentException>(() =>
+            new Beverage(_restaurant, "InvalidBeverage", 5.0, "Test", (Beverage.BeverageType)999, false));
     }
 
     [Fact]
-    public void IsAlcohol_Getter_ReturnsCorrectValue()
+    public void AddSetOfMenuItemsToBeverage_AddsAssociation()
     {
-        var beverage = new Beverage("Beer", 4.0, "Refreshing beer", Beverage.BeverageType.Drinks, true, null, null);
-        Assert.True(beverage.IsAlcohol);
+        var setOfMenuItem = CreateSetOfMenuItem("Lunch Combo", 15.0, "Lunch special");
+        var beverage = CreateBeverage("Coke", 2.0, "Soda", Beverage.BeverageType.Drinks, false);
+
+        beverage.AddSetOfMenuItemsToBeverage(setOfMenuItem);
+
+        Assert.Contains(setOfMenuItem, beverage.BeverageInSetOfMenuItems);
+        Assert.Contains(beverage, setOfMenuItem.Beverages);
+    }
+
+    [Fact]
+    public void RemoveSetOfMenuItemsFromBeverage_RemovesAssociation()
+    {
+        var setOfMenuItem = CreateSetOfMenuItem("Dinner Combo", 25.0, "Dinner special");
+        var beverage = CreateBeverage("Sprite", 2.5, "Soda", Beverage.BeverageType.Drinks, false);
+
+        beverage.AddSetOfMenuItemsToBeverage(setOfMenuItem);
+        beverage.RemoveSetOfMenuItemsFromBeverage(setOfMenuItem);
+
+        Assert.DoesNotContain(setOfMenuItem, beverage.BeverageInSetOfMenuItems);
+        Assert.DoesNotContain(beverage, setOfMenuItem.Beverages);
     }
 
     [Fact]
     public void AddBeverage_AddsBeverageToList()
     {
-        var beverage = new Beverage("Espresso", 2.5, "Strong coffee",
-            Beverage.BeverageType.Cafeteria, false, null, null);
+        var beverage = CreateBeverage("Fanta", 3.0, "Orange soda", Beverage.BeverageType.Drinks, false);
 
-        Beverage.AddBeverage(beverage);
         var beverages = Beverage.GetBeverages();
-
         Assert.Contains(beverage, beverages);
     }
 
     [Fact]
     public void GetBeverages_ReturnsCorrectList()
     {
-        var beverage1 = new Beverage("Espresso", 2.5, "Strong coffee",
-            Beverage.BeverageType.Cafeteria, false, null, null);
-        var beverage2 = new Beverage("Whiskey", 12.0, "Smooth whiskey", Beverage.BeverageType.Drinks, true, null, null);
-        Beverage.AddBeverage(beverage1);
-        Beverage.AddBeverage(beverage2);
+        var beverage1 = CreateBeverage("Tea", 1.5, "Hot tea", Beverage.BeverageType.Cafeteria, false);
+        var beverage2 = CreateBeverage("Mojito", 10.0, "Cocktail", Beverage.BeverageType.Cocktails, true);
 
         var beverages = Beverage.GetBeverages();
 
@@ -86,8 +102,7 @@ public class BeverageTests
     [Fact]
     public void DeleteBeverage_RemovesBeverageFromList()
     {
-        var beverage = new Beverage("Tea", 1.5, "Green tea", Beverage.BeverageType.Cafeteria, false, null, null);
-        Beverage.AddBeverage(beverage);
+        var beverage = CreateBeverage("Water", 1.0, "Mineral water", Beverage.BeverageType.Cafeteria, false);
 
         Beverage.DeleteBeverage(beverage);
         var beverages = Beverage.GetBeverages();
@@ -95,48 +110,41 @@ public class BeverageTests
         Assert.DoesNotContain(beverage, beverages);
     }
 
-    // [Fact]
-    // public void SaveBeverageJSON_SavesBeveragesToFile()
-    // {
-    //     var beverage = new Beverage("Coca Cola", 1.0, "Classic cola drink",
-    //         Beverage.BeverageType.Drinks, false, null, null);
-    //     Beverage.AddBeverage(beverage);
-    //     const string path = "test_beverages.json";
-    //
-    //     Beverage.SaveBeverageJSON(path);
-    //
-    //     Assert.True(File.Exists(path));
-    //
-    //     File.Delete(path);
-    // }
-
-    // [Fact]
-    // public void LoadBeverageJSON_LoadsBeveragesFromFile()
-    // {
-    //     const string path = "test_beverages.json";
-    //     var beverage = new Beverage("Pepsi", 1.0, "Classic cola drink",
-    //         Beverage.BeverageType.Drinks, false, null, null);
-    //     Beverage.AddBeverage(beverage);
-    //     Beverage.SaveBeverageJSON(path);
-    //     Beverage.DeleteBeverage(beverage);
-    //
-    //     Beverage.LoadBeverageJSON(path);
-    //     var beverages = Beverage.GetBeverages();
-    //
-    //     Assert.Single(beverages);
-    //     Assert.Equal(beverage.Name, beverages[0].Name);
-    //
-    //     File.Delete(path);
-    // }
+    [Fact]
+    public void AddSetOfMenuItemsToBeverage_ThrowsForNull()
+    {
+        var beverage = CreateBeverage("Coke", 2.0, "Soda", Beverage.BeverageType.Drinks, false);
+        Assert.Throws<ArgumentNullException>(() => beverage.AddSetOfMenuItemsToBeverage(null));
+    }
 
     [Fact]
-    public void Constructor_ThrowsExceptionForInvalidArguments()
+    public void RemoveSetOfMenuItemsFromBeverage_ThrowsForNull()
     {
-        Assert.Throws<ArgumentException>(() =>
-            new Beverage(null, 10.0, "Test", Beverage.BeverageType.Drinks, false, null, null));
-        Assert.Throws<ArgumentException>(() =>
-            new Beverage("Test", -5.0, "Test", Beverage.BeverageType.Drinks, false, null, null));
-        Assert.Throws<ArgumentException>(() =>
-            new Beverage("Test", 5.0, "", Beverage.BeverageType.Drinks, false, null, null));
+        var beverage = CreateBeverage("Sprite", 2.5, "Soda", Beverage.BeverageType.Drinks, false);
+        Assert.Throws<ArgumentNullException>(() => beverage.RemoveSetOfMenuItemsFromBeverage(null));
+    }
+
+    private Beverage CreateBeverage(string name, double price, string description, Beverage.BeverageType type, bool isAlcohol, List<Ingredient>? ingredients = null)
+    {
+        return new Beverage(_restaurant, name, price, description, type, isAlcohol, ingredients);
+    }
+
+    private SetOfMenuItem CreateSetOfMenuItem(string name, double price, string description)
+    {
+        return new SetOfMenuItem(_restaurant, name, price, description);
+    }
+
+    private List<Ingredient> CreateIngredients(params string[] ingredientNames)
+    {
+        return ingredientNames.Select(name => new Ingredient(name)).ToList();
+    }
+
+    private void AssertBeverageProperties(Beverage beverage, string name, double price, string description, Beverage.BeverageType type, bool isAlcohol)
+    {
+        Assert.Equal(name, beverage.Name);
+        Assert.Equal(price, beverage.Price);
+        Assert.Equal(description, beverage.Description);
+        Assert.Equal(type, beverage.BeverageT);
+        Assert.Equal(isAlcohol, beverage.IsAlcohol);
     }
 }

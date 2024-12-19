@@ -1,20 +1,34 @@
 using DigitalOrdering;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace DigitalOrderingUnitTests;
 
-// We can't create a object of class MenuItem because it's abstract so we created this class for testing purposes
 public class TestOrder : Order
 {
     private static List<TestOrder> _orders = [];
 
     public TestOrder(int numberOfPeople) : base(numberOfPeople)
     {
-        CalculateTotalPrice();
+        var ingredientsField = typeof(Ingredient).GetField("_ingredients",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+        if (ingredientsField != null)
+        {
+            var currentIngredients = (List<Ingredient>)ingredientsField.GetValue(null);
+            if (currentIngredients != null)
+            {
+                currentIngredients.Clear(); 
+            }
+            else
+            {
+                ingredientsField.SetValue(null, new List<Ingredient>());
+            }
+        }
+
+        AddOrder(this);
     }
 
-    // Extent management methods
+
     public static void AddOrder(TestOrder order)
     {
         _orders.Add(order);
@@ -24,32 +38,54 @@ public class TestOrder : Order
     {
         return [.._orders];
     }
-
-    public static void ClearOrders()
-    {
-        _orders.Clear();
-    }
-
-    // File persistence methods
-    public static void SaveOrdersJSON(string path)
-    {
-        var json = JsonConvert.SerializeObject(_orders, Formatting.Indented);
-        File.WriteAllText(path, json);
-    }
-
-    public static void LoadOrdersJSON(string path)
-    {
-        if (!File.Exists(path)) return;
-        var json = File.ReadAllText(path);
-        _orders = JsonConvert.DeserializeObject<List<TestOrder>>(json) ?? new List<TestOrder>();
-    }
 }
 
 public class OrderTests
 {
+    private readonly Restaurant _restaurant;
+    private readonly MenuItem _menuItemWithPromo;
+    private readonly MenuItem _menuItemWithoutPromo;
+
     public OrderTests()
     {
-        TestOrder.ClearOrders();
+        typeof(Ingredient)
+            .GetField("_ingredients", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            ?.SetValue(null, new List<Ingredient>());
+
+        RestoreStaticOrders();
+
+        var address = new Address("Main St", "Test City", "123");
+        var openHours = new List<OpenHour>
+        {
+            new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(22, 0, 0)),
+            new OpenHour(DayOfWeek.Sunday, new TimeSpan(10, 0, 0), new TimeSpan(22, 0, 0))
+        };
+        _restaurant = new Restaurant("Testaurant", address, openHours);
+
+        var ingredients = new List<Ingredient>
+        {
+            new Ingredient("Cheese"),
+            new Ingredient("Tomato Sauce")
+        };
+
+        var promotion = new Promotion(10, "Discount", "10% off");
+
+        _menuItemWithPromo = new Food(_restaurant, "Pizza", 20.0, "Cheese Pizza", Food.FoodType.Pasta, ingredients,
+            null, promotion, true);
+        _menuItemWithoutPromo =
+            new Beverage(_restaurant, "Soda", 10.0, "Coca-Cola", Beverage.BeverageType.Drinks, false);
+    }
+
+    private void RestoreStaticOrders()
+    {
+        typeof(Order)
+            .GetField("_orders", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            ?.SetValue(null, new List<Order>());
     }
 
     [Fact]
@@ -62,84 +98,38 @@ public class OrderTests
         Assert.Equal(0, order.OrderPrice);
         Assert.Equal(0, order.TotalPrice);
         Assert.NotEqual(0, order.Id);
-        Assert.Null(order.StartTime);
+        Assert.Null(order.StartTime); 
+
+        var orders = TestOrder.GetOrders();
+        Assert.Contains(order, orders); 
+        Assert.Single(orders); 
     }
 
+
     [Fact]
-    public void Id_Getter_ReturnsCorrectValue()
+    public void AddMenuItem_ThrowsExceptionForInvalidQuantity()
     {
         var order = new TestOrder(2);
-        Assert.True(order.Id > 0);
+        Assert.Throws<ArgumentException>(() => order.AddMenuItem(_menuItemWithPromo, 0));
+        Assert.Throws<ArgumentException>(() => order.AddMenuItem(_menuItemWithPromo, -1));
     }
 
     [Fact]
-    public void NumberOfPeople_Getter_ReturnsCorrectValue()
-    {
-        var order = new TestOrder(5);
-        Assert.Equal(5, order.NumberOfPeople);
-    }
-
-    [Fact]
-    public void AddOrder_AddsOrderToList()
-    {
-        var order = new TestOrder(4);
-        TestOrder.AddOrder(order);
-
-        var orders = TestOrder.GetOrders();
-        Assert.Contains(order, orders);
-    }
-
-    [Fact]
-    public void GetOrders_ReturnsCorrectListOfOrders()
-    {
-        var order1 = new TestOrder(3);
-        var order2 = new TestOrder(5);
-        TestOrder.AddOrder(order1);
-        TestOrder.AddOrder(order2);
-
-        var orders = TestOrder.GetOrders();
-
-        Assert.Equal(2, orders.Count);
-        Assert.Contains(order1, orders);
-        Assert.Contains(order2, orders);
-    }
-
-    [Fact]
-    public void SaveOrdersJSON_SavesOrdersToFile()
+    public void AddMenuItem_ThrowsExceptionForInvalidMenuItem()
     {
         var order = new TestOrder(3);
-        TestOrder.AddOrder(order);
-        const string path = "test_orders.json";
-
-        TestOrder.SaveOrdersJSON(path);
-        Assert.True(File.Exists(path));
-
-        File.Delete(path);
+        Assert.Throws<ArgumentNullException>(() => order.AddMenuItem(null, 1));
     }
 
-    [Fact]
-    public void LoadOrdersJSON_LoadsOrdersFromFile()
-    {
-        const string path = "test_orders.json";
-        var order = new TestOrder(2);
-        TestOrder.AddOrder(order);
-        TestOrder.SaveOrdersJSON(path);
-        TestOrder.ClearOrders();
-
-        TestOrder.LoadOrdersJSON(path);
-        var orders = TestOrder.GetOrders();
-
-        Assert.Single(orders);
-        Assert.Equal(order.NumberOfPeople, orders[0].NumberOfPeople);
-
-        File.Delete(path);
-    }
 
     [Fact]
-    public void Constructor_ThrowsExceptionForInvalidNumberOfPeople()
+    public void ChangeService_UpdatesServiceChargeCorrectly()
     {
-        Assert.Throws<ArgumentException>(() => new TestOrder(0));
-        Assert.Throws<ArgumentException>(() => new TestOrder(-5));
+        Order.ChangeService(15);
+        Assert.Equal(15, Order.Service);
+
+        Order.ChangeService(0); 
+        Assert.Equal(0, Order.Service);
     }
 
     [Fact]

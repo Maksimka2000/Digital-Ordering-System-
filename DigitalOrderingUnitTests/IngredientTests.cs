@@ -1,3 +1,4 @@
+using System.Reflection;
 using DigitalOrdering;
 using Xunit;
 
@@ -7,19 +8,40 @@ public class IngredientTests
 {
     public IngredientTests()
     {
-        typeof(Ingredient).GetField("_ingredients",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+        ResetStaticIngredients();
+    }
+
+    private void ResetStaticIngredients()
+    {
+        typeof(Ingredient)
+            .GetField("_ingredients", BindingFlags.NonPublic | BindingFlags.Static)
             ?.SetValue(null, new List<Ingredient>());
+    }
+
+    private static Restaurant CreateTestRestaurant()
+    {
+        return new Restaurant("Testaurant", new Address("Main St", "Test City", "123"), new List<OpenHour>
+        {
+            new OpenHour(DayOfWeek.Monday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Tuesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Wednesday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Thursday, new TimeSpan(9, 0, 0), new TimeSpan(21, 0, 0)),
+            new OpenHour(DayOfWeek.Friday, new TimeSpan(9, 0, 0), new TimeSpan(22, 0, 0)),
+            new OpenHour(DayOfWeek.Saturday, new TimeSpan(10, 0, 0), new TimeSpan(23, 0, 0)),
+            new OpenHour(DayOfWeek.Sunday, new TimeSpan(10, 0, 0), new TimeSpan(20, 0, 0))
+        });
+    }
+
+    private static Food CreateTestFood(Restaurant restaurant, string name = "Pizza")
+    {
+        return new Food(restaurant, name, 10.0, "Delicious food", Food.FoodType.Snack, null);
     }
 
     [Fact]
     public void Constructor_SetsPropertiesCorrectly()
     {
-        const string name = "Tomato";
-
-        var ingredient = new Ingredient(name);
-
-        Assert.Equal(name, ingredient.Name);
+        var ingredient = new Ingredient("Tomato");
+        Assert.Equal("Tomato", ingredient.Name);
         Assert.True(ingredient.Id > 0);
     }
 
@@ -35,19 +57,8 @@ public class IngredientTests
     {
         var ingredient1 = new Ingredient("Oregano");
         var ingredient2 = new Ingredient("Pepper");
+
         Assert.NotEqual(ingredient1.Id, ingredient2.Id);
-    }
-
-
-    [Fact]
-    public void AddIngredient_AddsIngredientToList()
-    {
-        var ingredient = new Ingredient("Lettuce");
-
-        Ingredient.AddIngredient(ingredient);
-        var ingredients = Ingredient.GetIngredients();
-
-        Assert.Contains(ingredient, ingredients);
     }
 
     [Fact]
@@ -55,8 +66,6 @@ public class IngredientTests
     {
         var ingredient1 = new Ingredient("Onion");
         var ingredient2 = new Ingredient("Garlic");
-        Ingredient.AddIngredient(ingredient1);
-        Ingredient.AddIngredient(ingredient2);
 
         var ingredients = Ingredient.GetIngredients();
 
@@ -69,64 +78,53 @@ public class IngredientTests
     public void DeleteIngredient_RemovesIngredientFromList()
     {
         var ingredient = new Ingredient("Cheese");
-        Ingredient.AddIngredient(ingredient);
 
         Ingredient.DeleteIngredient(ingredient);
-        var ingredients = Ingredient.GetIngredients();
 
-        Assert.DoesNotContain(ingredient, ingredients);
+        Assert.DoesNotContain(ingredient, Ingredient.GetIngredients());
     }
 
-    // [Fact]
-    // public void UpdateName_ChangesIngredientName()
-    // {
-    //     var ingredient = new Ingredient("Basil");
-    //
-    //     ingredient.UpdateName("Fresh Basil");
-    //
-    //     Assert.Equal("Fresh Basil", ingredient.Name);
-    // }
-
-    // [Fact]
-    // public void SaveIngredientJSON_SavesIngredientsToFile()
-    // {
-    //     var ingredient = new Ingredient("Butter");
-    //     Ingredient.AddIngredient(ingredient);
-    //     const string path = "test_ingredients.json";
-    //
-    //     Ingredient.SaveIngredientJSON(path);
-    //
-    //     Assert.True(File.Exists(path));
-    //
-    //     File.Delete(path);
-    // }
-    //
-    // [Fact]
-    // public void LoadIngredientJSON_LoadsIngredientsFromFile()
-    // {
-    //     const string path = "test_ingredients.json";
-    //     var ingredient = new Ingredient("Salt");
-    //     Ingredient.AddIngredient(ingredient);
-    //     Ingredient.SaveIngredientJSON(path);
-    //     Ingredient.DeleteIngredient(ingredient);
-    //
-    //     Ingredient.LoadIngredientJSON(path);
-    //     var ingredients = Ingredient.GetIngredients();
-    //
-    //     Assert.Single(ingredients);
-    //     Assert.Equal(ingredient.Name, ingredients[0].Name);
-    //
-    //     File.Delete(path);
-    // }
-    
     [Fact]
-    public void ExceptionTests()
+    public void UpdateName_ChangesIngredientName()
     {
-        var ingredient = new Ingredient("Salt");
-        Ingredient.AddIngredient(ingredient);
-        var duplicateIngredient = new Ingredient("Salt");
-        Assert.Throws<ArgumentException>(() => Ingredient.AddIngredient(duplicateIngredient));
+        var ingredient = new Ingredient("Basil");
 
-        Assert.Throws<ArgumentException>(() => Ingredient.AddIngredient(null));
+        ingredient.UpdateName("Fresh Basil");
+
+        Assert.Equal("Fresh Basil", ingredient.Name);
+    }
+
+    [Fact]
+    public void Constructor_ThrowsExceptionForNullOrEmptyName()
+    {
+        Assert.Throws<ArgumentException>(() => new Ingredient(null));
+        Assert.Throws<ArgumentException>(() => new Ingredient(""));
+    }
+
+    [Fact]
+    public void AddMenuItemToIngredient_AddsAssociation()
+    {
+        var ingredient = new Ingredient("Tomato");
+        var restaurant = CreateTestRestaurant();
+        var menuItem = CreateTestFood(restaurant);
+
+        ingredient.AddMenuItemToIngredient(menuItem);
+
+        Assert.Contains(menuItem, ingredient.IngredientInMenuItems);
+        Assert.Contains(ingredient, menuItem.Ingredients);
+    }
+
+    [Fact]
+    public void RemoveMenuItemFromIngredient_RemovesAssociation()
+    {
+        var ingredient = new Ingredient("Cheese");
+        var restaurant = CreateTestRestaurant();
+        var menuItem = CreateTestFood(restaurant);
+
+        ingredient.AddMenuItemToIngredient(menuItem);
+        ingredient.RemoveMenuItemFromIngredient(menuItem);
+
+        Assert.DoesNotContain(menuItem, ingredient.IngredientInMenuItems);
+        Assert.DoesNotContain(ingredient, menuItem.Ingredients);
     }
 }

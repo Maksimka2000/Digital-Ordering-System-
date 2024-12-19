@@ -34,6 +34,8 @@ public class Ingredient
     public Ingredient(string name)
     {
         Id = ++IdCounter;
+        ValidateStringMandatory(name, "Name in Ingredient");
+        ValidateNameDuplication(name);
         Name = name;
         AddIngredient(this);
     }
@@ -68,10 +70,12 @@ public class Ingredient
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
     }
-    private static void ValidateNameDuplication(Ingredient ingredient)
+    private static void ValidateNameDuplication(string name)
     {
-        if (_ingredients.FirstOrDefault(i => i.Name == ingredient.Name) == null) ;
-        else throw new ArgumentException($"ingredient {ingredient.Name} already exists");
+        if (_ingredients.Any(i => i.Name == name))
+        {
+            throw new ArgumentException($"Ingredient with name '{name}' already exists.");
+        }
     }
 
     // get, delete, add, update CRUD 
