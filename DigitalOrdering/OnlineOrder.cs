@@ -65,13 +65,13 @@ public class OnlineOrder : Order
         StartTime = null;
         AddTable(restaurant);
         AddRestaurant(restaurant);
-        AddOnlineOrder(this);
         ValidateAuthorization(registeredClient, nonRegisteredClient);
         if(nonRegisteredClient != null) NonRegisteredClient = nonRegisteredClient;
         if(registeredClient != null) AddOnlineOrderToRegisteredClient(registeredClient);
+        AddOnlineOrder(this);
     }
     
-    //association with Registered client stores online orders.
+    //association with Registered client stores online orders (REVERSE)
     private RegisteredClient _registeredClientMadeOnlineOrder;
     public RegisteredClient RegisteredClientMadeOnlineOrder => _registeredClientMadeOnlineOrder;
     public void AddOnlineOrderToRegisteredClient(RegisteredClient registeredClient)
@@ -83,8 +83,13 @@ public class OnlineOrder : Order
             registeredClient.AddOnlineOrder(this);
         }
     }
+    private void RemoveOnlineOrderFromRegisteredClient()
+    {
+        _registeredClientMadeOnlineOrder.RemoveOnlineOrder(this);
+        _registeredClientMadeOnlineOrder = null;
+    }
     
-    //association with table 
+    //association with table (REVERSE)
     private Table _table;
     //association getter
     public override Table Table => _table;
@@ -94,6 +99,11 @@ public class OnlineOrder : Order
         if(table == null) throw new ArgumentNullException($"Table can't be null in AddTable() while addin to the OnlineOrder");
         _table = table;
         table.AddOnlineOrder(this);
+    }
+    private void RemoveTable()
+    {
+        _table.RemoveOnlineOrder(this);
+        _table = null;   
     }
     private static readonly Random _random = new Random();
     private void AddTable(Restaurant restaurant)
@@ -115,7 +125,8 @@ public class OnlineOrder : Order
         AddTable(table);
     }
     
-    //association with restaurant
+    
+    //association with restaurant (REVESRE)
     private Restaurant _restaurant;
     //association getter
     public Restaurant Restaurant => _restaurant;
@@ -125,6 +136,11 @@ public class OnlineOrder : Order
         if(restaurant is null) throw new ArgumentNullException($"Argument {nameof(restaurant)} cannot be null in  AddRestaurant()");
         _restaurant = restaurant;
         restaurant.AddOnlineOrder(this);
+    }
+    private void RemoveRestaurant()
+    {
+        _restaurant.RemoveOnlineOrder(this);
+        _restaurant = null;
     }
     
     // validations
@@ -157,6 +173,33 @@ public class OnlineOrder : Order
     public static List<OnlineOrder> GetOnlineOrders()
     {
         return [.._onlineOrders];
+    }
+    public override void RemoveOrder()
+    {
+        if (_onlineOrders.Contains(this))
+        {
+            // remove online order
+            _onlineOrders.Remove(this);
+            
+            // remove association with table
+            RemoveTable(); // _table = null
+            
+            // remove association with registered client (_registeredClientMadeOnlineOrder)
+            RemoveOnlineOrderFromRegisteredClient();
+
+            // remove association with registered client 2
+            RemoveRegisteredClient();
+            
+            // remove association with restaurant
+            RemoveRestaurant();
+            
+            // remove association with the MenuItem
+            foreach (var orderList in _menuItems)
+            {
+                RemoveMenuItemFromOrder(orderList);
+            }
+            
+        }
     }
     
     //methods

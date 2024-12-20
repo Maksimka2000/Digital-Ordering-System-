@@ -1,4 +1,5 @@
 using DidgitalOrdering;
+using DigitalOrdering;
 using Xunit;
 
 namespace DigitalOrderingUnitTests;

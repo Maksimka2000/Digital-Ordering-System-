@@ -40,7 +40,7 @@ public class Ingredient
         AddIngredient(this);
     }
     
-    //association reverse
+    //association (REVERSE)
     private List<MenuItem> _ingredientInMenuItems = [];
     //association reverse getter
     [JsonIgnore]
@@ -90,10 +90,10 @@ public class Ingredient
         return [.._ingredients];
     }
 
-    public static void DeleteIngredient(Ingredient ingredient)
+    public void RemoveIngredient()
     {
-        if (ingredient == null) throw new ArgumentException("ingredient cannot be null");
-        _ingredients.Remove(ingredient);
+        if(_ingredientInMenuItems != null) throw new InvalidOperationException($"You cant delete the ingredient because it is used by  {_ingredientInMenuItems.Count} different MenuItems");
+        _ingredients.Remove(this);
     }
 
     public void UpdateName(string newName)

@@ -38,6 +38,11 @@ public class TestOrder : Order
     {
         return [.._orders];
     }
+
+    public override void RemoveOrder()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class OrderTests
@@ -110,15 +115,15 @@ public class OrderTests
     public void AddMenuItem_ThrowsExceptionForInvalidQuantity()
     {
         var order = new TestOrder(2);
-        Assert.Throws<ArgumentException>(() => order.AddMenuItem(_menuItemWithPromo, 0));
-        Assert.Throws<ArgumentException>(() => order.AddMenuItem(_menuItemWithPromo, -1));
+        Assert.Throws<ArgumentException>(() => order.AddMenuItemToOrder(_menuItemWithPromo, 0));
+        Assert.Throws<ArgumentException>(() => order.AddMenuItemToOrder(_menuItemWithPromo, -1));
     }
 
     [Fact]
     public void AddMenuItem_ThrowsExceptionForInvalidMenuItem()
     {
         var order = new TestOrder(3);
-        Assert.Throws<ArgumentNullException>(() => order.AddMenuItem(null, 1));
+        Assert.Throws<ArgumentNullException>(() => order.AddMenuItemToOrder(null, 1));
     }
 
 

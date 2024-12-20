@@ -79,7 +79,7 @@ public class IngredientTests
     {
         var ingredient = new Ingredient("Cheese");
 
-        Ingredient.DeleteIngredient(ingredient);
+        ingredient.RemoveIngredient();
 
         Assert.DoesNotContain(ingredient, Ingredient.GetIngredients());
     }

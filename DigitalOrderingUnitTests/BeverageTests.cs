@@ -104,7 +104,7 @@ public class BeverageTests
     {
         var beverage = CreateBeverage("Water", 1.0, "Mineral water", Beverage.BeverageType.Cafeteria, false);
 
-        Beverage.DeleteBeverage(beverage);
+        beverage.RemoveMenuItem();
         var beverages = Beverage.GetBeverages();
 
         Assert.DoesNotContain(beverage, beverages);

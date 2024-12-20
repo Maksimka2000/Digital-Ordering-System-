@@ -10,8 +10,8 @@ public class OrderList
     private static List<OrderList> _orderLists = [];
     
     public int Quantity { get; private set; }
-    public MenuItem MenuItem { get; private set; }
-    public Order Order { get; private set; }
+    public MenuItem? MenuItem { get; private set; }
+    public Order? Order { get; private set; }
 
     private void AddMenuItemToOrderList(MenuItem menuItem)
     {
@@ -38,4 +38,20 @@ public class OrderList
     {
         return [.._orderLists];
     }
+
+    public void RemoveOrderList()
+    {
+        Order.RemoveMenuItemFromOrder(this);
+        MenuItem.RemoveOrderFromMenuItem(this);
+        Order = null;
+        MenuItem = null;
+        _orderLists.Remove(this);
+    }
+
+    public void DecrementQuantity()
+    {
+        Quantity--;
+        if (Quantity == 0) RemoveOrderList();
+    }
+    
 }

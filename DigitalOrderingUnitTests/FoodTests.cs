@@ -79,7 +79,7 @@ public class FoodTests
     {
         var food = new Food(_restaurant, "Pizza", 10.0, "Cheese pizza", Food.FoodType.Snack, null);
 
-        Food.DeleteFood(food);
+        food.RemoveMenuItem();
 
         Assert.DoesNotContain(food, Food.GetFoods());
     }

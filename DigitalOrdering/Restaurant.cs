@@ -52,7 +52,7 @@ public class Restaurant
         AddRestaurant(this);
     }
     
-    //association with MenuItem
+    //association with MenuItem 
     private List<MenuItem> _menu = [];
     public List<MenuItem> Menu => [.._menu];
     public void AddMenuItemToMenu(string name, double price, string description,
@@ -70,7 +70,7 @@ public class Restaurant
     }
     public void AddMenuItemToMenu(string name, double price, string description, List<Food>? foods = null,
         List<Beverage>? beverages = null, List<DayOfWeek>? days = null, TimeSpan? startTime = null,
-        TimeSpan? endTime = null, bool isAvailable = true)
+        TimeSpan? endTime = null, bool isAvailable = true) 
     {
         new SetOfMenuItem(this, name, price, description, foods, beverages, days, startTime, endTime, isAvailable);
     }
@@ -79,6 +79,16 @@ public class Restaurant
         if(menuItem == null) throw new ArgumentNullException($"Menu item is null in AddMenuItemToMenu() Restaurant");
         if(menuItem.Restaurant != this) throw new AggregateException($"Menu item you are trying to add belong to other Restaurant: {menuItem.Restaurant.Name}");
         if(!_menu.Contains(menuItem)) _menu.Add(menuItem);
+    }
+    public void RemoveMenuItemFromMenu(MenuItem menuItem)
+    {
+        if(menuItem == null) throw new ArgumentException($"Menu item is null in RemoveMenuItemFromMenu() Restaurant");
+        if (menuItem.Restaurant != this) throw new AggregateException($"you are trying to remove menu item with doesn't belong to this restaurant {menuItem.Restaurant.Name}.");
+        if (_menu.Contains(menuItem))
+        {
+            _menu.Remove(menuItem);
+            menuItem.RemoveMenuItem();
+        }
     }
     
     
@@ -98,6 +108,16 @@ public class Restaurant
         if(table.Restaurant != this) throw new ArgumentException($"Table can belong only to one Restaurant which is: {table.Restaurant.Name}");
         if(!_tables.Contains(table)) _tables.Add(table);     
     }
+    public void RemoveTable(Table table) // if we remove the table we remove the whole object of table as table can't exit without the restaurant and table actually
+    {
+        if (table == null) throw new ArgumentNullException($"Table is null in the RemoveTable method restaurant.cs");
+        if (table.Restaurant != this) throw new ArgumentException($"Table doesn't belong to this restaurant");
+        if (_tables.Contains(table))
+        {
+            _tables.Remove(table);
+            table.DeleteTable();
+        }
+    }
     
     
     //association with OnlineOrder 
@@ -115,6 +135,18 @@ public class Restaurant
         if(onlineOrder.Restaurant != this) throw new ArgumentException($"online order can belong only to one Restaurant which is: {onlineOrder.Restaurant.Name}");
         if (!_onlineOrders.Contains(onlineOrder)) _onlineOrders.Add(onlineOrder);    
     }
+    public void RemoveOnlineOrder(OnlineOrder onlineOrder)
+    {
+        if(onlineOrder == null) throw new ArgumentException($"online order can't be null in REmoveONlineOrder()");
+        if(onlineOrder.Restaurant != this) throw new ArgumentException($"online order doesn't belong to this restaurant");
+        if (_onlineOrders.Contains(onlineOrder))
+        {
+            _onlineOrders.Remove(onlineOrder);
+            onlineOrder.RemoveOrder();
+        }
+    }
+    
+    
     
     // multi-value attribute methods
     public void UpdateOpenHours(List<OpenHour> newOpenHours)
@@ -158,6 +190,12 @@ public class Restaurant
         _restaurants.Add(restaurant);
     }
 
+    public static void RemoveRestaurant(Restaurant restaurant)
+    {
+        // remove every table in the restaurant 
+        // remove every menuItem in the restaurant
+        _restaurants.Remove(restaurant);
+    }
     public void UpdateName(string newName)
     {
         Name = newName;

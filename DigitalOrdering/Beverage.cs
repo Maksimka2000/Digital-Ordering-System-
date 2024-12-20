@@ -37,23 +37,27 @@ public class Beverage : MenuItem
     [JsonConstructor]
     public Beverage(Restaurant restaurant, string name, double price, string description,
         BeverageType beverageT, bool isAlcohol,
-        List<Ingredient>? ingredients = null, Promotion? promotion = null, bool isAvailable = true) : base(restaurant, name, price,
+        List<Ingredient>? ingredients = null, Promotion? promotion = null, bool isAvailable = true) : base(restaurant,
+        name, price,
         description, isAvailable, ingredients, promotion)
     {
         IsAlcohol = isAlcohol;
         BeverageT = beverageT;
         AddBeverage(this);
     }
-    
-    //association reverse
+
+    //association (REVERSE)
     private List<SetOfMenuItem> _beverageInSetOfMenuItems = [];
+
     //association reverse getter
-    [JsonIgnore]
-    public List<SetOfMenuItem> BeverageInSetOfMenuItems => [.._beverageInSetOfMenuItems];
+    [JsonIgnore] public List<SetOfMenuItem> BeverageInSetOfMenuItems => [.._beverageInSetOfMenuItems];
+
     //association reverse methods
     public void AddSetOfMenuItemsToBeverage(SetOfMenuItem setOfMenuItem)
     {
-        if(setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}, SetOfMenuItem can't be null in AddBeverageInSetOfMenuItem method");
+        if (setOfMenuItem == null)
+            throw new ArgumentNullException(
+                $"{this.Name}, SetOfMenuItem can't be null in AddBeverageInSetOfMenuItem method");
         if (!_beverageInSetOfMenuItems.Contains(setOfMenuItem))
         {
             _beverageInSetOfMenuItems.Add(setOfMenuItem);
@@ -62,7 +66,7 @@ public class Beverage : MenuItem
     }
     public void RemoveSetOfMenuItemsFromBeverage(SetOfMenuItem setOfMenuItem)
     {
-        if(setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}, SetOfMenuItem can't be null in RemoveSetOfMenuItemsFromBeverage method");
+        if (setOfMenuItem == null) throw new ArgumentNullException($"{this.Name}, SetOfMenuItem can't be null in RemoveSetOfMenuItemsFromBeverage method");
         if (_beverageInSetOfMenuItems.Contains(setOfMenuItem))
         {
             _beverageInSetOfMenuItems.Remove(setOfMenuItem);
@@ -83,31 +87,50 @@ public class Beverage : MenuItem
         if (beverage == null) throw new ArgumentException("Game cannot be null");
         _beverages.Add(beverage);
     }
+
     public static List<Beverage> GetBeverages()
     {
         return [.._beverages];
     }
-    public static void DeleteBeverage(Beverage beverage)
+
+    public override void RemoveMenuItem()
     {
-        if (_beverages.Contains(beverage))
+        if (_beverages.Contains(this))
         {
-            if (beverage._beverageInSetOfMenuItems.Count > 0)
+            // verify removing association with the setOFmenuItems
+            if (_beverageInSetOfMenuItems.Count > 0) throw new ArgumentException($"Beverage Can be deleted as it is in the SetOfMenuItems: {_beverageInSetOfMenuItems.Count}, first modify the  setOfmenuItems");
+            
+            // verify removing association with the ingredients
+            if (_ingredients.Count > 0)
             {
-                foreach (var setOfMenuItem in beverage._beverageInSetOfMenuItems)
+                foreach (var ingredient in _ingredients)
                 {
-                    setOfMenuItem.RemoveBeverage(beverage);
-                    Console.WriteLine($"Set of menu items named: {setOfMenuItem.Name} id: {setOfMenuItem.Id} was modified by RemoveBeverage. So mind of the {beverage.Name}  does not exist in SetOfMenuItem anymore, modify you SetOfMenuItem as soon as possible.");
+                    ingredient.RemoveMenuItemFromIngredient(this);
                 }
             }
-            if (beverage._ingredients.Count > 0)
+            
+            // check if menu item is in any other table orders or online Orders if it is in any TableOrder(Change in future to the StandBY) or in the ONlineOrders
+            foreach (var orderList in _orders)
             {
-                foreach (var ingredient in beverage._ingredients)
+                if(orderList.Order is OnlineOrder || orderList.Order is TableOrder) throw new Exception($"You can't delete orders that are on reservations or in table orders");
+            }
+            
+            // association with attribute MenuItem => OrderList => Order
+            if (_orders.Count > 0)
+            {
+                foreach (var order in _orders)
                 {
-                    ingredient.RemoveMenuItemFromIngredient(beverage);
+                    RemoveOrderFromMenuItem(order);
                 }
             }
+            
+            // verify removing association with restaurant
+            RemoveRestaurant();
+            _restaurant.RemoveMenuItemFromMenu(this);
+            
+            // remove menuItem
+            _beverages.Remove(this);
         }
-        _beverages.Remove(beverage);
+        
     }
-    
 }

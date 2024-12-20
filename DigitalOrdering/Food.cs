@@ -82,7 +82,7 @@ public class Food : MenuItem
         } else throw new ArgumentNullException($"epmty lists and null is not allowed in UpdateDietaryPreferencesType().");
     }
     
-    // associations reverse 
+    // associations  with setOfMenuItems  (REVERSE)
     private List<SetOfMenuItem> _foodInSetOfMenuItems = [];
     // associations reverse getter
     [JsonIgnore]
@@ -128,30 +128,44 @@ public class Food : MenuItem
     {
         return new List<Food>(_foods);
     }
-    public static void DeleteFood(Food food)
+    public override void RemoveMenuItem()
     {
-        if (_foods.Contains(food))
+        if (_foods.Contains(this))
         {
-            if (food._foodInSetOfMenuItems.Count > 0)
+            
+            // verify removing association with the setOFmenuItems
+            if (_foodInSetOfMenuItems.Count > 0) throw new ArgumentException($"Food Can not be deleted as it is in the SetOfMenuItems: {_foodInSetOfMenuItems.Count}, first modify the  setOfmenuItems");
+                
+            // verify removing association with the ingredients
+            if (_ingredients.Count > 0)
             {
-                foreach (var setOfMenuItem in food._foodInSetOfMenuItems)
+                foreach (var ingredient in _ingredients)
                 {
-                    // food.RemoveSetOfMenuItemsFromFood(setOfMenuItem);
-                    setOfMenuItem.RemoveFood(food);
-                    Console.WriteLine($"Set of menu items named: {setOfMenuItem.Name} id: {setOfMenuItem.Id} was modified by RemoveFood. So mind of the {food.Name}  does not exist in SetOfMenuItem anymore, modify you SetOfMenuItem as soon as possible.");
+                    ingredient.RemoveMenuItemFromIngredient(this);
                 }
             }
-            if (food.Ingredients.Count > 0)
+             
+            // check if menu item is in any other table orders or online Orders if it is in any TableOrder(Change in future to the StandBY) or in the ONlineOrders
+            foreach (var orderList in _orders)
             {
-                foreach (var ingredient in food._ingredients)
-                { 
-                    // food.RemoveIngredient(ingredient);
-                    ingredient.RemoveMenuItemFromIngredient(food);
+                if(orderList.Order is OnlineOrder || orderList.Order is TableOrder) throw new Exception($"You can't delete orders that are on reservations or in table orders");
+            }
+            
+            // association with attribute MenuItem => OrderList => Order
+            if (_orders.Count > 0)
+            {
+                foreach (var order in _orders)
+                {
+                    RemoveOrderFromMenuItem(order);
                 }
             }
             
-            _foods.Remove(food);
+            // remove menuItem
+            _foods.Remove(this);
+            
+            // verify removing association with restaurant
+            _restaurant.RemoveMenuItemFromMenu(this);
+            RemoveRestaurant();
         }
     }
-    
 }

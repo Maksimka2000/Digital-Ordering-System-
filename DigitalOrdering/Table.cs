@@ -57,7 +57,7 @@ public class Table
         AddTable(this);
     }
     
-    // association reverse with restaurant 
+    // association  with restaurant  (REVERSE)
     private Restaurant _restaurant;
     //associaiton reverse getter and setter
     public Restaurant Restaurant => _restaurant;
@@ -68,6 +68,11 @@ public class Table
         _restaurant = restaurant;
         restaurant.AddTable(this);
     }
+    private void RemoveFromRestaurant()
+    {
+        _restaurant = null;
+    }
+    
     
     //associatin with OnlineOrder
     private List<OnlineOrder> _onlineOrders = [];
@@ -80,17 +85,37 @@ public class Table
         if(onlineOrder.Table != this) throw new ArgumentException($"Online order belong to table id: {onlineOrder.Table.Id}. And this table id: {this.Id} AddOnlineOrder()");
         if (!_onlineOrders.Contains(onlineOrder)) _onlineOrders.Add(onlineOrder);
     }
+    public void RemoveOnlineOrder(OnlineOrder onlineOrder)
+    {
+        if(onlineOrder is null) throw new ArgumentNullException($"Online order can't be null in RemoveOnlineOrder()");
+        if (onlineOrder.Table != this) throw new AggregateException($"You are trying to delete an onlineOrder which doesn't even belong to this: {Id} table order belong to {onlineOrder.Table.Id} table");
+        if (_onlineOrders.Contains(onlineOrder))
+        {
+            _onlineOrders.Remove(onlineOrder);
+            onlineOrder.RemoveOrder();
+        }
+    }
     
     //association with TableOrder
     private List<TableOrder> _tableOrders = [];
     //association getter
-    public List<TableOrder> TableOrder => [.._tableOrders];
+    public List<TableOrder> TableOrders => [.._tableOrders];
     // association methods
     public void AddTableOrder(TableOrder tableOrder)
     {
         if(tableOrder is null) throw new ArgumentNullException($"Table order can't be null in AddTableOrder()");
         if(tableOrder.Table != this) throw new ArgumentException($"Table order belong to table id: {tableOrder.Table.Id}. And this table id: {this.Id} AddTableOrder()");
         if(!_tableOrders.Contains(tableOrder)) _tableOrders.Add(tableOrder);
+    }
+    public void RemoveTableOrder(TableOrder tableOrder)
+    {
+        if(tableOrder is null) throw new ArgumentNullException($"Table order can't be null in RemoveTableOrder()");
+        if (tableOrder.Table != this) throw new AggregateException($"You are trying to delete an tableOrder which doesn't even belong to this: {Id} table order belong to {tableOrder.Table.Id} table");
+        if (_tableOrders.Contains(tableOrder))
+        {
+            _tableOrders.Remove(tableOrder);
+            tableOrder.RemoveOrder();
+        }
     }
     
     // validation
@@ -106,28 +131,29 @@ public class Table
 
 
     // get, delete, add, update CRUD 
-    public static void AddTable(Table table)
+    private static void AddTable(Table table)
     {
         if (table == null) throw new ArgumentException("Tabale cannot be null");
         _tables.Add(table);
     }
-
     public static List<Table> GetTables()
     {
         return [.._tables];
     }
-
-    public static void DeleteTable(Table table)
+    public void DeleteTable()
     {
-        if (table == null) throw new ArgumentException("table cannot be null");
-        _tables.Remove(table);
+        if (_onlineOrders.Count > 0 && _tableOrders.Count > 0) throw new ArgumentException($" You can't delete the table as it has active reservations or have orders"); //// modify this later to the STAND BY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (_tables.Contains(this))
+        {
+            _tables.Remove(this);
+            RemoveFromRestaurant(); // _restaurant = null;    
+        }
     }
 
     public void UpdateAlias(string alias)
     {
         Alias = alias;
     }
-
     public void UpdateCapacity(int capacity)
     {
         Capacity = capacity;

@@ -106,7 +106,6 @@ public class RegisteredClientTests
     public void AddRegisteredClient_AddsClientToList()
     {
         var client = CreateClient();
-        RegisteredClient.AddRegisteredClient(client);
 
         var clients = RegisteredClient.GetRegisteredClients();
         Assert.Contains(client, clients);

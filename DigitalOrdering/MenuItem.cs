@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using DidgitalOrdering;
+using Newtonsoft.Json.Converters;
 
 namespace DigitalOrdering;
 
@@ -66,14 +67,18 @@ public abstract class MenuItem
         AddRestaurant(restaurant);
     }
     
-    //association with Restaurant
-    private Restaurant _restaurant;
+    //association with Restaurant (REVERSE)
+    protected Restaurant _restaurant;
     public Restaurant Restaurant => _restaurant;
     private void AddRestaurant(Restaurant restaurant)
     {
         if(restaurant == null) throw new NullReferenceException("Restaurant cannot be null  in AddRestaurant() MenuItem");
         _restaurant = restaurant;
         restaurant.AddMenuItemToMenu(this);
+    }
+    protected void RemoveRestaurant()
+    {
+        _restaurant = null;
     }
     
     
@@ -102,9 +107,9 @@ public abstract class MenuItem
             ingredient.RemoveMenuItemFromIngredient(this);
         }
     }
-    public void UpdateIngredients(List<Ingredient>? ingredients)
+    public void UpdateIngredients(List<Ingredient> ingredients)
     {
-        if (ingredients != null && ingredients.Count != 0)
+        if (ingredients.Count != 0)
         {
             if (_ingredients.Count > 0) 
                 foreach (Ingredient ingredient in _ingredients) 
@@ -113,8 +118,8 @@ public abstract class MenuItem
         }
     }
     
-    // association with attribute MenuItem => OrderList => Order
-    private List<OrderList> _orders = [];
+    // association with attribute MenuItem => OrderList => Order (REVERSE)
+    protected List<OrderList> _orders = [];
     // association getters
     [JsonIgnore]
     public List<OrderList> Orders => [.._orders];
@@ -139,6 +144,21 @@ public abstract class MenuItem
         if (orderList.MenuItem != this) throw new AggregateException($"you are trying to add the wrong orderList to the MenuItem in AddOrderList()");
         if (!_orders.Contains(orderList)) _orders.Add(orderList);
     }
+    public void RemoveOrderFromMenuItem(OrderList orderList)
+    {
+        if (orderList == null) throw new ArgumentException($"Order list can't be null in teh RemoveOrderList() MenuItem.cs");
+        if (orderList.MenuItem != this) throw new AggregateException($"you are trying to remove the wrong orderList from the MenuItem in AddOrderList()");
+        if (_orders.Contains(orderList))
+        {
+            _orders.Remove(orderList);
+            orderList.RemoveOrderList();
+        }
+    }
+    public void DecrementQuantityInOrderList(OrderList orderList){
+        if(orderList == null) throw new ArgumentException($"Order list can't be null in DecrementQuantityInOrderList() MenuItem.cs");
+        if(orderList.MenuItem != this) throw new AggregateException($"you are trying to modify the wrong orderList from the MenuItem in AddOrderList()");
+        orderList.DecrementQuantity();
+    }
     
     // validation
     private static void ValidateStringMandatory(string name, string text)
@@ -150,6 +170,9 @@ public abstract class MenuItem
         if (price <= 0) throw new ArgumentException($"{text} Price must be greater than zero");
     }
 
+    // CRUD On object itself
+    public abstract void RemoveMenuItem();
+    
     // CRUD
     public void UpdateName(string newName)
     {
@@ -177,6 +200,7 @@ public abstract class MenuItem
     // other methods
     public void AddPromotion(Promotion promotion)
     {
+        if (_promotion != null) throw new ArgumentException($"You can't add ne promotion first delete previous");
         Promotion = promotion;
     }
     public void RemovePromotion()
@@ -211,7 +235,126 @@ public abstract class MenuItem
         else Console.WriteLine("No Promotion to update");
     }
     
+}
+
+
+
+[Serializable]
+public class Promotion
+{
     
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum PromotionType
+    {
+        Regular = 0
+    }
     
+    // Class/static fields/attributes
+    private const double MaxDiscountPercent = 99.99;
+    private const double MinDiscountPercent = 0.01;
     
+    // Fields/attributes
+    private double _discountPercent; 
+    private string _name;
+    private string? _description;
+    private PromotionType _type;
+    
+    // setters validation 
+    [JsonConverter(typeof(StringEnumConverter))]
+    public PromotionType Type
+    {
+        get => _type;
+        private set
+        {
+            if(!Enum.IsDefined(typeof(PromotionType), value)) throw new ArgumentException("Promotion type is not defined in Promotion class.");
+            _type = value;
+        }
+    }
+    public double DiscountPercent
+    {
+        get => _discountPercent;
+        private set
+        {
+            ValidateDiscountPercentage(value);
+            _discountPercent = value;
+        }
+    }
+    public string Name
+    {
+        get => _name;
+        private set
+        {
+            ValidateStringMandatory(value, "Name in Promotion");
+            _name = value;
+        }
+    }
+    public string? Description
+    {
+        get => _description;
+        private set
+        {
+            if (value != null)
+            {
+                ValidateStringOptional(value, "Description in Promotion");
+                _description = value;
+            }
+        }
+    }
+    
+    // constructor
+    [JsonConstructor]
+    public Promotion(double discountPercent, string name, string? description = null, PromotionType type = PromotionType.Regular)
+    {
+        DiscountPercent = discountPercent;
+        Name = name;
+        Description = description;
+        Type = type;
+    }
+    
+    // validation methods
+    private static void ValidateDiscountPercentage(double discountPercent)
+    {
+        if (!(discountPercent >= MinDiscountPercent && discountPercent <= MaxDiscountPercent)) throw new Exception($"Discount must be from 0.01 min to 99.99 max");
+    }
+    private static void ValidateStringMandatory(string name, string text)
+    {
+        if (string.IsNullOrEmpty(name)) throw new ArgumentException($"{text} cannot be null or empty");
+    }
+
+    private static void ValidateStringOptional(string value, string text)
+    {
+        if(value == string.Empty) throw new ArgumentException($"{text} cannot be empty");
+    }
+    
+    // get, add, delete, set  on class
+    public void UpdateDiscountPercent(double newDiscountPercent)
+    {
+        DiscountPercent = newDiscountPercent;
+    }
+    public void UpdateName(string newName)
+    {
+        Name = newName;
+    }
+    public void UpdateDescription(string newDescription)
+    {
+        Description = newDescription;
+    }
+    public void RemoveDescription()
+    {
+        Description = null;
+    }
+    public void UpdateType(PromotionType newType)
+    {
+        Type = newType;
+    }
+    
+    // other
+    public override string ToString()
+    {
+        return $"name: {Name}, description: {Description}, discount: {DiscountPercent}, type: {Type}";
+    }
+    public Promotion Clone()
+    {
+        return new Promotion(DiscountPercent, Name, Description, Type);
+    }
 }

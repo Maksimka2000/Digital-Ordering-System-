@@ -28,7 +28,7 @@ public class TableOrder : Order
         AddTableOrder(this);
     }
     
-    // association with Table
+    // association with Table (REVERSE)
     private Table _table;
     // association getter
     public override Table Table => _table;
@@ -38,6 +38,11 @@ public class TableOrder : Order
         if (table == null) throw new ArgumentNullException($"Table can't be null in AddTable() while addin to the TableOrder");
         _table = table;
         table.AddTableOrder(this);
+    }
+    private void RemoveTable()
+    {
+        _table.RemoveTableOrder(this);
+        _table = null;
     }
     
 
@@ -49,6 +54,27 @@ public class TableOrder : Order
     {
         if (table == null) throw new ArgumentException("Table can't be null");
         _tableOrders.Add(table);
+    }
+    public override void RemoveOrder()
+    {
+        if (_tableOrders.Contains(this))
+        {
+            // remove online order
+            _tableOrders.Remove(this);
+            
+            // remove association with table
+            RemoveTable(); // _table = null
+
+            // remove association with registered client 2
+            RemoveRegisteredClient();
+            
+            // remove association with the MenuItem
+            foreach (var orderList in _menuItems)
+            {
+                RemoveMenuItemFromOrder(orderList);
+            }
+            
+        }
     }
 
     public static List<TableOrder> GetTableOrders()

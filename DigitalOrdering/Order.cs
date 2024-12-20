@@ -26,7 +26,6 @@ public abstract class Order
     // fields 
     [JsonIgnore]
     public int Id { get; }
-
     [JsonIgnore]
     public double OrderPrice { get; private set; } = 0.0;
     [JsonIgnore]
@@ -49,6 +48,9 @@ public abstract class Order
             _numberOfPeople = value;
         }
     }
+    
+    //virtual property
+    public virtual Table? Table => null;
 
     //constructor
     [JsonConstructor]
@@ -58,9 +60,6 @@ public abstract class Order
         NumberOfPeople = numberOfPeople;
         if(registeredClient != null) AddRegisteredClient(registeredClient);
     }
-    
-    //virtual property
-    public virtual Table? Table => null;
     
     // association with registered client
     private RegisteredClient _registeredClient;
@@ -73,14 +72,19 @@ public abstract class Order
             registeredClient.AddOrder(this);
         }
     }
+    protected void RemoveRegisteredClient()
+    {
+        _registeredClient.RemoveOrder(this);
+        _registeredClient = null;
+    }
     
     // association with attribute MenuItem => OrderList => Order
-    private List<OrderList> _menuItems = [];
+    protected List<OrderList> _menuItems = [];
     // association getters
     [JsonIgnore]
     public List<OrderList> MenuItems => [.._menuItems];
     // association methods
-    public void AddMenuItem(MenuItem menuItem, int quantity = 1)
+    public void AddMenuItemToOrder(MenuItem menuItem, int quantity = 1)
     {
         if(quantity <= 0) throw new ArgumentException($"quantity must be greater than zero");
         if(menuItem == null) throw new ArgumentNullException($" {this}: MenuItem in AddMenuItem can't be null");
@@ -101,6 +105,21 @@ public abstract class Order
         if (!_menuItems.Contains(orderList)) _menuItems.Add(orderList);
         MakeCalculationOfPrice(orderList);
     }
+    public void RemoveMenuItemFromOrder(OrderList orderList)
+    {
+        if(orderList == null) throw new ArgumentException($" Order.cs: OrderList can't be null in RemoveOrderList()");
+        if(orderList.Order != this) throw new ArgumentException($"You trying to remove the wrong orderList from the Order in RemoveOrderList()");
+        if (_menuItems.Contains(orderList))
+        {
+            _menuItems.Remove(orderList);
+            orderList.RemoveOrderList();
+        }
+    }
+    public void DecrementQuantityInOrderList(OrderList orderList){
+        if(orderList == null) throw new ArgumentException($"Order list can't be null in DecrementQuantityInOrderList() Order.cs");
+        if(orderList.Order != this) throw new AggregateException($"you are trying to modify the wrong orderList from the MenuItem in AddOrderList()");
+        orderList.DecrementQuantity();
+    }
 
     // validation 
     private static void ValidateService(double value)
@@ -111,6 +130,10 @@ public abstract class Order
     {
         if (value <= 0) throw new ArgumentException("Number of people must be greater than zero.");
     }
+
+    
+    //CRUD on obj
+    public abstract void RemoveOrder();
     
     // crud
     public static void ChangeService(double service)

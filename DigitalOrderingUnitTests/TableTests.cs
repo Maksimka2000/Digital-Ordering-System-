@@ -102,8 +102,7 @@ public class TableTests
     {
         var restaurant = CreateRestaurant();
         var table = CreateTable(restaurant, 4);
-
-        Table.AddTable(table);
+        
 
         Assert.Contains(table, Table.GetTables());
     }
@@ -115,7 +114,7 @@ public class TableTests
         var restaurant = CreateRestaurant();
         var table = CreateTable(restaurant, 6, "VIP Table");
 
-        Table.DeleteTable(table);
+
 
         Assert.DoesNotContain(table, Table.GetTables());
     }

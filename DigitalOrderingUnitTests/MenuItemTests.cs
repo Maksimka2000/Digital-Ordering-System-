@@ -23,6 +23,10 @@ public class TestMenuItem : MenuItem
     public static void AddMenuItem(TestMenuItem item) => _menuItems.Add(item);
 
     public static List<TestMenuItem> GetMenuItems() => new(_menuItems);
+    public override void RemoveMenuItem()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class MenuItemTests
