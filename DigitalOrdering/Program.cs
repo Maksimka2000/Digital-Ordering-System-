@@ -318,35 +318,35 @@ void CreateObjects()
         "WIthour beverages and in monday and friday", new List<Food> { restaurant1food5 }, null,
         new List<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Friday }, new TimeSpan(10, 0, 0), new TimeSpan(15, 0, 0));
     // ================================================ TableOrder
-    var restaurant1tableOrder1 = new TableOrder(restaurant1table1, 8, client1);
-    restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food2);
-    restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food2);
-    restaurant1food2.AddToOrder(restaurant1tableOrder1);
-    restaurant1food2.AddToOrder(restaurant1tableOrder1);
-    restaurant1food1.AddToOrder(restaurant1tableOrder1);
-    restaurant1food1.AddToOrder(restaurant1tableOrder1);
-    restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food1);
-    restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food1);
-    restaurant1tableOrder1.AddMenuItemToOrder(restaurant1businessLunch1, 2);
-    var restaurant1tableOrder2 = new TableOrder(restaurant1table2, 4);
-    restaurant1tableOrder2.AddMenuItemToOrder(restaurant1beverage1);
-    var restaurant1tableOrder3 = new TableOrder(restaurant1table2, 4);
-    restaurant1tableOrder3.AddMenuItemToOrder(restaurant1food5);
+    var restaurant1tableOrder1 = new TableOrder(restaurant1table1, 8, new Dictionary<MenuItem, int> { { restaurant1food2, 6 }, { restaurant1food1, 2 }, {restaurant1businessLunch1, 2}  }, client1);
+    // restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food2);
+    // restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food2);
+    // restaurant1food2.AddToOrder(restaurant1tableOrder1);
+    // restaurant1food2.AddToOrder(restaurant1tableOrder1);
+    // restaurant1food1.AddToOrder(restaurant1tableOrder1);
+    // restaurant1food1.AddToOrder(restaurant1tableOrder1);
+    // restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food1);
+    // restaurant1tableOrder1.AddMenuItemToOrder(restaurant1food1);
+    // restaurant1tableOrder1.AddMenuItemToOrder(restaurant1businessLunch1, 2);
+    var restaurant1tableOrder2 = new TableOrder(restaurant1table2, 4, new Dictionary<MenuItem, int> { { restaurant1beverage1, 1 } });
+    // restaurant1tableOrder2.AddMenuItemToOrder(restaurant1beverage1);
+    var restaurant1tableOrder3 = new TableOrder(restaurant1table2, 4, new Dictionary<MenuItem, int> { { restaurant1food5, 1 } });
+    // restaurant1tableOrder3.AddMenuItemToOrder(restaurant1food5);
     // =============================================== Online order
     var restaurant1onlineOrder1 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), "heljfoadsf", client2);
-    restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1food3);
-    restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1food3);
-    restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1beverage3, 2);
+        new TimeSpan(2, 0, 0), "heljfoadsf", new Dictionary<MenuItem, int> { { restaurant1food3, 2 }, {restaurant1beverage3, 2} },  client2);
+    // restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1food3);
+    // restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1food3);
+    // restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1beverage3, 2);
     var restaurant1onlineOrder2 = new OnlineOrder(restaurant1, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Max", "434 345 345"));
-    restaurant1onlineOrder2.AddMenuItemToOrder(restaurant1food1);
+        new TimeSpan(2, 0, 0), null, new Dictionary<MenuItem, int> { { restaurant1food1, 1 } }, null,  new NonRegisteredClient("Max", "434 345 345"));
+    // restaurant1onlineOrder2.AddMenuItemToOrder(restaurant1food1);
     var restaurant1onlineOrder3 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), null, client1);
-    restaurant1onlineOrder3.AddMenuItemToOrder(restaurant1food5, 2);
+        new TimeSpan(2, 0, 0), null, new Dictionary<MenuItem, int> { { restaurant1food5, 2 } }, client1);
+    // restaurant1onlineOrder3.AddMenuItemToOrder(restaurant1food5, 2);
     var restaurant1onlineOrder4 = new OnlineOrder(restaurant1, 1, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Alexa", "434 345 345"));
-    restaurant1onlineOrder4.AddMenuItemToOrder(restaurant1beverage1, 5);
+        new TimeSpan(2, 0, 0), null, new Dictionary<MenuItem, int> { { restaurant1food5, 2 } }, null,  new NonRegisteredClient("Alexa", "434 345 345"));
+    // restaurant1onlineOrder4.AddMenuItemToOrder(restaurant1beverage1, 5);
     // ==========================================================================================================================================================================================================
 
     // ========================================================= Create Restaurant2 =========================================================================================
@@ -374,16 +374,12 @@ void CreateObjects()
         "A combination of two food beyound your imagination and a drink", new List<Food> { restaurant2food1 },
         new List<Beverage> { restaurant2beverage1 });
     // ================================================ TableOrder
-    var restaurant2tableOrder1 = new TableOrder(restaurant2table1, 8, client1);
-    restaurant2tableOrder1.AddMenuItemToOrder(restaurant2food1, 10);
-    var restaurant2tableOrder2 = new TableOrder(restaurant2table2, 4);
-    restaurant2tableOrder2.AddMenuItemToOrder(restaurant2businessLunch1, 2);
+    var restaurant2tableOrder1 = new TableOrder(restaurant2table1, 8, new Dictionary<MenuItem, int> { { restaurant2food1, 2 }, { restaurant2food2, 2 } }, client1);
+    var restaurant2tableOrder2 = new TableOrder(restaurant2table2, 4, new Dictionary<MenuItem, int> { { restaurant2businessLunch1, 2 } });
     // =============================================== Online order
     var restaurant2onlineOrder1 = new OnlineOrder(restaurant2, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), "heljfoadsf", client2);
-    restaurant2onlineOrder1.AddMenuItemToOrder(restaurant2beverage2, 2);
+        new TimeSpan(2, 0, 0), "heljfoadsf", new Dictionary<MenuItem, int> { { restaurant2beverage2, 2 } }, client2);
     var restaurant2onlineOrder2 = new OnlineOrder(restaurant2, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), null, null, new NonRegisteredClient("Max", "434 345 345"));
-    restaurant2onlineOrder2.AddMenuItemToOrder(restaurant2food1, 1);
+        new TimeSpan(2, 0, 0), null, new Dictionary<MenuItem, int> { { restaurant2food1, 1 } }, null, new NonRegisteredClient("Max", "434 345 345"));
     // ==========================================================================================================================================================================================================
 }

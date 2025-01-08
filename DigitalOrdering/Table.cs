@@ -70,6 +70,7 @@ public class Table
     }
     private void RemoveFromRestaurant()
     {
+        _restaurant.RemoveTable(this);
         _restaurant = null;
     }
     

@@ -55,7 +55,7 @@ public class OnlineOrder : Order
 
     // Constructor
     [JsonConstructor]
-    public OnlineOrder(Restaurant restaurant, int numberOfPeople, DateTime dateAndTime, TimeSpan? duration = null, string? description = null, RegisteredClient? registeredClient = null, NonRegisteredClient? nonRegisteredClient = null) : base(numberOfPeople, registeredClient)
+    public OnlineOrder(Restaurant restaurant, int numberOfPeople, DateTime dateAndTime, TimeSpan? duration = null, string? description = null, Dictionary<MenuItem, int>? menuItemsWithQuantities = null, RegisteredClient? registeredClient = null, NonRegisteredClient? nonRegisteredClient = null) : base(numberOfPeople, menuItemsWithQuantities, registeredClient)
     {
         DateAndTime = dateAndTime;
         Description = description;

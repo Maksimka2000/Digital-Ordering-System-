@@ -54,11 +54,21 @@ public abstract class Order
 
     //constructor
     [JsonConstructor]
-    protected Order(int numberOfPeople, RegisteredClient? registeredClient = null)
+    protected Order(int numberOfPeople, Dictionary<MenuItem, int>? menuItemsWithQuantities = null, RegisteredClient? registeredClient = null)
     {
         Id = ++IdCounter;
         NumberOfPeople = numberOfPeople;
         if(registeredClient != null) AddRegisteredClient(registeredClient);
+        
+        if (menuItemsWithQuantities != null)
+        {
+            foreach (var entry in menuItemsWithQuantities)
+            {
+                var menuItem = entry.Key;
+                var quantity = entry.Value;
+                AddMenuItemToOrder(menuItem, quantity);
+            }
+        }
     }
     
     // association with registered client
