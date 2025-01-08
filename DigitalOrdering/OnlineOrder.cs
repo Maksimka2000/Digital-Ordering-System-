@@ -69,6 +69,16 @@ public class OnlineOrder : Order
         if(nonRegisteredClient != null) NonRegisteredClient = nonRegisteredClient;
         if(registeredClient != null) AddOnlineOrderToRegisteredClient(registeredClient);
         AddOnlineOrder(this);
+        
+        if (menuItemsWithQuantities != null)
+        {
+            foreach (var entry in menuItemsWithQuantities)
+            {
+                var menuItem = entry.Key;
+                var quantity = entry.Value;
+                AddMenuItemToOrder(menuItem, quantity);
+            }
+        }
     }
     
     //association with Registered client stores online orders (REVERSE)

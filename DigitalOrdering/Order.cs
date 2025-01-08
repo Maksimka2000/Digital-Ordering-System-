@@ -60,15 +60,17 @@ public abstract class Order
         NumberOfPeople = numberOfPeople;
         if(registeredClient != null) AddRegisteredClient(registeredClient);
         
-        if (menuItemsWithQuantities != null)
-        {
-            foreach (var entry in menuItemsWithQuantities)
-            {
-                var menuItem = entry.Key;
-                var quantity = entry.Value;
-                AddMenuItemToOrder(menuItem, quantity);
-            }
-        }
+        
+        // MOVED OT THE TableOrder.cs and OnlineOrder.cs separately
+        // if (menuItemsWithQuantities != null)
+        // {
+        //     foreach (var entry in menuItemsWithQuantities)
+        //     {
+        //         var menuItem = entry.Key;
+        //         var quantity = entry.Value;
+        //         AddMenuItemToOrder(menuItem, quantity);
+        //     }
+        // }
     }
     
     // association with registered client

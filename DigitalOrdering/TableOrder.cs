@@ -26,6 +26,16 @@ public class TableOrder : Order
         StartTime = new TimeSpan(DateTime.Now.Ticks);
         AddTable(table);
         AddTableOrder(this);
+        
+        if (menuItemsWithQuantities != null)
+        {
+            foreach (var entry in menuItemsWithQuantities)
+            {
+                var menuItem = entry.Key;
+                var quantity = entry.Value;
+                AddMenuItemToOrder(menuItem, quantity);
+            }
+        }
     }
     
     // association with Table (REVERSE)
