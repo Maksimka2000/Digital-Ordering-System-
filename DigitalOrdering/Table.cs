@@ -14,7 +14,7 @@ public class Table
     private string? _description;
     private string? _alias;
     private int _capacity;
-    public bool IsLocked { get; private set; }
+    public bool IsOccupied { get; private set; }
 
     // fields setter validation
     public int Capacity
@@ -52,7 +52,7 @@ public class Table
         Capacity = capacity;
         Description = description;
         Alias = alias;
-        IsLocked = false;
+        IsOccupied = false;
         AddToRestaurant(restaurant);
         AddTable(this);
     }
@@ -75,49 +75,28 @@ public class Table
     }
     
     
-    //associatin with OnlineOrder
-    private List<OnlineOrder> _onlineOrders = [];
+    //associatin with Order (OnlineOrder and TableOrder)
+    private List<Order> _orders = [];
     //association getter
-    public List<OnlineOrder> OnlineOrders => [.._onlineOrders];
+    public List<Order> Orders => [.._orders];
     //association methods
-    public void AddOnlineOrder(OnlineOrder onlineOrder)
+    public void AddOrder(Order order)
     {
-        if(onlineOrder is null) throw new ArgumentNullException($"Online order can't be null in AddOnlineOrder()");
-        if(onlineOrder.Table != this) throw new ArgumentException($"Online order belong to table id: {onlineOrder.Table.Id}. And this table id: {this.Id} AddOnlineOrder()");
-        if (!_onlineOrders.Contains(onlineOrder)) _onlineOrders.Add(onlineOrder);
+        if(order is null) throw new ArgumentNullException($"Online order can't be null in AddOnlineOrder()");
+        if(order.Table != this) throw new ArgumentException($"Online order belong to table id: {order.Table.Id}. And this table id: {this.Id} AddOnlineOrder()");
+        if (!_orders.Contains(order)) _orders.Add(order);
     }
-    public void RemoveOnlineOrder(OnlineOrder onlineOrder)
+    public void RemoveOrder(Order order)
     {
-        if(onlineOrder is null) throw new ArgumentNullException($"Online order can't be null in RemoveOnlineOrder()");
-        if (onlineOrder.Table != this) throw new AggregateException($"You are trying to delete an onlineOrder which doesn't even belong to this: {Id} table order belong to {onlineOrder.Table.Id} table");
-        if (_onlineOrders.Contains(onlineOrder))
+        if(order is null) throw new ArgumentNullException($"Online order can't be null in RemoveOnlineOrder()");
+        if (order.Table != this) throw new AggregateException($"You are trying to delete an onlineOrder which doesn't even belong to this: {Id} table order belong to {order.Table.Id} table");
+        if (_orders.Contains(order))
         {
-            _onlineOrders.Remove(onlineOrder);
-            onlineOrder.RemoveOrder();
+            _orders.Remove(order);
+            order.RemoveOrder();
         }
     }
     
-    //association with TableOrder
-    private List<TableOrder> _tableOrders = [];
-    //association getter
-    public List<TableOrder> TableOrders => [.._tableOrders];
-    // association methods
-    public void AddTableOrder(TableOrder tableOrder)
-    {
-        if(tableOrder is null) throw new ArgumentNullException($"Table order can't be null in AddTableOrder()");
-        if(tableOrder.Table != this) throw new ArgumentException($"Table order belong to table id: {tableOrder.Table.Id}. And this table id: {this.Id} AddTableOrder()");
-        if(!_tableOrders.Contains(tableOrder)) _tableOrders.Add(tableOrder);
-    }
-    public void RemoveTableOrder(TableOrder tableOrder)
-    {
-        if(tableOrder is null) throw new ArgumentNullException($"Table order can't be null in RemoveTableOrder()");
-        if (tableOrder.Table != this) throw new AggregateException($"You are trying to delete an tableOrder which doesn't even belong to this: {Id} table order belong to {tableOrder.Table.Id} table");
-        if (_tableOrders.Contains(tableOrder))
-        {
-            _tableOrders.Remove(tableOrder);
-            tableOrder.RemoveOrder();
-        }
-    }
     
     // validation
     private static void ValidateCapacity(int value)
@@ -143,7 +122,7 @@ public class Table
     }
     public void DeleteTable()
     {
-        if (_onlineOrders.Count > 0 && _tableOrders.Count > 0) throw new ArgumentException($" You can't delete the table as it has active reservations or have orders"); //// modify this later to the STAND BY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (_orders.Count > 0 && _orders.Count > 0) throw new ArgumentException($" You can't delete the table as it has active reservations or have orders"); //// modify this later to the STAND BY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (_tables.Contains(this))
         {
             _tables.Remove(this);
@@ -161,20 +140,23 @@ public class Table
     }
 
     // methods
-    public void LockTable()
+    
+    
+    public void MakeTableOccupied()
     {
-        IsLocked = true;
+        IsOccupied = true;
     }
 
-    public void UnLockTable()
+    public void MakeTableUnoccupied()
     {
-        IsLocked = false;
+        IsOccupied = false;
     }
     
     //methods for the Making OnlineOrder 
     public bool IsAvailableForOnlineOrder(DateTime dateAndTime, TimeSpan? duration)
     {
-        return _onlineOrders.All(onlineOrder => dateAndTime + duration <= onlineOrder.DateAndTime ||
-                                 dateAndTime >= onlineOrder.DateAndTime + onlineOrder.Duration);
+        var onlineOrders = _orders.Where(order => order is OnlineOrder).Cast<OnlineOrder>();
+        return onlineOrders.All(onlineOrder => dateAndTime + duration <= onlineOrder.DateAndTime ||
+                                               dateAndTime >= onlineOrder.DateAndTime + onlineOrder.Duration);
     }
 }

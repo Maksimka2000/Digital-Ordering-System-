@@ -13,7 +13,7 @@ public class OnlineOrder : Order
     private DateTime _dateAndTime;
     private string? _description;
     private TimeSpan _duration;
-    public bool HaveGuestsArrived { get; private set; }
+    public bool IsGuestsArrived { get; private set; }
     public NonRegisteredClient NonRegisteredClient { get; private set; }
     
     // fields setter validation
@@ -59,7 +59,7 @@ public class OnlineOrder : Order
     {
         DateAndTime = dateAndTime;
         Description = description;
-        HaveGuestsArrived = false;
+        IsGuestsArrived = false;
         if (duration == null) Duration = new TimeSpan(2, 0, 0);
         else Duration = (TimeSpan)duration;
         StartTime = null;
@@ -68,7 +68,7 @@ public class OnlineOrder : Order
         ValidateAuthorization(registeredClient, nonRegisteredClient);
         if(nonRegisteredClient != null) NonRegisteredClient = nonRegisteredClient;
         if(registeredClient != null) AddOnlineOrderToRegisteredClient(registeredClient);
-        AddOnlineOrder(this);
+        
         
         if (menuItemsWithQuantities != null)
         {
@@ -79,6 +79,8 @@ public class OnlineOrder : Order
                 AddMenuItemToOrder(menuItem, quantity);
             }
         }
+        
+        AddOnlineOrder(this);
     }
     
     //association with Registered client stores online orders (REVERSE)
@@ -93,26 +95,28 @@ public class OnlineOrder : Order
             registeredClient.AddOnlineOrder(this);
         }
     }
-    private void RemoveOnlineOrderFromRegisteredClient()
+    public void RemoveOnlineOrderFromRegisteredClient()
     {
-        _registeredClientMadeOnlineOrder.RemoveOnlineOrder(this);
-        _registeredClientMadeOnlineOrder = null;
+        if (_registeredClientMadeOnlineOrder != null)
+        {
+            var temp = _registeredClientMadeOnlineOrder;
+            _registeredClientMadeOnlineOrder = null;
+            temp.RemoveOnlineOrder(this);
+        }
     }
     
     //association with table (REVERSE)
-    private Table _table;
     //association getter
-    public override Table Table => _table;
     //association methods
-    private void AddTable(Table table)
+    protected override void AddTable(Table table)
     {
         if(table == null) throw new ArgumentNullException($"Table can't be null in AddTable() while addin to the OnlineOrder");
         _table = table;
-        table.AddOnlineOrder(this);
+        table.AddOrder(this);
     }
-    private void RemoveTable()
+    protected override void RemoveTable()
     {
-        _table.RemoveOnlineOrder(this);
+        _table.RemoveOrder(this);
         _table = null;   
     }
     private static readonly Random _random = new Random();
@@ -141,16 +145,24 @@ public class OnlineOrder : Order
     //association getter
     public Restaurant Restaurant => _restaurant;
     //association methods
-    private void AddRestaurant(Restaurant restaurant)
+    public void AddRestaurant(Restaurant restaurant)
     {
         if(restaurant is null) throw new ArgumentNullException($"Argument {nameof(restaurant)} cannot be null in  AddRestaurant()");
-        _restaurant = restaurant;
-        restaurant.AddOnlineOrder(this);
+        if (_restaurant == null)
+        {
+            _restaurant = restaurant;
+            restaurant.AddOnlineOrder(this);    
+        }
     }
-    private void RemoveRestaurant()
+    public void RemoveRestaurant()
     {
-        _restaurant.RemoveOnlineOrder(this);
-        _restaurant = null;
+        if (_restaurant != null)
+        {
+            var temp = _restaurant;
+            _restaurant = null;    
+            temp.RemoveOnlineOrder(this);
+            
+        }
     }
     
     // validations
@@ -213,9 +225,27 @@ public class OnlineOrder : Order
     }
     
     //methods
+    public void UpdateOnlineOrder(DateTime? dateAndTime = null, TimeSpan? duration = null, int? numberOfPeople = null, string? description = null  )
+    {
+        if(dateAndTime == null) dateAndTime = _dateAndTime;
+        if(duration == null) duration = _duration;
+        if(numberOfPeople == null) numberOfPeople = _numberOfPeople;
+        if(description == null) description = _description;
+        
+        DateAndTime = (DateTime)dateAndTime;
+        Duration = (TimeSpan)duration;
+        NumberOfPeople = (int)numberOfPeople;
+        Description = description;
+        
+        AddTable(_restaurant);
+    }
     public void MarkAsGuestsArrived()
     {
-        HaveGuestsArrived = true;
+        if(Table.IsOccupied) throw new InvalidOperationException("This table is already occupied, try to change the table manualy");
+        IsGuestsArrived = true;
         StartTime = new TimeSpan(DateTime.Now.Ticks);
+        Table.MakeTableOccupied();
+        RemoveRestaurant();
+        RemoveOnlineOrderFromRegisteredClient();
     }
 }

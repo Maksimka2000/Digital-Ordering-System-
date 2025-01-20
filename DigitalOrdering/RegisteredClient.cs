@@ -15,6 +15,28 @@ public class RegisteredClient
     
     //static fields
     private static int IdCounter = 0;
+    private static int _invitationByBonuses = 20;
+    private static int _invitationBonuses = 20;
+
+    public static int InvitationByBonuses
+    {
+        get => _invitationByBonuses;
+        private set
+        {
+            ValidateMandatoryInt(value, "InvitationByBonuses can't be less than 0 and must be not null");
+            _invitationByBonuses = value;
+        }
+    }
+    
+    public static int InvitationBonuses
+    {
+        get => _invitationByBonuses;
+        private set
+        {
+            ValidateMandatoryInt(value, "InvitationBonuses can't be less than 0 and must be not null");
+            _invitationByBonuses = value;
+        }
+    }
     
     //fields
     public int Id { get; }
@@ -90,18 +112,27 @@ public class RegisteredClient
         Email = email;
         PhoneNumber = phoneNumber;
         Bonus = 0;
-        if(invitedByRegisteredClient != null) AddInvitedBy(invitedByRegisteredClient);
+        if (invitedByRegisteredClient != null)
+        {
+            AddInvitedBy(invitedByRegisteredClient);
+            AddBonusses(InvitationByBonuses);
+            invitedByRegisteredClient.AddBonusses(InvitationBonuses);
+        }
         AddRegisteredClient(this);
     }
-    
+
+   
+
     //association with OnlineOrder
     private Dictionary<int, OnlineOrder> _onlineOrders = [];
     public Dictionary<int, OnlineOrder> OnlineOrders => _onlineOrders;
     public void AddOnlineOrder(OnlineOrder onlineOrder)
     {
         if(onlineOrder == null) throw new ArgumentNullException($"Parameter {nameof(onlineOrder)} cannot be null in AddOnlineOrder() RegisteredClient");
+        // this is validation logic suppose to play the role of addition the order to the Registered client only from the order class.
         if(onlineOrder.RegisteredClient == null) throw new ArgumentException($"you can't add the online order directly to the user, it is done automatically after creation of the online order");
         if (onlineOrder.RegisteredClient != this) throw new AggregateException($"online order you are trying to add belong to different client");
+        // 
         if (!_onlineOrders.ContainsKey(onlineOrder.Id))
         {
             _onlineOrders[onlineOrder.Id] = onlineOrder;
@@ -111,43 +142,34 @@ public class RegisteredClient
     public void RemoveOnlineOrder(OnlineOrder onlineOrder)
     {
         if(onlineOrder == null) throw new ArgumentNullException($"Parameter {nameof(onlineOrder)} cannot be null");
-        if (onlineOrder.RegisteredClient != this) throw new ArgumentException($"you are trying to remove online order which doesn't belong to this client");
+        // if (onlineOrder.RegisteredClient != this) throw new ArgumentException($"you are trying to remove online order which doesn't belong to this client");
         if (_onlineOrders.ContainsKey(onlineOrder.Id))
         {
             _onlineOrders.Remove(onlineOrder.Id);
-            onlineOrder.RemoveOrder();
+            onlineOrder.RemoveOnlineOrderFromRegisteredClient();
+        }
+    }
+    
+    //association with FinalizedOrder 
+    private Dictionary<int, Order> _orderHistory = [];
+    public Dictionary<int, Order> OrderHistory => _orderHistory;
+    public void AddFinalizedOrder(Order order)
+    { 
+        if(order == null) throw new ArgumentNullException($"Parameter {nameof(order)} cannot be null in AddFinalizedOrder() RegisteredClient");
+        // this is validation logic suppose to play the role of addition the order to the Registered client only from the order class.
+        if(order.RegisteredClient == null) throw new ArgumentException($" ( AddFinalizedOrder ) you can't add the online order directly to the user, it is done automatically after creation of the online order");
+        if (order.RegisteredClient != this) throw new AggregateException($"online order you are trying to add belong to different client");
+        // ---
+        if (!_orderHistory.ContainsKey(order.Id))
+        {
+            _orderHistory[order.Id] = order;
+            order.AddFinalizedOrderToRegisteredClient(this);
         }
     }
 
-    
-    // association with Registered client 
-    private RegisteredClient? _invitedBy = null;
-    public RegisteredClient? InvitedBy => _invitedBy;
-    private void AddInvitedBy(RegisteredClient registeredClient)
-    {
-        if (registeredClient == null) throw new ArgumentNullException($"Parameter {nameof(registeredClient)} cannot be null");
-        if (_invitedBy == null)
-        {
-            _invitedBy = registeredClient;
-            registeredClient.AddInvited(this);
-        }
-    }
-    // association with Registered client (REVERSED)
-    private List<RegisteredClient> _invited = [];
-    public List<RegisteredClient> Invited => _invited;
-    private void AddInvited(RegisteredClient registeredClient)
-    {
-        if (registeredClient == null) throw new ArgumentNullException($"Parameter {nameof(registeredClient)} cannot be null");
-        if (!_invited.Contains(registeredClient))
-        {
-            _invited.Add(registeredClient);
-            registeredClient.AddInvitedBy(this);
-        }
-    }
-    
     //association with Order (REVERSE)
     private List<Order> _orders = [];
-    // public List<Order> Orders => [.._orders];
+    public List<Order> Orders => [.._orders];
     public void AddOrder(Order order)
     {
         if (order == null) throw new ArgumentException($"Order can be null in the AddOrder() Registered client");
@@ -164,11 +186,46 @@ public class RegisteredClient
         if (_orders.Contains(order))
         {
             _orders.Remove(order);
-            order.RemoveOrder();
+            order.RemoveRegisteredClient();
         }
     }
     
+    
+    // association with Registered client 
+    private RegisteredClient? _invitedBy = null;
+    public RegisteredClient? InvitedBy => _invitedBy;
+    private void AddInvitedBy(RegisteredClient registeredClient)
+    {
+        if (registeredClient == null) throw new ArgumentNullException($"Parameter {nameof(registeredClient)} cannot be null");
+        if (registeredClient == this) throw new ArgumentException($"You are trying to  invite yourself");
+        if (_invitedBy == null)
+        {
+            _invitedBy = registeredClient;
+            registeredClient.AddInvited(this);
+        } 
+    }
+    // association with Registered client (REVERSED)
+    private List<RegisteredClient> _invited = [];
+    public List<RegisteredClient> Invited => _invited;
+    private void AddInvited(RegisteredClient registeredClient)
+    {
+        if (registeredClient == null) throw new ArgumentNullException($"Parameter {nameof(registeredClient)} cannot be null");
+        if (registeredClient.InvitedBy != null && registeredClient.InvitedBy != this) throw new ArgumentException($"you are trying to add an invited client");
+        if (registeredClient == this) throw new ArgumentException($"You are trying to  invite yourself");
+        if (!_invited.Contains(registeredClient))
+        {
+            _invited.Add(registeredClient);
+            registeredClient.AddInvitedBy(this);
+        }
+    }
+    
+   
+    
     // validation methods
+    private static void ValidateMandatoryInt(int? value, string errorMessage)
+    {
+        if(value == null || value <= 0) throw new ArgumentException(errorMessage);
+    }
     private static void ValidateEmailAndPhoneNumberInput(string? email, string? phoneNumber)
     { 
         if(email is null && phoneNumber is null) throw new NullReferenceException("Email and phone number cannot be null");
@@ -226,6 +283,49 @@ public class RegisteredClient
         return [.._registeredClients];
     }
     // delete check if registeredClient has any of the reservations in the OnlineOrder and if so don't allow the deletion first propose to decline reservation and then
+    public static void RemoveRegisteredClient(RegisteredClient client)
+    {
+        if(client == null) throw new ArgumentException("client cannot be null");
+        if(client.OnlineOrders.Count > 0) throw new InvalidOperationException("You are trying to remove the client from the OnlineOrders, first decline online orders ");
+
+        if (client.Orders.Count > 0)
+        {
+            foreach (var order in client.Orders)
+            {
+                order.RemoveOrder();
+            }
+        }
+        
+        //do for finilized
+        _registeredClients.Remove(client);
+    }
+   
+    
+    
+    // other methods
+    public void SubtractLoyaltyPoints(int bonusesUsed)
+    {
+        Bonus -= bonusesUsed;
+    }
+    private void AddBonusses(int bonusses)
+    {
+        if (bonusses > 0 && bonusses < 100)
+        {
+            Bonus += bonusses;
+        }
+    }
+    public static void ChangeInvitedByBonusValue(int value)
+    {
+        InvitationByBonuses = value;
+    }
+    public static void ChangeInvitedBonusValue(int value)
+    {
+        InvitationBonuses = value;
+    }
+    public void CheckStatusOfLoyaltyPoints()
+    {
+        Console.WriteLine($"There are {Bonus} bonus points available");
+    }
     public void UpdatePassword(string newPassword)
     {
         Password = newPassword;
@@ -238,7 +338,6 @@ public class RegisteredClient
     {
         Surname = newSurname;
     }
-
     public void UpdateEmail(string? newEmail)
     {
         var oldEmail = Email;
@@ -259,8 +358,39 @@ public class RegisteredClient
             throw new NullReferenceException("Email cannot be null");
         }
     }
-    
-    
+
+    public void ListReservations()
+    {
+        Console.WriteLine($"        Current user has {OnlineOrders.Count} OnlineOrders which are active reservations");
+        foreach (var onlineOrder in OnlineOrders)
+        {
+            Console.WriteLine($"             Order ID (Key): {onlineOrder.Key}, Order Details (Value): 1)Id: {onlineOrder.Value.Id}, 2)Number of people: {onlineOrder.Value.NumberOfPeople}. 3)Description: {onlineOrder.Value.Description}, 4)Date and Time: {onlineOrder.Value.DateAndTime}, 5)Has: {onlineOrder.Value.MenuItems.Count} menuItems in order:");
+            foreach (var orderList in onlineOrder.Value.MenuItems)
+            {
+                Console.WriteLine($"                    [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price}. Discount: {orderList.MenuItem.Promotion?.DiscountPercent} ]");
+            }
+            Console.WriteLine($"                    Summary: Order price is: {onlineOrder.Value.OrderPrice}. Service Price is: {onlineOrder.Value.ServicePrice}. Discount: {onlineOrder.Value.DiscountAmount}. Total Price is: {onlineOrder.Value.TotalPrice}. ");
+        }
+    }
+    public void ListOrderHistory()
+    {
+        Console.WriteLine($"        Current user has {OrderHistory.Count} orders in history which are finalized already");
+        foreach (var order in OrderHistory)
+        {
+            Console.WriteLine($"             Order ID (Key): {order.Key}, Order Details (Value): 1)Id: {order.Value.Id}, 2)Number of people: {order.Value.NumberOfPeople}. 3)It was: {(order.Value is OnlineOrder ? "Online order" : "Table order")}. 4)Time and Date: {order.Value.StartTime} - {order.Value.TimeEnd}. 5)Has: {order.Value.MenuItems.Count} menuItems in order:");
+            foreach (var orderList in order.Value.MenuItems)
+            {
+                Console.WriteLine($"                    [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price}. Discount: {orderList.MenuItem.Promotion?.DiscountPercent} ]");
+            }
+            Console.WriteLine($"                    Summary: Order price is: {order.Value.OrderPrice}. Service Price is: {order.Value.ServicePrice}. Discount: {order.Value.DiscountAmount}. Bonuses used: {order.Value.BonusesUsed}. Total Price is: {order.Value.TotalPrice}. ");
+        }
+    }
+    public void GenerateInvitationLink()
+    {
+        const string baseUrl = "https://myrestaurant.com/invite";
+        string invitationLink = $"{baseUrl}?clientId={Id}";
+        Console.WriteLine($"your invitation link: {invitationLink}");
+    }
 }
 
 

@@ -58,7 +58,8 @@ public class OnlineOrderTests
             duration,
             description,
             null,
-            client ?? new NonRegisteredClient("John Doe", "+48 123 456 789")
+            null,
+            new NonRegisteredClient("John Doe", "+48 123 456 789")
         );
     }
 
@@ -74,7 +75,7 @@ public class OnlineOrderTests
         Assert.Equal(numberOfPeople, onlineOrder.NumberOfPeople);
         Assert.Equal(_validOpenHours, onlineOrder.DateAndTime);
         Assert.Equal(description, onlineOrder.Description);
-        Assert.False(onlineOrder.HaveGuestsArrived);
+        Assert.False(onlineOrder.IsGuestsArrived);
         Assert.Null(onlineOrder.StartTime);
     }
 
@@ -85,7 +86,7 @@ public class OnlineOrderTests
 
         Assert.Throws<ArgumentException>(() =>
             new OnlineOrder(_restaurant, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(22, 0, 0), null, "Too late",
-                null, client));
+                null, null, client));
     }
 
     [Fact]
@@ -95,7 +96,7 @@ public class OnlineOrderTests
 
         onlineOrder.MarkAsGuestsArrived();
 
-        Assert.True(onlineOrder.HaveGuestsArrived);
+        Assert.True(onlineOrder.IsGuestsArrived);
         Assert.NotNull(onlineOrder.StartTime);
     }
 
@@ -132,5 +133,40 @@ public class OnlineOrderTests
 
         Assert.Throws<ArgumentException>(() =>
             CreateOrder(2, "Too short", client, new TimeSpan(0, 30, 0)));
+    }
+    
+    [Fact]
+    public void UpdateOnlineOrder_ShouldUpdateFieldsCorrectly()
+    {
+        var initialDateAndTime = DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0);
+        var initialDuration = TimeSpan.FromHours(2);
+        
+        var updatedDateAndTime = DateTime.Now.AddDays(3).Date + new TimeSpan(12, 0, 0);
+        var updatedDuration = TimeSpan.FromHours(3);
+
+        var onlineOrder = new OnlineOrder(
+            restaurant: _restaurant,
+            numberOfPeople: 2,
+            dateAndTime: initialDateAndTime,
+            duration: initialDuration,
+            description: "Initial Description",
+            null,
+            null,
+            new NonRegisteredClient("John Doe", "+48 123 456 789")
+        );
+
+        // Act
+        onlineOrder.UpdateOnlineOrder(
+            dateAndTime: updatedDateAndTime,
+            duration: updatedDuration,
+            numberOfPeople: 3,
+            description: "Updated Description"
+        );
+
+        // Assert
+        Assert.Equal(updatedDateAndTime, onlineOrder.DateAndTime);
+        Assert.Equal(updatedDuration, onlineOrder.Duration);
+        Assert.Equal(3, onlineOrder.NumberOfPeople);
+        Assert.Equal("Updated Description", onlineOrder.Description);
     }
 }

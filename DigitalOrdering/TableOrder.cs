@@ -25,7 +25,7 @@ public class TableOrder : Order
         QRCodeScanTime = new TimeSpan(DateTime.Now.Ticks); // change soon. We assign the value here when the user first requested the web page and taking when the user sent the order form and then if the device is the same asingn value to hte qr code
         StartTime = new TimeSpan(DateTime.Now.Ticks);
         AddTable(table);
-        AddTableOrder(this);
+        
         
         if (menuItemsWithQuantities != null)
         {
@@ -36,22 +36,23 @@ public class TableOrder : Order
                 AddMenuItemToOrder(menuItem, quantity);
             }
         }
+        
+        table.MakeTableOccupied();
+        AddTableOrder(this);
     }
     
     // association with Table (REVERSE)
-    private Table _table;
-    // association getter
-    public override Table Table => _table;
+    //association getter
     // association methods
-    private void AddTable(Table table)
+    protected override void AddTable(Table table)
     {
         if (table == null) throw new ArgumentNullException($"Table can't be null in AddTable() while addin to the TableOrder");
         _table = table;
-        table.AddTableOrder(this);
+        table.AddOrder(this);
     }
-    private void RemoveTable()
+    protected override void RemoveTable()
     {
-        _table.RemoveTableOrder(this);
+        _table.RemoveOrder(this);
         _table = null;
     }
     

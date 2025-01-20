@@ -34,11 +34,15 @@ void OutputAllObjectsCreated()
     Console.WriteLine("\n================================ Registered Clients ================================================================    \n");
     foreach (var client in RegisteredClient.GetRegisteredClients())
     {
-        Console.WriteLine($"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}, Bonus: {client.Bonus}. Current user has {client.OnlineOrders.Count} OnlineOrders which are active reservations");
-        foreach (var onlineOrder in client.OnlineOrders)
+        Console.WriteLine($"Client ID: {client.Id}, Name: {client.Name}, Surname: {client.Surname}, Email: {client.Email}, Phone Number: {client.PhoneNumber}");
+        Console.WriteLine($"        Client has: {client.Bonus} Bonuses");
+        Console.WriteLine($"             client was invited by the: {client.InvitedBy?.Id}, {client.InvitedBy?.Name}");
+        foreach (var clientInvited in client.Invited)
         {
-            Console.WriteLine($"             [ Order ID (Key): {onlineOrder.Key}, Order Details (Value) which is onlineOrder Id: {onlineOrder.Value.Id} ]");
+            Console.WriteLine($"             client invited: {clientInvited.Id}, {clientInvited.Name}");
         }
+        client.ListReservations();
+        client.ListOrderHistory();
     }
     Console.WriteLine("\n=========================================== Restaurants are: ================================================================    \n");
     foreach (var restaurant in Restaurant.GetRestaurants())
@@ -53,151 +57,16 @@ void OutputAllObjectsCreated()
         Console.WriteLine($"        Tables are: {restaurant.Tables.Count} tables in the restaurant:");
         foreach (var table in restaurant.Tables)
         {
-            Console.WriteLine($"            [Table ID: {table.Id}, belong to the restaurant: {table.Restaurant.Name} Capacity: {table.Capacity}, Alias: {table.Alias ?? "no alias"}, Description: {table.Description ?? "no description"}, IsLocked: {table.IsLocked}, belong to: {table.Restaurant.Name} restauratn]");
+            Console.WriteLine($"            [Table ID: {table.Id}, belong to the restaurant: {table.Restaurant.Name} Capacity: {table.Capacity}, Alias: {table.Alias ?? "no alias"}, Description: {table.Description ?? "no description"}, IsLocked: {table.IsOccupied}, belong to: {table.Restaurant.Name} restauratn]");
         }
         // Console.WriteLine("\n=================================== Menu                        ================================================================    \n");
-        Console.WriteLine($"        There are {restaurant.Menu.Count} menu items in the restaurant:");
-        var groupedMenuItems = restaurant.Menu
-            .GroupBy(menuItem => menuItem.GetType())
-            .ToDictionary(group => group.Key, group => group.ToList());
-        foreach (var group in groupedMenuItems)
-        {
-            // Console.WriteLine($"\n================================ Menu Type: {group.Key.Name} ================================================================    \n");
-            Console.WriteLine($"            {group.Value.Count}/{restaurant.Menu.Count} are {group.Key.Name}: ");
-            foreach (var menuItem in group.Value)
-            {
-                Console.Write($"                        id: {menuItem.Id}, Name: {menuItem.Name}, Price: {menuItem.Price}, Description: {menuItem.Description}, IsAvailable: {menuItem.IsAvailable}. ");
-                switch (menuItem)
-                {
-                    // =============================================  Load Food. MenuItem has Ingredients.
-                    case Food food:
-                    {
-                        Console.Write($"foodType: {food.FoodT}, DietaryPreference: ");
-                        if (food.DietaryPreferences.Count > 0)
-                        {
-                            Console.Write("[");
-                            foreach (var dietaryPreference in food.DietaryPreferences)
-                                Console.Write($"{dietaryPreference}, ");
-                            Console.Write("]");
-                        }
-                        else
-                        {
-                            Console.Write("No dietary preferences");
-                        }
-
-                        Console.WriteLine();
-                        break;
-                    }
-                    // =============================================  Load Beverage. MenuItem has Ingredients.
-                    case Beverage beverage:
-                    {
-                        Console.WriteLine($" BeverageType: {beverage.BeverageT}");
-                        break;
-                    }
-                    // =============================================  Load SetOfMenuItem. MenuItem has Ingredients.
-                    case SetOfMenuItem setOfMenuItems:
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine($"                                 There are {setOfMenuItems.Foods.Count} foods: ");
-                        if (setOfMenuItems.Foods.Count > 0)
-                        {
-                            foreach (var food in setOfMenuItems.Foods)
-                            {
-                                
-                                Console.Write($"                                        [food name: {food.Name}");
-                                Console.Write(
-                                    $". Promotion for this food: {(food.Promotion == null ? "No Promotion" : food.Promotion.Name)}");
-                                Console.Write(
-                                    $". Ingredients in the food: {(food.Ingredients.Count == 0 ? "No ingredients" : " [")}");
-                                if (food.Ingredients.Count > 0)
-                                {
-                                    foreach (var ingredient in food.Ingredients)
-                                    {
-                                        Console.Write($"{ingredient.Name}, ");
-                                    }
-
-                                    Console.Write("] ");
-                                }
-
-                                Console.WriteLine("]");
-                            }
-                        }
-
-                        Console.WriteLine($"                                 There are {setOfMenuItems.Beverages.Count} beverages: ");
-                        if (setOfMenuItems.Beverages.Count > 0)
-                        {
-                            foreach (var beverage in setOfMenuItems.Beverages)
-                            {
-                                Console.Write($"                                        [Beverage name: {beverage.Name}");
-                                Console.Write(
-                                    $". Promotion for this beverage: {(beverage.Promotion == null ? "No Promotion" : beverage.Promotion.Name)}");
-                                Console.Write(
-                                    $". Ingredients in the beverage: {(beverage.Ingredients.Count == 0 ? "No ingredients" : "There are ingredients: [")}");
-                                if (beverage.Ingredients.Count > 0)
-                                {
-                                    foreach (var ingredient in beverage.Ingredients)
-                                    {
-                                        Console.Write($"{ingredient.Name}, ");
-                                    }
-
-                                    Console.Write("] ");
-                                }
-
-                                Console.WriteLine("]");
-                            }
-                        }
-
-                        Console.Write($"                                 Is available on:\n");
-                        Console.Write("                                        [");
-                        foreach (var day in setOfMenuItems.Days) Console.Write($"{day}, ");
-                        Console.Write($"] from {setOfMenuItems.StartTime} to {setOfMenuItems.EndTime}");
-                        Console.WriteLine();
-                        break;
-                    }
-                }
-
-                Console.WriteLine(menuItem.Promotion == null
-                    ? "                                 No promotion"
-                    : $"                                 Promotion: [ name: {menuItem.Promotion.Name}. And {menuItem.Promotion}]");
-                Console.Write(menuItem.Ingredients.Count == 0
-                    ? "                                 No ingredients"
-                    : "                                 There are ingredients: [");
-                if (menuItem.Ingredients.Count > 0)
-                {
-                    foreach (var ingredient in menuItem.Ingredients)
-                        Console.Write($"{ingredient.Name}, ");
-                    Console.Write("]");   
-                }
-                Console.WriteLine("");
-            }
-        }
-        // Console.WriteLine("\n================================ Online Orders ================================================================    \n");
-        Console.WriteLine($"        There are {restaurant.OnlineOrders.Count} Online Orders:");
-        foreach (var onlineOrder in restaurant.OnlineOrders)
-        {
-            Console.WriteLine($"            Online order id: {onlineOrder.Id}, belong to table: {onlineOrder.Table.Id}. Number of People: {onlineOrder.NumberOfPeople}, Date and Time: {onlineOrder.DateAndTime}, Duration: {onlineOrder.Duration}, Description: {onlineOrder.Description}, Guests Arrived: {onlineOrder.HaveGuestsArrived}. Registered client: {onlineOrder.RegisteredClient?.Id} {onlineOrder.RegisteredClient?.Name} {onlineOrder.RegisteredClient?.PhoneNumber}. Non registered: {onlineOrder.NonRegisteredClient?.ToString()}. Has the following item: {onlineOrder.MenuItems.Count}:");
-            foreach (var orderList in onlineOrder.MenuItems)
-            {
-                Console.WriteLine($"                [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price}. Discount: {orderList.MenuItem.Promotion?.DiscountPercent} ]");
-            }
-            Console.WriteLine($"                Summary: Order price is: {onlineOrder.OrderPrice}. Service Price is: {onlineOrder.ServicePrice}. Discount: {onlineOrder.DiscountAmount}. Total Price is: {onlineOrder.TotalPrice}");
-        }
-        // Console.WriteLine("\n================================ Table Orders ================================================================    \n");
-        var tablesWithTableOrders = restaurant.Tables.Where(table => table.TableOrders.Count > 0).ToList();
-        Console.WriteLine($"        There are {tablesWithTableOrders.Count()} tables which have orders:");
-        foreach (var table in tablesWithTableOrders)
-        {
-            Console.WriteLine($"            Table id: {table.Id} belong to {table.Restaurant.Name} has {table.TableOrders.Count} orders:");
-            foreach (var tableOrder in table.TableOrders)
-            {
-                Console.WriteLine($"                Table order id: {tableOrder.Id}, belong to restaurant: {tableOrder.Table.Restaurant.Name}, belong to table: {tableOrder.Table.Id}. Number of People: {tableOrder.NumberOfPeople}. Registered client: {tableOrder.RegisteredClient?.Id}, {tableOrder.RegisteredClient?.Name}, {tableOrder.RegisteredClient?.PhoneNumber}.  has the following items: {tableOrder.MenuItems.Count}: ");
-                foreach (var orderList in tableOrder.MenuItems)
-                {
-                    Console.WriteLine($"                    [ Order Id: {orderList.Order.Id}. MenuItem Id: {orderList.MenuItem.Id}, MenuItem Name: {orderList.MenuItem.Name}. Quantity: {orderList.Quantity}. Price: {orderList.MenuItem.Price}. Discount: {orderList.MenuItem.Promotion?.DiscountPercent} ]");
-                }
-                Console.WriteLine($"                Summary: Order price is: {tableOrder.OrderPrice}. Service Price is: {tableOrder.ServicePrice}. Discount: {tableOrder.DiscountAmount}. Total Price is: {tableOrder.TotalPrice}");
-            }
-        }
+        restaurant.ListMenuForTableOrder();
+        // Console.WriteLine("\n================================ Online Orders (which are in standBy but guest are not arrived ================================================================    \n");
+        restaurant.ListReservations();
+        // Console.WriteLine("\n================================ All Orders (StandBy and table occupied and in case of the onlineOrder check for the guest arrived) ================================================================    \n");
+        restaurant.ListStandByOrdersWIthTableOccupied();
+        // Console.WriteLine("\n================================ all Orders (Finalized) ================================================================    \n");
+        restaurant.ListAllFinalizedOrders();
     }
 
     
@@ -212,8 +81,7 @@ void OutputAllObjectsCreated()
         }
         Console.Write($"] \n");
     }
-    
-    
+    //
 }
 
 void CreateObjects()
@@ -246,7 +114,11 @@ void CreateObjects()
     // ==================================================== Registered client
     RegisteredClient client1 = new RegisteredClient("Max", "32jpjoi3j04#A", "s23454@pjatk.com", "546 545 544");
     RegisteredClient client2 = new RegisteredClient("Alexa", "32jpjD$i3j04#A", null, "344 434 344", "Arstv");
-    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr");
+    RegisteredClient client3 = new RegisteredClient("Max", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr", client1);
+    RegisteredClient client4 = new RegisteredClient("Maximilian", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr", client1);
+    RegisteredClient client5 = new RegisteredClient("Alexandra", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr", client2);
+    RegisteredClient client6 = new RegisteredClient("Maksym", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr", client2);
+    RegisteredClient client7 = new RegisteredClient("Aliaksandra", "32Apjoi3jf4#A", "s488@gjsp.com", null, "Skr", client2);
     //========================================================= promotion
     var promo1 = new Promotion(10.0, "new year", "it is purpose delete this in february");
     var promo2 = new Promotion(10.0, "He[ppy", "nothi", Promotion.PromotionType.Regular);
@@ -334,7 +206,7 @@ void CreateObjects()
     // restaurant1tableOrder3.AddMenuItemToOrder(restaurant1food5);
     // =============================================== Online order
     var restaurant1onlineOrder1 = new OnlineOrder(restaurant1, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), "heljfoadsf", new Dictionary<MenuItem, int> { { restaurant1food3, 2 }, {restaurant1beverage3, 2} },  client2);
+        new TimeSpan(2, 0, 0), "tes", new Dictionary<MenuItem, int> { { restaurant1food3, 2 }, {restaurant1beverage3, 2} },  client2);
     // restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1food3);
     // restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1food3);
     // restaurant1onlineOrder1.AddMenuItemToOrder(restaurant1beverage3, 2);
@@ -352,9 +224,12 @@ void CreateObjects()
     // ========================================================= Create Restaurant2 =========================================================================================
     Restaurant restaurant2 = new Restaurant("Miscusi on river", new Address("Zlote 44", "Krakow", "44"), workHours);
     // restaurant2.AddTable(4);
-    var restaurant2table1 = new Table(restaurant2, 2);
-    var restaurant2table2 = new Table(restaurant2, 4, "ali");
-    var restaurant2table3 = new Table(restaurant2, 6, "window", "descrip");
+    var restaurant2table1 = new Table(restaurant2, 8);
+    var restaurant2table2 = new Table(restaurant2, 8, "ali");
+    var restaurant2table3 = new Table(restaurant2, 10, "window", "descrip");
+    var restaurant2table4 = new Table(restaurant2, 4);
+    var restaurant2table5 = new Table(restaurant2, 2);
+    var restaurant2table6 = new Table(restaurant2, 6);
     // ======================================================== Create FOod for Restaurant1
     var restaurant2food1 = new Food(restaurant2, "Spaghetti Carbonara", 12.99, "Classic pasta with bacon and eggs",
         Food.FoodType.Pasta, new List<Ingredient> { pastaIngredient, baconIngredient, eggIngredient }, null, promo1);
@@ -374,12 +249,24 @@ void CreateObjects()
         "A combination of two food beyound your imagination and a drink", new List<Food> { restaurant2food1 },
         new List<Beverage> { restaurant2beverage1 });
     // ================================================ TableOrder
-    var restaurant2tableOrder1 = new TableOrder(restaurant2table1, 8, new Dictionary<MenuItem, int> { { restaurant2food1, 2 }, { restaurant2food2, 2 } }, client1);
-    var restaurant2tableOrder2 = new TableOrder(restaurant2table2, 4, new Dictionary<MenuItem, int> { { restaurant2businessLunch1, 2 } });
+    var restaurant2tableOrder1 = new TableOrder(restaurant2table1, 8, new Dictionary<MenuItem, int> { { restaurant2food1, 2 }, { restaurant2food2, 2 } , {restaurant2businessLunch1, 1}}, client1);
+    var restaurant2tableOrder2 = new TableOrder(restaurant2table2, 8, new Dictionary<MenuItem, int> { { restaurant2businessLunch1, 2 } });
+    var restaurant2tableOrder3 = new TableOrder(restaurant2table3, 10, new Dictionary<MenuItem, int> { { restaurant2food2, 1 } }, client2);
+    restaurant2tableOrder1.FinalizeOrder(10);
     // =============================================== Online order
     var restaurant2onlineOrder1 = new OnlineOrder(restaurant2, 4, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
-        new TimeSpan(2, 0, 0), "heljfoadsf", new Dictionary<MenuItem, int> { { restaurant2beverage2, 2 } }, client2);
+        new TimeSpan(2, 0, 0), "hell", new Dictionary<MenuItem, int> { { restaurant2beverage2, 2 } }, client2);
     var restaurant2onlineOrder2 = new OnlineOrder(restaurant2, 2, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
         new TimeSpan(2, 0, 0), null, new Dictionary<MenuItem, int> { { restaurant2food1, 1 } }, null, new NonRegisteredClient("Max", "434 345 345"));
+    restaurant2onlineOrder2.MarkAsGuestsArrived();
+    var restaurant2onlineOrder3 = new OnlineOrder(restaurant2, 5, DateTime.Now.AddDays(3).Date + new TimeSpan(15, 0, 0),
+        new TimeSpan(1, 0, 0), null, new Dictionary<MenuItem, int> { { restaurant2food1, 1 }, { restaurant2beverage1, 2} }, client3);
+    restaurant2onlineOrder3.MarkAsGuestsArrived();
+    restaurant2onlineOrder3.FinalizeOrder(10);
     // ==========================================================================================================================================================================================================
+    restaurant2tableOrder2.SendOrderToTheKitchen();
+    restaurant2onlineOrder2.SendOrderToTheKitchen();
+    restaurant2tableOrder1.PrintBill();
+    restaurant2onlineOrder3.PrintBill();
+    client1.GenerateInvitationLink();
 }
