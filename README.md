@@ -2,6 +2,7 @@
 
 This repository contains the documentation and diagrams for the **Digital Ordering System**, which is designed to manage restaurant operations, orders, reservations, and staff workflows.  
 The following sections provide diagrams, scenarios, and analysis details of the system.
+![Analytical Class Diagram](docs/diagram/digital%20ordering%20system%20-%20Class%20Diagram.svg)
 
 ---
 
