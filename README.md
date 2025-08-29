@@ -193,26 +193,31 @@ system.
 The above analytical class diagram visualizes the digital ordering system. Users can 
 make reservation (online orders) or table orders (using QR code). It defines the 
 relationships, attributes, and associations between entities in the system. 
-**RegisteredClient **
+
+**RegisteredClient**
 Registered clients have a unique ID, password, and optional surname. They must 
 provide at least one of the following: Email: Used for communication.PhoneNumber: 
 Mandatory for Online Orders.Registered clients can receive bonuses and place both 
 online and table orders. 
-**NonRegisteredClient **
+
+**NonRegisteredClient**
 Only requires a name and optional phone number. Used for placing Online Orders 
 without registering. 
-**Restaurant **
+
+**Restaurant**
 Includes details like Id, Name, Address, and WorkHour. Includes associations to 
 manage: Table, MenuItems. 
-**Table **
+
+**Table**
 Tables are associated with orders and can be accessed via QR scanning for table 
 order placement. Attributes include: Capacity: Number of people it can 
 accommodate. Alias: Identifier used within the restaurant. IsOccupied: Indicates 
 whether the table is currently occupied. Associated with: Orders: Table becomes 
 occupied upon order placement. Restaurant: Each table belongs to one specific 
 restaurant. QRScanningTime: For tracking when a table is accessed via QR code for 
-ordering. 
-**Order **
+ordering.
+
+**Order**
 The base class for all orders with common attributes: Id, ServicePercentage: Default 
 is 10%., OrderPrice: Sum of item prices multiplied by quantities., TotalPrice: 
 OrderPrice + ServicePrice. NumberOfPeople: Number of guests. TimeStart: When 
@@ -222,22 +227,26 @@ OnlineOrder: Requires reservation details (e.g., date, time, and guest arrival s
 Each order includes details like service percentage (10%), total price, and number of 
 people. Finalized orders have additional details, such as applied coupons and 
 bonuses used. 
-**MenuItem (Abstract) **
+
+**MenuItem (Abstract)**
 MenuItem class is abstract and includes: Food with dietary preferences (e.g. vegan, 
 gluten-free) and type (e.g. pasta, desert). Beverage, which can include alcoholic or 
 non-alcoholic options and type. 
 Relationships: Ingredients: Represents the components of menu items. Some items, 
 like pre-made drinks, may not have ingredients. SetsOfMenuItem: Groups of menu 
 items with defined limits (e.g., 2–4 foods, 1–2 beverages). 
-**Promotions **
+
+**Promotions**
 Discounts associated with menu items. Attributes include: Id, DiscountPercentage, 
 and Name. Min: Minimum discount is 1%. Max: Maximum discount is 99%. 
 Promotions are applied directly to menu items and cannot exist independently. 
-**Associations **
+
+**Associations**
 Association class: Link menu items to their ingredients and orders to items. 
 Qualified associations: Links OnlineOrder and Finalized to RegisteredClient.    
 Aggregation: Connects Order and NonRegisteredClient, MenuItem and Ingredient, 
 Food+Beverages and SetsOfMenuItem. 
+
 Composition: Connects StandBy, TableOrder, OnlineOrder to Table. Table to 
 Restaurant. OnlineOrder and MenuItem to Restaurant. That kind of relationship 
 exists in our diagram because some tables can’t exist without tables they’re related 
@@ -254,8 +263,8 @@ to.
 
 ## Design Class Diagram - Design Decisions
 
-**Attribute validation**
-Empty strings, null values, and invalid numbers are not allowed, even for nullable attributes. Validating attributes in the constructor is often better when initial values need to be checked immediately upon object creation. This ensures that even the initial state of the object is consistent and avoids creating invalid instances. For attributes that don’t frequently change, validation should occur in the constructor. For attributes that may be updated later, validation would be enforced in the setter.Setter validation is called "property with backing field" design pattern, where a private field (<code style="color : green">_surname</code>) is used to store the value, and a public property (<code style="color : green">Surname</code>) provides controlled access to it. Setter will simply control how values are assigned to <code style="color : green">_surname</code>. In this example, the setter validates the input using the <code style="color : green">ValidateSurname</code> method before assigning it. This prevents invalid data from being stored in the attribute. This would help to ensure that all modifications passed to the attribute are going through a single validation point in the setter, maintaining data consistency and integrity.
+### Attribute validation
+   Empty strings, null values, and invalid numbers are not allowed, even for nullable attributes. Validating attributes in the constructor is often better when initial values need to be checked immediately upon object creation. This ensures that even the initial state of the object is consistent and avoids creating invalid instances. For attributes that don’t frequently change, validation should occur in the constructor. For attributes that may be updated later, validation would be enforced in the setter.Setter validation is called "property with backing field" design pattern, where a private field (<code style="color : green">_surname</code>) is used to store the value, and a public property (<code style="color : green">Surname</code>) provides controlled access to it. Setter will simply control how values are assigned to <code style="color : green">_surname</code>. In this example, the setter validates the input using the <code style="color : green">ValidateSurname</code> method before assigning it. This prevents invalid data from being stored in the attribute. This would help to ensure that all modifications passed to the attribute are going through a single validation point in the setter, maintaining data consistency and integrity.
 ```csharp
 private string? _surname;
 public string? Surname
@@ -269,8 +278,8 @@ public string? Surname
 }
 ```
 
-**Mandatory attributes**
-Mandatory attributes must always be initialized with valid values to prevent nulls, 
+### Mandatory attributes
+   Mandatory attributes must always be initialized with valid values to prevent nulls, 
 empty states, or invalid numbers. This can be ensured by explicitly validating these 
 attributes during object construction or through property setters. To uphold these 
 requirements, checks must verify that; Objects: Must not be null to ensure that 
@@ -290,7 +299,7 @@ ArgumentException($"{text} cannot be null or empty");
 } 
 ```
 
-**Optional attributes**
+### Optional attributes 
   Optional attributes are those that may or may not have values assigned. When designing setters for optional attributes, it is essential to accommodate null values while ensuring that any non-null inputs meet the required constraints. Since simple types like <code style="color : green">int</code> or <code style="color : green">double</code> do not allow null values, the solution is to use nullable types, such as <code style="color : green">int?</code> or <code style="color : green">double?</code>, denoted with a question mark (<code style="color : green">?</code>). This allows the attribute to hold either a value or null. Also Employing nullable types like <code style="color : green">string?</code>, <code style="color : green">int?</code>, or <code style="color : green">double?</code> allows optional attributes to accommodate null values effectively.
   When implementing the setter for an optional attribute, if a non-null value is provided, the setter should validate the input against appropriate constraints, such as ensuring a string or list is not empty and meets length requirements or that a number falls within an acceptable range. 
 ```csharp
@@ -301,7 +310,7 @@ if (value == string.Empty)  throw new
 ArgumentException($"{propertyName} cannot be empty");
 }
 ```
-Object initializers should be used to handle scenarios where optional attributes are 
+   Object initializers should be used to handle scenarios where optional attributes are 
 or aren’t provided during object creation.This ensures that optional attributes are 
 handled gracefully without imposing unnecessary constraints during object creation. 
 ```csharp
@@ -312,7 +321,7 @@ Description = description;
 ```
 
 **Complex attributes **
-Complex attributes represent attributes that consist of multiple related values or involve intricate logic, such as an address or a time schedule. Instead of representing these attributes with primitive types, it is often better to encapsulate them in separate classes. For example, in a <code style="color : green">Restaurant</code> class, attributes like <code style="color : green">Location</code> could be modeled as separate classes. This modular approach ensures that each complex attribute has its own well-defined responsibilities and encapsulation. And of course there could be unique validation rules inside the complex attributes which respond to the consistency and prevent creation of invalid instances. Such attributes are rarely changed, so there must be consideration of making the class immutable to ensure its consistency throughout its lifecycle.  If there is a strong need to update data within a complex attribute, the editing should be done through methods defined in the class that encapsulates the attribute.
+   Complex attributes represent attributes that consist of multiple related values or involve intricate logic, such as an address or a time schedule. Instead of representing these attributes with primitive types, it is often better to encapsulate them in separate classes. For example, in a <code style="color : green">Restaurant</code> class, attributes like <code style="color : green">Location</code> could be modeled as separate classes. This modular approach ensures that each complex attribute has its own well-defined responsibilities and encapsulation. And of course there could be unique validation rules inside the complex attributes which respond to the consistency and prevent creation of invalid instances. Such attributes are rarely changed, so there must be consideration of making the class immutable to ensure its consistency throughout its lifecycle.  If there is a strong need to update data within a complex attribute, the editing should be done through methods defined in the class that encapsulates the attribute.
 ```csharp
 public class Address 
 { 
@@ -335,7 +344,7 @@ return new Address(Street, City, StreetNumber);}
 ```
 
 **Multi-value attributes**
-Represent collections of data associated with a single object, such as a set of 
+   Represent collections of data associated with a single object, such as a set of 
 working days for a restaurant. Collections should be exposed in a read-only manner 
 to prevent direct modification by external code. This can be achieved by returning 
 copies of the collection or exposing it as a read-only interface. Although setters for 
@@ -345,7 +354,7 @@ private List<OpenHour> _openHours;
 public IReadOnlyList<OpenHour> OpenHours => 
 _openHours.AsReadOnly(); 
 ```
-Also When adding, updating, or removing elements in the collection, there should be 
+   Also When adding, updating, or removing elements in the collection, there should be 
 validation for each item to ensure it meets the defined constraints.
 ```csharp
 public void UpdateOpenHours(List<OpenHour> newOpenHours) 
@@ -355,12 +364,12 @@ _openHours = newOpenHours;
 }
 ```
 
-**Class attributes**
-Also known as static attributes, represent shared properties or data that belong to the class itself rather than any specific instance. Is declared as <code style="color : green">static</code> fields within the class. This ensures that the attribute is associated with the class rather than individual instances. All instances of the class will reference the same shared attribute, making it ideal for common or globally applicable data.
+### Class attributes
+   Also known as static attributes, represent shared properties or data that belong to the class itself rather than any specific instance. Is declared as <code style="color : green">static</code> fields within the class. This ensures that the attribute is associated with the class rather than individual instances. All instances of the class will reference the same shared attribute, making it ideal for common or globally applicable data.
 ```csharp
 private static double _service = 10; 
 ```
-If the attribute is mutable, there should be controlled access through a static getter and setter.If the attribute is immutable, it must be declared as <code style="color : green">readonly</code> and assigned its value at declaration or in a static constructor. This prevents further modifications, ensuring consistency.
+   If the attribute is mutable, there should be controlled access through a static getter and setter.If the attribute is immutable, it must be declared as <code style="color : green">readonly</code> and assigned its value at declaration or in a static constructor. This prevents further modifications, ensuring consistency.
 ```csharp
 public static double Service 
 { 
@@ -373,17 +382,17 @@ _service = value;
 } 
 ```
 
-**Derived attributes **
-Values calculated based on other attributes within the class, providing computed data rather than directly stored values. Method within the class that calculates the derived attribute based on the current state of other attributes should be created such as MakeCalculationOfPrice(). While derived attributes traditionally do not have setters to maintain their computed nature, in some cases approach involves recalculating these values whenever method within class is called, effectively updating attributes, based on the latest data for example <code style="color : green">MenuItem</code>. And in this case setters are used to update the computed values, whenever recalculations are necessary due to changes in underlying attributes or associations.
+### Derived attributes 
+   Values calculated based on other attributes within the class, providing computed data rather than directly stored values. Method within the class that calculates the derived attribute based on the current state of other attributes should be created such as MakeCalculationOfPrice(). While derived attributes traditionally do not have setters to maintain their computed nature, in some cases approach involves recalculating these values whenever method within class is called, effectively updating attributes, based on the latest data for example <code style="color : green">MenuItem</code>. And in this case setters are used to update the computed values, whenever recalculations are necessary due to changes in underlying attributes or associations.
 ```csharp
 public double OrderPrice { get; private set; } = 0.0; 
 ```
 
-**Tagged value**
-Refer to attributes or properties associated with specific tags or labels, influencing behavior or categorization within the system. These values provide additional context or classification beyond standard attributes, enhancing flexibility and organizational capabilities. Tagged values are realized through attributes like <code style="color : green">_dietaryPreferences</code> and <code style="color : green">_foodType</code>, which are tagged with enums (<code style="color : green">DietaryPreferencesType</code> and <code style="color : green">FoodType</code>) to categorize or classify data based on specific criteria such as dietary preferences or food types. Furthermore, due to the usage of enumerations the design class diagram includes the notations of those classes, which transform the previously used note notation for tagged values to an actual class related to the given attribute.
+### Tagged value
+   Refer to attributes or properties associated with specific tags or labels, influencing behavior or categorization within the system. These values provide additional context or classification beyond standard attributes, enhancing flexibility and organizational capabilities. Tagged values are realized through attributes like <code style="color : green">_dietaryPreferences</code> and <code style="color : green">_foodType</code>, which are tagged with enums (<code style="color : green">DietaryPreferencesType</code> and <code style="color : green">FoodType</code>) to categorize or classify data based on specific criteria such as dietary preferences or food types. Furthermore, due to the usage of enumerations the design class diagram includes the notations of those classes, which transform the previously used note notation for tagged values to an actual class related to the given attribute.
 
-**Associations**
-In the absence of ORM (Object-relational mapping), reverse connections are 
+### Associations
+   In the absence of ORM (Object-relational mapping), reverse connections are 
 implemented across all associations. This approach ensures that each end of the 
 association comprehensively acknowledges and maintains the relationship, 
 promoting data integrity and preventing logical inconsistencies. When creating a 
@@ -396,7 +405,7 @@ It is also crucial to handle infinite recursion in case of the reverse connectio
 methods check whether the specific object is already associated before adding it. 
 This prevents redundant associations and potential stack overflow errors. 
 
-**General association implementation **
+### General association implementation
 Many-to-many association: should be implemented using a reference between 
 objects (no identifiers) Upon the creation of a reference connecting one object to 
 another, a reverse connection must be created. In case of lists - keep them private. 
@@ -432,7 +441,7 @@ public void AddMenuItemToIngredient(MenuItem menuItem)
        menuItem.AddIngredient(this); 
    }
 ```
-Similarly to the adding methods Removing method should work. So a method for 
+   Similarly to the adding methods Removing method should work. So a method for 
 removing the connection between the objects should automatically remove the 
 reverse reference as well. And also should take into account any necessary 
 exceptions. 
@@ -450,13 +459,13 @@ foreach (var ingredient in _ingredients)
 AddIngredient(ingredient); 
 }
 ```
-In constructors there should be an option to add all the references of a given 
+   In constructors there should be an option to add all the references of a given 
 associations (it should not be set using a public setter) 
 if (ingredients /= null) UpdateIngredients(ingredients
 ```csharp
 if (ingredients /= null) UpdateIngredients(ingredients); 
 ```
-One-to-many association: A method should be provided to establish the association 
+   One-to-many association: A method should be provided to establish the association 
 between two objects. This method must ensure that an object is associated with only 
 one other object at a time, maintaining bidirectional consistency by invoking the 
 corresponding method on the related object. Additionally, a method should exist to 
@@ -464,7 +473,7 @@ add an object to the list while performing necessary checks, such as validating 
 null values to prevent invalid associations and verifying that the object is not already 
 associated with another entity to avoid conflicts.
 
-Order.cs: 
+   Order.cs: 
 ```csharp
 rivate RegisteredClient _registeredClient; 
 public RegisteredClient RegisteredClient /> _registeredClient; 
@@ -480,7 +489,7 @@ method");
 } 
 ```
 
-RegisteredClient.cs:
+   RegisteredClient.cs:
 ```csharp
 private List<Order> _orders = []; 
 public void AddOrder(Order order) 
@@ -498,16 +507,16 @@ order.AddRegisteredClient(this);
 }
 ```
 
-**Association class/attribute **
-association class serves to capture additional information or behaviors associated with a relationship between two main classes. For example, in the context of <code style="color : green">MenuItem</code> and <code style="color : green">Order</code>, the <code style="color : green">OrderList</code> class captures details such as quantity and specific associations between <code style="color : green">MenuItem</code> and <code style="color : green">Order</code>. Unlike basic associations that directly link two classes, the association class (<code style="color : green">OrderList</code>) manages the relationship by holding references to both <code style="color : green">MenuItem</code> and <code style="color : green">Order</code>, along with additional attributes like <code style="color : green">Quantity</code>.
+### Association class/attribute
+   Association class serves to capture additional information or behaviors associated with a relationship between two main classes. For example, in the context of <code style="color : green">MenuItem</code> and <code style="color : green">Order</code>, the <code style="color : green">OrderList</code> class captures details such as quantity and specific associations between <code style="color : green">MenuItem</code> and <code style="color : green">Order</code>. Unlike basic associations that directly link two classes, the association class (<code style="color : green">OrderList</code>) manages the relationship by holding references to both <code style="color : green">MenuItem</code> and <code style="color : green">Order</code>, along with additional attributes like <code style="color : green">Quantity</code>.
 
-Methods like <code style="color : green">AddMenuItem</code> and <code style="color : green">AddToOrder</code> within <code style="color : green">MenuItem</code> and <code style="color : green">Order</code> classes respectively instantiate <code style="color : green">OrderList</code> objects, ensuring that all necessary references and attributes are properly initialized. These methods enforce bidirectional consistency by setting up reverse connections between associated objects (<code style="color : green">MenuItem</code> ↔ <code style="color : green">OrderList</code> ↔ <code style="color : green">Order</code>). Also When a new <code style="color : green">OrderList</code> object is instantiated, it initializes references to both <code style="color : green">MenuItem</code> and <code style="color : green">Order</code> using methods like <code style="color : green">AddOrderList </code>and <code style="color : green">AddToOrder</code> ensuring bidirectional connections are established immediately. So the responsibility for managing the association is centralized within the <code style="color : green">OrderList</code> class. <code style="color : green">OrderList</code> constructor handles this, adding itself to the <code style="color : green">_menuItems</code> list in the <code style="color : green">Order</code> and adding itself to the <code style="color : green">_orders</code> list in the <code style="color : green">MenuItem</code>.
+   Methods like <code style="color : green">AddMenuItem</code> and <code style="color : green">AddToOrder</code> within <code style="color : green">MenuItem</code> and <code style="color : green">Order</code> classes respectively instantiate <code style="color : green">OrderList</code> objects, ensuring that all necessary references and attributes are properly initialized. These methods enforce bidirectional consistency by setting up reverse connections between associated objects (<code style="color : green">MenuItem</code> ↔ <code style="color : green">OrderList</code> ↔ <code style="color : green">Order</code>). Also When a new <code style="color : green">OrderList</code> object is instantiated, it initializes references to both <code style="color : green">MenuItem</code> and <code style="color : green">Order</code> using methods like <code style="color : green">AddOrderList </code>and <code style="color : green">AddToOrder</code> ensuring bidirectional connections are established immediately. So the responsibility for managing the association is centralized within the <code style="color : green">OrderList</code> class. <code style="color : green">OrderList</code> constructor handles this, adding itself to the <code style="color : green">_menuItems</code> list in the <code style="color : green">Order</code> and adding itself to the <code style="color : green">_orders</code> list in the <code style="color : green">MenuItem</code>.
 
-Private lists (<code style="color : green">_menuItems</code> in <code style="color : green">Order</code> and <code style="color : green">_orders</code> in <code style="color : green">MenuItem</code>) manage instances of <code style="color : green">OrderList</code>. These lists are accessed through getter methods (<code style="color : green">MenuItems</code> and <code style="color : green">Orders</code>), which return copies of the lists to maintain encapsulation. This prevents external modifications that could compromise data integrity.
+   Private lists (<code style="color : green">_menuItems</code> in <code style="color : green">Order</code> and <code style="color : green">_orders</code> in <code style="color : green">MenuItem</code>) manage instances of <code style="color : green">OrderList</code>. These lists are accessed through getter methods (<code style="color : green">MenuItems</code> and <code style="color : green">Orders</code>), which return copies of the lists to maintain encapsulation. This prevents external modifications that could compromise data integrity.
 
-Validation checks within methods (<code style="color : green">AddMenuItem</code>, <code style="color : green">AddToOrder</code>, etc.) ensure that null references are handled appropriately (e.g., throwing <code style="color : green">ArgumentNullExceptions</code>) to maintain robustness and prevent unexpected behaviors.
+   Validation checks within methods (<code style="color : green">AddMenuItem</code>, <code style="color : green">AddToOrder</code>, etc.) ensure that null references are handled appropriately (e.g., throwing <code style="color : green">ArgumentNullExceptions</code>) to maintain robustness and prevent unexpected behaviors.
 
-Order.cs:
+   Order.cs:
 ```csharp
 private List<OrderList> _menuItems = []; 
 public List<OrderList> MenuItems /> [/._menuItems]; 
@@ -523,7 +532,7 @@ public void AddOrderList(OrderList orderList)
 } 
 ```
 
-MenuItem.cs: 
+   MenuItem.cs: 
 ```csharp
 private List<OrderList> _orders = []; 
 public List<OrderList> Orders /> [/._orders]; 
@@ -543,7 +552,7 @@ trying to add the wrong orderList to the MenuItem in AddOrderList()");
 } 
 ```
 
-OrderList.cs:
+   OrderList.cs:
 ```csharp
 public int Quantity { get; private set; } 
 public MenuItem MenuItem { get; private set; } 
@@ -570,8 +579,8 @@ public OrderList(MenuItem menuItem, Order order, int quantity = 1)
 } 
 ```
 
-**Composition associations**
-The (part) cannot exist without the (whole). The lifecycle of a part object is tightly 
+### Composition associations
+   The (part) cannot exist without the (whole). The lifecycle of a part object is tightly 
 coupled with the whole. So the part can’t be independent. When the whole is 
 deleted, all associated part objects are also deleted to prevent orphaned instances. 
 When implementing a composition association, it is essential to enforce that the 
@@ -580,7 +589,7 @@ establishing the relationship during the initialization of the "part" object. Fo
 a constructor can be designed to accept the "whole" object as a parameter, ensuring 
 that the association is created immediately. This guarantees that the "part" is always 
 connected to a valid "whole." 
-The "part" cannot be shared between multiple "whole" objects, whereas in basic 
+   The "part" cannot be shared between multiple "whole" objects, whereas in basic 
 association, relationships may allow multiple connections.. A "part" object can only 
 belong to one "whole" object at a time. To enforce this, validation logic must be 
 implemented during the association process to ensure that a given "part" is not 
@@ -592,7 +601,7 @@ achieved by iterating through the "part" objects, removing their references to t
 "whole," and clearing their relationships entirely. This ensures no orphaned "part" 
 objects remain, maintaining a consistent state in the system. 
 
-Table.cs: 
+   Table.cs: 
 ```csharp
 public Table(Restaurant restaurant) 
 { 
@@ -623,7 +632,7 @@ public void DeleteTable()
 }  
 ```
 
-Restaurant.cs: 
+   Restaurant.cs: 
 ```csharp
 private List<Table> _tables = []; 
 public List<Table> Tables /> [/._tables]; 
@@ -660,8 +669,8 @@ public static void RemoveRestaurant(Restaurant restaurant)
 } 
 ```
 
-**Qualified associations **
-Qualified associations introduce a more structured way of managing relationships 
+### Qualified associations
+   Qualified associations introduce a more structured way of managing relationships 
 between objects by using a qualifier (key) to identify and access related instances. In 
 a qualified association, a key is introduced to identify each related object. This key is 
 typically a unique attribute of the associated object, such as an ID. The qualifier is 
@@ -731,7 +740,7 @@ private void RemoveOnlineOrderFromRegisteredClient()
    _registeredClientMadeOnlineOrder = null; 
 }
 ```
-Qualified associations differ from basic associations by introducing a key to identify 
+   Qualified associations differ from basic associations by introducing a key to identify 
 related objects, whereas basic associations often rely on lists or sets without unique 
 identifiers. Accessing related objects is more efficient in qualified associations 
 because keys allow direct lookup, unlike basic associations, which may require 
@@ -740,8 +749,8 @@ within the collection, ensuring that each "part" can only be associated with one
 "whole" under a specific key. Basic associations lack this level of structured 
 enforcement. 
 
-**Reflex Association **
-Reflexive associations describe relationships within the same class, where instances 
+### Reflex Association 
+   Reflexive associations describe relationships within the same class, where instances 
 of a class can be associated with other instances of the same class. In reflexive 
 associations, both the "source" and "target" ends of the relationship are managed 
 within the same class. This requires additional attributes and methods. Reflexive 
@@ -786,14 +795,14 @@ trying to  invite yourself");
    } 
 } 
 ```
-Representation of the "source" and "target" ends of the reflexive association are:<code style="color : green">_invitedBy</code> represents the instance that invited this object and <code style="color : green">_invited</code> represents the list of instances invited by this object. Methods are implemented to establish and manage the relationship bidirectionally: <code style="color : green">AddInvitedBy()</code> links the current instance to another as the inviter, <code style="color : green">AddInvited()</code> establishes the reverse link, where the current instance invites another. Validation must state that an instance cannot invite itself and an instance already invited by another should not be reassigned. Both methods must be private as the addition to the both methods must be triggered after the creation of the object.
+   Representation of the "source" and "target" ends of the reflexive association are:<code style="color : green">_invitedBy</code> represents the instance that invited this object and <code style="color : green">_invited</code> represents the list of instances invited by this object. Methods are implemented to establish and manage the relationship bidirectionally: <code style="color : green">AddInvitedBy()</code> links the current instance to another as the inviter, <code style="color : green">AddInvited()</code> establishes the reverse link, where the current instance invites another. Validation must state that an instance cannot invite itself and an instance already invited by another should not be reassigned. Both methods must be private as the addition to the both methods must be triggered after the creation of the object.
 
-**Inheritances**
+### Inheritances
 
-**Multi-Aspect Inheritance**
-Normal inheritance for one aspect of the design, enabling a natural and straightforward implementation of shared functionality across related roles. For the other aspect, base class flattening is implemented, allowing the flexibility to mix in or assign specific behaviors without deep inheritance hierarchies. Main object expose functionality for each role through delegation, ensuring a clean separation of concerns and an intuitive interaction surface.
+### Multi-Aspect Inheritance
+   Normal inheritance for one aspect of the design, enabling a natural and straightforward implementation of shared functionality across related roles. For the other aspect, base class flattening is implemented, allowing the flexibility to mix in or assign specific behaviors without deep inheritance hierarchies. Main object expose functionality for each role through delegation, ensuring a clean separation of concerns and an intuitive interaction surface.
 
-For example multi-aspect inheritance and flattening strategy might be used. Common attributes of <code style="color : green">FinalizedOrder</code> and <code style="color : green">StandByOrder</code> were moved to the <code style="color : green">Order</code> class. Enum to represent the role (<code style="color : green">StandBy</code> or <code style="color : green">Finalized</code>) were added in order to ensure immutability of this role. Methods in the <code style="color : green">Order</code> class must be created to allow orders to change the role from <code style="color : green">StandBy</code> to <code style="color : green">Finalized</code>.
+   For example multi-aspect inheritance and flattening strategy might be used. Common attributes of <code style="color : green">FinalizedOrder</code> and <code style="color : green">StandByOrder</code> were moved to the <code style="color : green">Order</code> class. Enum to represent the role (<code style="color : green">StandBy</code> or <code style="color : green">Finalized</code>) were added in order to ensure immutability of this role. Methods in the <code style="color : green">Order</code> class must be created to allow orders to change the role from <code style="color : green">StandBy</code> to <code style="color : green">Finalized</code>.
 
 ---
 
