@@ -816,69 +816,66 @@ The changes were implemented to address three specific scenarios: "Start Order,"
 "Remove/Add Menu Item," and "Remove Ingredients." Below are the methods 
 identified and introduced for each scenario: 
 
-**Start Order** 
+### Start Order
 The following new methods are introduced to support the dynamic behavior of the 
 "Start the Order" use case:
-● VerifyScanedQRCoder(): Captures and processes the QR code data to 
+1. VerifyScanedQRCoder(): Captures and processes the QR code data to 
 identify the table and restaurant. This method verifies the QR code, extracts 
 table and restaurant information, and verifies that order will be initiated with 
-the associated table. 
-● ListMenuForTableOrder(): Displays the menu items available for selection. 
+the associated table.
+2. ListMenuForTableOrder(): Displays the menu items available for selection. 
 Retrieves and renders the list of menu items based on the restaurant's 
 menu for the table order without setOfMenuItems. 
-● ListMenuForOnlineOrder(): Displays the menu items available for 
+3. ListMenuForOnlineOrder(): Displays the menu items available for 
 selection. Retrieves and renders the list of menu items based on the 
 restaurant's menu for the table order with setOfMenuItems. 
 
-**Remove/Add Menu Item From/To Order List **
+### Remove/Add Menu Item From/To Order List
 The following methods are essential for implementing the selected desired menu 
 items before the confirmation of the order process. Use cases involve customers 
 managing their order list by adding or removing menu items. 
-● AddMenuItemToOrder(): Adds a specific menu item to the order list. Checks 
+1. AddMenuItemToOrder(): Adds a specific menu item to the order list. Checks 
 the availability of the menu item and adds the selected quantity to the 
 customer's current order. Updates the order list and price accordingly. 
-● RemoveMenuItemFromOrder(): Removes a specific menu item from the order 
+2. RemoveMenuItemFromOrder(): Removes a specific menu item from the order 
 list 
-● DecrementQuantityInOrderList(): Deducts the specified quantity of the menu 
+3. DecrementQuantityInOrderList(): Deducts the specified quantity of the menu 
 item from the order. If the quantity reaches zero, remove the menu item from 
 the order entirely. 
-● MakeCalculationOfPrice(): Recalculates the total price of the order after 
+4. MakeCalculationOfPrice(): Recalculates the total price of the order after 
 adding menu items. Sums up the prices of all menu items in the order and 
 applies any discounts or promotions if applicable. 
-● AdjustPriceOnRemoval(): Recalculate the total price of the order after 
+5. AdjustPriceOnRemoval(): Recalculate the total price of the order after 
 removing menu items. 
-● AdjustPriceOnDecrement(): Recalculate the total price of the order after 
+6. AdjustPriceOnDecrement(): Recalculate the total price of the order after 
 decrementation of menu items. 
-● DisplayMenuItemDetails(): Displays detailed information about a selected 
+7. DisplayMenuItemDetails(): Displays detailed information about a selected 
 menu item. Retrieves details such as description, dietary preferences, and 
 price from the database. 
 
-**Confirm Order **
+### Confirm Order
 The following new methods are crucial for finalizing the order from the client side and 
 create an order: 
-● AddTable(): Finds free tables in the system and assigns a random available 
-table to an online order. Queries the system for tables marked as free. 
-Ensures the table is suitable for the party size and order type.Randomly 
-selects and assigns a table to the orde 
-● IsRestaurantOpen(): Verifies if the restaurant is open before assigning a 
+1. AddTable(): Finds free tables in the system and assigns a random available table to an online order. Queries the system for tables marked as free.  Ensures the table is suitable for the party size and order type.Randomly selects and assigns a table to the orde 
+2. IsRestaurantOpen(): Verifies if the restaurant is open before assigning a 
 table or creating an order. Check the current time against the restaurant's 
 operating hours. Ensures the restaurant is open before proceeding with 
 table assignment or order creation. 
-● IsAvailableForOnlineOrder(): Checks if a table is available for online 
+3. IsAvailableForOnlineOrder(): Checks if a table is available for online 
 orders. Ensures tables flagged for online orders are free. Filters out tables 
 that are reserved for in-person dining or already occupied. 
 
-**Delete/Add Ingredient From/To MenuItem **
+### Delete/Add Ingredient From/To MenuItem
 This use case involves the Admin removing an ingredient from a specific MenuItem. 
 The dynamic analysis identifies new methods necessary for implementing this 
 functionality: 
-● DisplayMenuItemDetails(): Allows the Admin to choose a specific 
+1. DisplayMenuItemDetails(): Allows the Admin to choose a specific 
 MenuItem from the list for editing. Retrieves the details of the selected 
 MenuItem, including its associated ingredients. 
-● ListAlIngredients(): Displays the list of ingredients for the selected 
+2. ListAlIngredients(): Displays the list of ingredients for the selected 
 MenuItem. 
 
-**Persistence Considerations **
+### Persistence Considerations
 For the scenarios "Delete/Add Ingredient From/To MenuItem," "Remove/Add Menu Item 
 From/To Order List," and "Start Order," the persistence layer of the system leverages Entity 
 Framework Core, allowing operations to interact seamlessly with the database. Methods 
