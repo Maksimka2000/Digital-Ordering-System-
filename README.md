@@ -263,6 +263,85 @@ to.
 
 ## Design Class Diagram - Design Decisions
 
+### Technology Stack
+This project is implemented entirely in C# (100% of the codebase) to ensure robust and efficient object-oriented programming practices. The stack leverages the language's capabilities for encapsulation, serialization, and LINQ for data manipulation.
+
+### General Structure of the Class
+1. **Enums**: Common enumerations used within the system.
+2. **Class extent**: Holds all instances of the class.
+3. **Fields**: Attributes or properties that define the class's state.
+4. **Setters and getters**: Accessor and mutator methods for fields, including validation logic.
+5. **Constructor**: Initializes the object with default or provided values.
+6. **Methods for multi-value attributes**: Helper methods to handle collections or lists.
+7. **Associations, getter, methods**: Manage relationships between classes.
+8. **Validation methods**: Ensure data integrity.
+9. **Methods on Class CRUD**: Create, Read, Update, and Delete operations for objects.
+10. **Methods on attributes**: Operations specific to class attributes.
+11. **Other methods**: Additional utility or domain-specific methods.
+
+### Associations
+Aggregation Associations (Many-to-Many):
+1. Ingredient ↔ MenuItem
+2. Food ↔ SetOfMenuItems
+3. Beverage ↔ SetOfMenuItems
+Aggregation Associations (One-to-Many):
+1. Order ↔ RegisteredClient
+2. Restaurant ↔ OnlineOrder
+Associations with Attribute or Association Class:
+1. Order ↔ MenuItem
+Composition Associations:
+1. Restaurant ↔ Table
+2. Restaurant ↔ MenuItem
+3. Table ↔ Order
+Qualified Associations:
+1. RegisteredClient ↔ OnlineOrder
+2. RegisteredClient ↔ Order
+Reflex Associations:
+1. RegisteredClient ↔ Self
+
+### Class Extent
+1. **Definition**: Holds all instances of a class. For example, the state of a `MenuItem` instance is defined by its `Id`, `Name`, and `Price`.
+2. **Design Choices for Security**:
+   - Use private static fields to hold class extent.
+   - Publicly expose read-only access methods.
+   - Encapsulate internal details to prevent unauthorized modifications.
+   - Example:
+     ```csharp
+     private static List<MenuItem> menuItems = new List<MenuItem>();
+     public static IReadOnlyList<MenuItem> GetAllMenuItems() => menuItems.AsReadOnly();
+     ```
+3. **Automatic Addition of Objects**:
+   - Add new objects to the class extent in the constructor.
+4. **Unauthorized Modification Prevention**:
+   - Return copies of collections or immutable views.
+5. **View of Collection Without Modifications**:
+   - Use LINQ to create projections or filters:
+     ```csharp
+     public static List<MenuItem> GetMenuItemsByPriceRange(double minPrice, double maxPrice) =>
+         menuItems.Where(item => item.Price >= minPrice && item.Price <= maxPrice).ToList();
+     ```
+6. **Persistence**:
+   - Serialize objects to JSON for saving and deserialize them for restoring:
+     ```csharp
+     public static void SaveMenuItemsToFile(string filePath)
+     {
+         string json = JsonConvert.SerializeObject(menuItems, Formatting.Indented);
+         File.WriteAllText(filePath, json);
+     }
+
+     public static void LoadMenuItemsFromFile(string filePath)
+     {
+         if (File.Exists(filePath))
+         {
+             string json = File.ReadAllText(filePath);
+             menuItems = JsonConvert.DeserializeObject<List<MenuItem>>(json);
+         }
+     }
+     ```
+7. **Strategies for Serialization and Deserialization**:
+   - Ensure all objects in the collection are serializable.
+   - Use the `Newtonsoft.Json` package in C# for JSON operations.
+
 ### Attribute validation
    Empty strings, null values, and invalid numbers are not allowed, even for nullable attributes. Validating attributes in the constructor is often better when initial values need to be checked immediately upon object creation. This ensures that even the initial state of the object is consistent and avoids creating invalid instances. For attributes that don’t frequently change, validation should occur in the constructor. For attributes that may be updated later, validation would be enforced in the setter.Setter validation is called "property with backing field" design pattern, where a private field (<code style="color : green">_surname</code>) is used to store the value, and a public property (<code style="color : green">Surname</code>) provides controlled access to it. Setter will simply control how values are assigned to <code style="color : green">_surname</code>. In this example, the setter validates the input using the <code style="color : green">ValidateSurname</code> method before assigning it. This prevents invalid data from being stored in the attribute. This would help to ensure that all modifications passed to the attribute are going through a single validation point in the setter, maintaining data consistency and integrity.
 ```csharp
@@ -803,6 +882,48 @@ trying to  invite yourself");
    Normal inheritance for one aspect of the design, enabling a natural and straightforward implementation of shared functionality across related roles. For the other aspect, base class flattening is implemented, allowing the flexibility to mix in or assign specific behaviors without deep inheritance hierarchies. Main object expose functionality for each role through delegation, ensuring a clean separation of concerns and an intuitive interaction surface.
 
    For example multi-aspect inheritance and flattening strategy might be used. Common attributes of <code style="color : green">FinalizedOrder</code> and <code style="color : green">StandByOrder</code> were moved to the <code style="color : green">Order</code> class. Enum to represent the role (<code style="color : green">StandBy</code> or <code style="color : green">Finalized</code>) were added in order to ensure immutability of this role. Methods in the <code style="color : green">Order</code> class must be created to allow orders to change the role from <code style="color : green">StandBy</code> to <code style="color : green">Finalized</code>.
+
+### Conclusion
+Mandatory Attributes:
+- Strings must not allow null, whitespace, empty strings, or empty lists.
+- Additional validation methods can be implemented for numeric types (int, double, etc.).
+Optional Attributes:
+- Strings must not allow empty strings, whitespace, or empty lists.
+- Additional validation methods for numeric types can be applied.
+- Optional attributes can be included in constructors or overloaded methods.
+Class Attributes:
+- Attributes can be mandatory or optional.
+- Each attribute should have setters and getters with specific validation methods.
+Complex Attributes:
+- Mandatory attributes should not allow null values.
+- Optional attributes can allow null values.
+Multivalue Attributes:
+- Mandatory attributes should not allow null or empty lists/arrays.
+- Optional attributes should not allow empty lists/arrays.
+
+
+### Additional Solutions
+1. Use `[JsonIgnore]` to prevent serialization of circular references for reverse navigation properties.
+2. Implement reverse connections for all associations to maintain bidirectional consistency.
+3. Ensure bidirectional consistency for relationships like `MenuItem ↔ Ingredient` to avoid bugs.
+4. Centralize logic for adding, removing, and validating data to maintain code consistency:
+   ```csharp
+   public static void AddMenuItem(MenuItem menuItem)
+   {
+       if (!menuItems.Contains(menuItem))
+       {
+           menuItems.Add(menuItem);
+       }
+   }
+
+   public static void RemoveMenuItem(MenuItem menuItem)
+   {
+       if (menuItems.Contains(menuItem))
+       {
+           menuItems.Remove(menuItem);
+       }
+   }
+   ```
 
 ---
 
