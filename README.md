@@ -893,16 +893,20 @@ trying to  invite yourself");
 Mandatory Attributes:
 - Strings must not allow null, whitespace, empty strings, or empty lists.
 - Additional validation methods can be implemented for numeric types (int, double, etc.).
+
 Optional Attributes:
 - Strings must not allow empty strings, whitespace, or empty lists.
 - Additional validation methods for numeric types can be applied.
 - Optional attributes can be included in constructors or overloaded methods.
+
 Class Attributes:
 - Attributes can be mandatory or optional.
 - Each attribute should have setters and getters with specific validation methods.
+
 Complex Attributes:
 - Mandatory attributes should not allow null values.
-- Optional attributes can allow null values.
+- Optional attributes can allow null values
+
 Multivalue Attributes:
 - Mandatory attributes should not allow null or empty lists/arrays.
 - Optional attributes should not allow empty lists/arrays.
