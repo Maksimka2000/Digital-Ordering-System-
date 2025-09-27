@@ -280,22 +280,28 @@ This project is implemented entirely in C# (100% of the codebase) to ensure robu
 11. **Other methods**: Additional utility or domain-specific methods.
 
 ### Associations
+
 Aggregation Associations (Many-to-Many):
 1. Ingredient ↔ MenuItem
 2. Food ↔ SetOfMenuItems
 3. Beverage ↔ SetOfMenuItems
+
 Aggregation Associations (One-to-Many):
 1. Order ↔ RegisteredClient
 2. Restaurant ↔ OnlineOrder
+
 Associations with Attribute or Association Class:
 1. Order ↔ MenuItem
+
 Composition Associations:
 1. Restaurant ↔ Table
 2. Restaurant ↔ MenuItem
 3. Table ↔ Order
+
 Qualified Associations:
 1. RegisteredClient ↔ OnlineOrder
 2. RegisteredClient ↔ Order
+
 Reflex Associations:
 1. RegisteredClient ↔ Self
 
